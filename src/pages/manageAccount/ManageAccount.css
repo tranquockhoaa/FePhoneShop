@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.manage-container {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgb(90, 10, 10);
+
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: row;
+
+  position: absolute;
+}
+
+.manage-container .left-col {
+  width: 253px;
+  min-width: 120px;
+  height: 100%;
+  border: 1px solid blue;
+}
+
+.manage-container .left-col .block-menu {
+  width: 100%;
+  height: 500px;
+  border: 1px solid rgb(3, 80, 13);
+  padding: 10px;
+}
+
+.manage-container .left-col .block-menu .block-item-menu {
+  width: 100%;
+  height: 34px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0px 0px 15px;
+
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.manage-container .left-col .block-menu .block-item-menu:hover {
+  border-color: pink;
+}
+
+.manage-container .left-col .block-menu .block-item-menu:focus {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.manage-container .right-col {
+  width: 100%;
+  height: 100%;
+  border: 1px solid blue;
+  margin: 0px 0px 0px 18px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.manage-container .right-col .form-group {
+  width: 600px;
+  height: 100%;
+
+  border: 1px solid blue;
+}
+
+.manage-container .right-col .form-group .avata-name {
+  width: 100%;
+  height: 40px;
+  margin-top: 60px;
+  margin-bottom: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.manage-container .right-col .form-group .field {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.manage-container .right-col .form-group .field .name-item {
+  width: 100%;
+  height: 40px;
+
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.manage-container .right-col .form-group .field .name-item:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid red;
+}
+
+.manage-container .right-col .form-group .field .name-item::placeholder {
+  font-size: 14px;
+}
+
+.manage-container .left-col .block-menu .block-item-menu .loggout-button {
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  border-radius: 8px;
+  text-align: left;
+  padding: 4px;
+}
+
+.manage-container .left-col .block-menu .block-item-menu .loggout-button:hover {
+  border: 1px solid pink;
+}
+
+.manage-container .left-col .block-menu .block-item-menu .info {
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  border-radius: 8px;
+  text-align: left;
+  padding: 4px;
+}
+
+.manage-container .left-col .block-menu .block-item-menu .info .info-title {
+  width: 100%;
+  height: 100%;
+  border: none;
+  text-align: left;
+}
+
+.manage-container .left-col .block-menu .block-item-menu .info:hover {
+  border: 1px solid pink;
+}
+
+.info-title:hover {
+  background-color: #45a049; /* Màu nền khi hover */
+}
