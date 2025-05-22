@@ -11,27 +11,3 @@
   border: 1px solid black;
 }
 
-.store .item-store {
-  width: 100%;
-  height: 80vh;
-  border: 1px solid black;
-  margin-top: 2vh;
-}
-
-.store .item-store .title {
-  width: 100%;
-  height: 4.5vh;
-  border: 1px solid blue;
-  margin-bottom: 1rem;
-}
-
-.store .item-store .title .title-name {
-  width: 40%;
-  height: 100%;
-  border: 1px solid red;
-  padding-left: 1rem;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
