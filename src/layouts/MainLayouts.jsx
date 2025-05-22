@@ -1,22 +1,18 @@
-import React from 'react';
-import Header from '../components/Header.jsx';
-import { Outlet } from 'react-router-dom';
-import './MainLayouts.css';
+import React from "react";
+import Header from "../components/Header.jsx";
+import { Outlet } from "react-router-dom";
+import "./MainLayouts.css";
 const MainLayouts = () => {
   return (
     <div>
-      <Header />
-
+      <div>
+        <Header />
+      </div>
       <div className="body-container">
         <main>
           <Outlet />
         </main>
       </div>
-    
-
-
-
-
     </div>
   );
 };

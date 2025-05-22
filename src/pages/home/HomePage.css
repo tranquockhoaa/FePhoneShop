@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
+  font-family: Arial, 'Montserrat', sans-serif;
 }
 
 .homepage {
@@ -14,9 +14,7 @@
   width: 100%;
   height: 376px;
   border: 1px solid black;
-
   display: flex;
-
   position: relative;
 }
 
@@ -24,7 +22,6 @@
   width: 20%;
   height: 100%;
   border: 1px solid black;
-
   display: flex;
   flex-direction: column;
 }
@@ -33,6 +30,7 @@
   height: 12.5%;
   width: 100%;
   display: flex;
+  align-items: center;
   gap: 10px;
   padding: 10px 16px;
   border: 1px solid #ccc;
@@ -57,13 +55,95 @@
   height: 100%;
   border: 1px solid blue;
   display: none;
-
   position: absolute;
   z-index: 1;
   right: 0;
   top: 0;
+  background-color: white;
 }
 
 .homepage .block-top-home .wrap-menu .menu:hover .option-list {
   display: block;
+}
+
+.store .item-store {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  border: 1px solid black;
+  margin-top: 2vh;
+}
+
+.store .item-store .title {
+  height: 4.5vh;
+  border: 1px solid blue;
+  margin-bottom: 1rem;
+}
+
+.store .item-store .title .title-name {
+  width: 40%;
+  height: 100%;
+  border: 1px solid red;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.store .product-grid {
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.store .product-grid .item {
+  border: 1px solid rgb(19, 70, 128);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 300px; 
+  
+}
+
+.store .product-grid .item .frame_inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.store .product-grid .item .frame_inner .text_small {
+  background-color: #FF0000;
+  color: white;
+  font-size: 12px;
+  border-radius: 12px;
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+
+.store .product-grid .item .frame_inner .img-product {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.store .product-grid .item .frame_inner .login-link {
+  text-decoration: none;
+}
+
+.store .product-grid .item .frame_inner .name {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  max-height: 2.8em; 
+  overflow: hidden;
+  color: black;
 }

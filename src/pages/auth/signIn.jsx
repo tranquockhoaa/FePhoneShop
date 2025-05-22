@@ -129,7 +129,7 @@ function SignIn() {
 
         <div className="input-wrapper">
           <button type="submit" className="submit-button">
-            Đăng nhập
+            Đăng kí
           </button>
         </div>
       </form>
