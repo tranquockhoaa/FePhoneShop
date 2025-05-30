@@ -1,24 +1,24 @@
-import React from 'react';
-import './Header.css';
-import { Link } from 'react-router';
-import AccountSetting from '../pages/auth/accountSetting';
+import React from "react";
+import "./Header.css";
+import { Link } from "react-router";
+import AccountSetting from "../pages/auth/accountSetting";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const [accountInfo, setAccountInfo] = useState(
-    JSON.parse(localStorage.getItem('account')),
+    JSON.parse(localStorage.getItem("account"))
   );
 
- useEffect(() => {
+  useEffect(() => {
     // Handler mỗi khi bạn bắn event 'accountChange'
     const onAccountChange = () => {
-      setAccountInfo(JSON.parse(localStorage.getItem('account')));
+      setAccountInfo(JSON.parse(localStorage.getItem("account")));
     };
 
-    window.addEventListener('accountChange', onAccountChange);
+    window.addEventListener("accountChange", onAccountChange);
     return () => {
-      window.removeEventListener('accountChange', onAccountChange);
+      window.removeEventListener("accountChange", onAccountChange);
     };
   }, []);
 
@@ -51,7 +51,11 @@ const Header = () => {
 
         <div className="wish-list">Wishlist</div>
 
-        <div className="order-button">Giỏ hàng</div>
+        <div className="order-button">
+          <Link to="/cart" className="title">
+            Giỏ hàng
+          </Link>
+        </div>
 
         {!accountInfo ? (
           <div className="header-login-button">
