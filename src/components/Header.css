@@ -96,3 +96,8 @@
   transform: translate(-50%, -50%);
   width: 100%;
 }
+
+.header-container .order-button .title{
+  text-decoration: none;
+  color: inherit;
+}

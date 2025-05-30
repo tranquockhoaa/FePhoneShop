@@ -24,10 +24,11 @@ export const App = () => {
             <Route path="infoAccount" element={<InfoAccount />}></Route>
             <Route path="loggout" element={<Loggout />}></Route>
           </Route>
+          <Route path="/product-detail/:code" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/product-detail/:code" element={<ProductDetail />} />
-
+        <Route path="/cart" element={<Cart />} />
         <Route path="/login/forgotPassword" element={<ForgotPassword />} />
         <Route path="/signIn" element={<SingIn />} />
         <Route path="*" element={<NoPage />} />

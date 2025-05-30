@@ -22,18 +22,24 @@ import {
 
 const brands = [
   {
+    name: "Realme",
+    logo: logoRealme,
+    title: "REALME",
+    component: <RealmeSearch />,
+  },
+  {
     name: "Xiaomi",
     logo: xiaomiLogo,
     title: "XIAOMI NỔI BẬT",
     component: <XiaomiSearch />,
   },
   {
-    name: "Realme",
-    logo: logoRealme,
-    title: "REALME",
-    component: <RealmeSearch />,
+    name: "Samsung",
+    logo: logoIphone,
+    title: "SAMSUNG",
+    component: <SamsungSearch />,
   },
-  { name: "iQoo", logo: logoIqoo, title: "IQOO", component: <IqooSearch /> },
+  { name: "iQOO", logo: logoIqoo, title: "IQOO", component: <IqooSearch /> },
   {
     name: "iPhone",
     logo: logoIphone,
@@ -41,12 +47,7 @@ const brands = [
     component: <IphoneSearch />,
   },
   { name: "iPad", logo: logoIpad, title: "IPAD", component: <IpadSearch /> },
-  {
-    name: "SamSung",
-    logo: logoIphone,
-    title: "SAMSUNG",
-    component: <SamsungSearch />,
-  },
+
   { name: "Oppo", logo: logoIphone, title: "OPPO", component: <OppoSearch /> },
   { name: "Tin Tức", logo: logoInfo, component: <Information /> },
 ];
@@ -135,11 +136,11 @@ const HomePage = () => {
                               className="login-link"
                             >
                               <img
-                                src={`data/Xiaomi/${product.code}/image/${product.color_name}.jpg`}
+                                src={`data/${brand.name}/${product.code}/image/${product.color_name}.jpg`}
                                 alt={"image-review"}
                                 className="img-product"
                               />
-                              <h5 className="name">{product.name}</h5>
+                              {/* <h5 className="name">{product.name}</h5> */}
                             </Link>
                             <p className="price">
                               {product.price.toLocaleString()}₫

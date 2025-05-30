@@ -144,6 +144,9 @@
   font-weight: 500;
   color: black;
   width: 100%;
+   word-break: break-word;   /* Tự động xuống dòng khi quá dài */
+  white-space: normal;      /* Cho phép xuống dòng */
+  overflow-wrap: anywhere; 
 }
 
 .homepage .price{
