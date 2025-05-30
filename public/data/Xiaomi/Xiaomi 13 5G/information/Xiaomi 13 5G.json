@@ -1,0 +1,56 @@
+{
+  "thong_tin_dien_thoai": {
+    "the_sim": "2 Nano SIM, 2 sóng Online",
+    "man_hinh": {
+      "kich_thuoc": "6.36 inches",
+      "cong_nghe": "OLED",
+      "toc_do_quet": "120Hz",
+      "cong_nghe_anh": "Dolby Vision, HDR10+",
+      "do_sang": "1200 nits (HBM), 1900 nits (peak)",
+      "do_phan_giai": "FullHD+ 1080 x 2400 pixels, 20:9 ratio"
+    },
+    "cpu": "Qualcomm SM8550 Snapdragon 8 Gen 2 (4 nm)",
+    "ram": ["8GB", "12GB"],
+    "bo_nho": ["128GB", "512GB"],
+    "camera_sau": [
+      "50 MP, f/1.8, 23mm (wide), 1/1.49\", 1.0µm, PDAF, OIS",
+      "10 MP, f/2.0, 75mm (telephoto), 1/3.75\", 1.0µm, PDAF, OIS, 3.2x optical zoom",
+      "12 MP, f/2.2, 15mm, 120˚ (ultrawide), 1/3.06\", 1.12µm"
+    ],
+    "camera_truoc": "32 MP, f/2.0, 22mm (wide), 0.7µm",
+    "jack_3_5mm": false,
+    "loa": "Loa kép Stereo",
+    "pin": {
+      "loai": "Li-Po",
+      "dung_luong": "4500 mAh",
+      "sac_nhanh": "67W"
+    },
+    "mau_sac": [
+      "White",
+      "Black",
+      "Flora Green",
+      "Mountain Blue",
+      "Red",
+      "Blue",
+      "Yellow",
+      "Green",
+      "Gray"
+    ],
+    "gpu": "Adreno 740",
+    "ngay_ra_mat": "14/12/2022",
+    "he_dieu_hanh": "Android 13, MIUI 14",
+    "loai_san_pham": "Sản phẩm mới nguyên seal",
+    "mang_bang_tan": "GSM / CDMA / HSPA / CDMA2000 / LTE / 5G",
+    "kich_thuoc": "152.8 x 71.5 x 8.0 mm",
+    "trong_luong": "185 g",
+    "bluetooth": "5.3, A2DP, LE",
+    "chuan_bo_nho": {
+      "128GB": "UFS 3.1",
+      "256GB_512GB": "UFS 4.0"
+    },
+    "chuan_am_thanh": "24-bit/192kHz audio",
+    "wifi": "Wi-Fi 802.11 a/b/g/n/ac/6e, dual-band, Wi-Fi Direct",
+    "nfc": true,
+    "cong_ket_noi": "USB Type-C 2.0"
+  }
+}

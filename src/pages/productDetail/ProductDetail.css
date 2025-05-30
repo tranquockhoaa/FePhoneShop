@@ -441,3 +441,8 @@
   display: flex;
   flex-direction: column;
 }
+
+.product-detail-body .grid-item.selected{
+  border: 1px solid #E60012;
+  background-color: #fff9c4;
+}

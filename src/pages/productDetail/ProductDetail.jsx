@@ -1,31 +1,88 @@
-import React from "react";
-import "./ProductDetail.css";
-import { useState } from "react";
-import xiaomiLogo from "../../assets/iconBrand/milogo_1592402136_1592534441.png";
-import logoRealme from "../../assets/iconBrand/apple_watch_menu-512_1592535236_1598409765.png";
-import logoIqoo from "../../assets/iconBrand/logo_iqoo.png";
-import logoIphone from "../../assets/iconBrand/logo_iphone.png";
-import logoIpad from "../../assets/iconBrand/logo_ipad.png";
-import logoInfo from "../../assets/iconBrand/icon_info.png";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
 import Header from "../../components/Header";
 import TableInfor from "./TableInfor";
-
-const images = [
-  "image/imageProduct/xiaomi/iqoo.jpg",
-  "image/imageProduct/xiaomi/ioqq_black.jpg",
-];
+import "./ProductDetail.css";
+import js from "@eslint/js";
 
 const ProductDetail = () => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const { code } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [productDetail, setProductDetail] = useState([]);
+  const [selectedImage, setSelectedImage] = useState("");
   const [showInfo, setShowInfo] = useState(false);
-  const toggleInfo = () => {
-    setShowInfo(!showInfo);
-  };
+
+  const [selectedVersionIndex, setSelectedVersionIndex] = useState(0);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [infoProductDetail, setInfoProductDetail] = useState({});
+
+  const selectedVariant = productDetail[selectedVersionIndex];
+  const selectedOption = selectedVariant?.options[selectedColorIndex];
+
+  const imagePaths =
+    selectedVariant?.options.map((option) =>
+      encodeURI(
+        `/data/${option.brandName}/${option.name}/image/${option.color}.jpg`
+      )
+    ) || [];
+
+  useEffect(() => {
+    if (imagePaths.length > 0) {
+      setSelectedImage(imagePaths[selectedColorIndex]);
+    }
+  }, [selectedColorIndex, selectedVariant]);
+
+  const toggleInfo = () => setShowInfo(!showInfo);
+
+  useEffect(() => {
+    const getInfoDetailByCodeName = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/products/getInfoDetail?codeProduct=${code}`
+        );
+        setProductDetail(response.data.data.data || []);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getInfoDetailByCodeName();
+  }, [code]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const product = productDetail[0]?.options?.[0];
+      if (!product) return;
+
+      const { brandName, name } = product;
+      const jsonPath = encodeURI(
+        `/data/${brandName}/${name}/information/${name}.json`
+      );
+      console.log(jsonPath);
+      try {
+        const response = await fetch(jsonPath);
+        if (!response.ok) throw new Error("File not found");
+
+        const jsonData = await response.json();
+        setInfoProductDetail(jsonData);
+      } catch (err) {
+        console.error("Failed to load JSON", err);
+      }
+    };
+
+    if (productDetail.length > 0) {
+      fetchData();
+    }
+  }, [productDetail]);
+
   return (
     <div>
-      <div>
-        <Header />
-      </div>
+      <Header />
+
       <div className="product-detail-body">
         <div className="container">
           <div className="megamenu">
@@ -34,7 +91,7 @@ const ProductDetail = () => {
         </div>
 
         <p className="product-name">
-          Xiaomi Redmi Note14 Pro 5G{" "}
+          {code}
           <span className="name-small">
             Tặng gói BHV bảo hành cả nguồn, màn hình, vân tay
           </span>
@@ -48,21 +105,27 @@ const ProductDetail = () => {
                   <img src={selectedImage} alt="img-review" />
                 </div>
               </div>
+
               <div className="thumbs">
                 <div className="frame-img-list">
-                  {images.map((image, index) => (
+                  {imagePaths.map((imagePath, index) => (
                     <div
-                      className={`small-frame ${
-                        selectedImage === image ? "active" : ""
-                      }`}
                       key={index}
-                      onClick={() => setSelectedImage(image)}
+                      className={`small-frame ${
+                        selectedImage === imagePath ? "active" : ""
+                      }`}
+                      onClick={() => setSelectedImage(imagePath)}
                     >
-                      <img className="image" src={image} alt="img-review" />
+                      <img
+                        className="image"
+                        src={imagePath}
+                        alt={`img-${index}`}
+                      />
                     </div>
                   ))}
                 </div>
               </div>
+
               <div className="all-des-other-pr">
                 <div className="title-allbox">Mô tả sản phẩm</div>
                 <div className="des-pr">
@@ -76,41 +139,66 @@ const ProductDetail = () => {
 
             <div className="frame-center">
               <div className="product-base">
-                <form action="" className="buy-simple-form" method="post">
+                <form className="buy-simple-form">
                   <div className="price" name="price">
-                    4.600.000₫ <span className="small-price">3.000.000₫</span>
+                    {selectedOption?.price.toLocaleString("vi-VN")}₫
                   </div>
 
-                  <strong className="label">Lựa chọn phiên bản </strong>
-                  <p className="pr-available">{`Tình trạng: Còn hàng`}</p>
+                  <strong className="label">Lựa chọn phiên bản</strong>
+                  <p className="pr-available">
+                    {" "}
+                    Tình trạng:{" "}
+                    {selectedOption?.quantity > 0 ? "Còn hàng " : "Hết hàng"}
+                  </p>
 
                   <div className="storage-grid">
-                    <div className="grid-item">
-                      <div className="extend-name">8GB/128GB</div>
-                      <div className="price">4.600.000₫</div>
-                    </div>
-                    <div className="grid-item">item2</div>
-                    <div className="grid-item">item3</div>
-                    <div className="grid-item">item4</div>
+                    {productDetail.map((variant, index) => (
+                      <div
+                        key={index}
+                        className={`grid-item ${
+                          selectedVersionIndex === index ? "selected" : ""
+                        }`}
+                        onClick={() => {
+                          setSelectedVersionIndex(index);
+                          setSelectedColorIndex(0);
+                        }}
+                      >
+                        <div className="extend-name">
+                          {variant.ram}/{variant.storage}
+                        </div>
+                        <div className="price">
+                          {variant.options[0]?.price.toLocaleString("vi-VN")}₫
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   <strong className="label">Lựa chọn màu</strong>
-
                   <div className="color-grid">
-                    <div className="grid-item">
-                      <div className="extend-name">8GB/128GB</div>
-                    </div>
-                    <div className="grid-item">item2</div>
-                    <div className="grid-item">item3</div>
-                    <div className="grid-item">item4</div>
+                    {selectedVariant?.options.map((option, index) => (
+                      <div
+                        key={index}
+                        className={`grid-item ${
+                          selectedColorIndex === index ? "selected" : ""
+                        }`}
+                        onClick={() => setSelectedColorIndex(index)}
+                      >
+                        <div className="extend-name">
+                          {option.color} <br />
+                          <span className="price">
+                            {option.price.toLocaleString("vi-VN")}₫
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   <div className="order-box">
                     <div className="add-cart-eventory">
                       <img
                         className="cart-icon"
-                        src="image/common/cart.png"
-                        alt=""
+                        src="/image/common/cart.png"
+                        alt="cart"
                       />
                     </div>
 
@@ -126,10 +214,11 @@ const ProductDetail = () => {
                 Gọi <span className="phone-number">01234567890</span> hoặc{" "}
                 <span className="phone-number">01234567890</span> để được tư vấn
               </div>
+
               <div className="banner">
                 <img
                   className="img-banner"
-                  src="image/banner/warranty.gif"
+                  src="/image/banner/warranty.gif"
                   alt="gif"
                 />
               </div>
@@ -138,7 +227,7 @@ const ProductDetail = () => {
             <div className="frame-right">
               <div className="table-info-title">Thông số chi tiết</div>
               <div className="infor-detail">
-                <TableInfor />
+                <TableInfor data={infoProductDetail} />
               </div>
               <div className="show-full-info">
                 <button className="button-show-info" onClick={toggleInfo}>
@@ -148,16 +237,16 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
+
         {showInfo && (
           <div className="overlay">
             <div className="content">
-              {" "}
               <div className="table-info-title">Thông số chi tiết</div>
               <button onClick={toggleInfo} className="button-close">
-                <img src="/image/common/icon-close.png" alt="" />
+                <img src="/image/common/icon-close.png" alt="close" />
               </button>
               <div className="show-table-info-detail">
-                <TableInfor />
+                <TableInfor data={infoProductDetail} />
               </div>
             </div>
           </div>

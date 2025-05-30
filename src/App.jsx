@@ -11,6 +11,7 @@ import InfoAccount from "./pages/manageAccount/infoAccount";
 import Loggout from "./pages/manageAccount/Loggout";
 import ProductDetail from "./pages/productDetail/productDetail";
 import Table from "./pages/table";
+import Cart from "./pages/cart/cart";
 // import Xiaomi from './components/homeMenu/Xiaomi';
 
 export const App = () => {
@@ -25,7 +26,7 @@ export const App = () => {
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/product-detail" element={<ProductDetail />} />
+        <Route path="/product-detail/:code" element={<ProductDetail />} />
 
         <Route path="/login/forgotPassword" element={<ForgotPassword />} />
         <Route path="/signIn" element={<SingIn />} />

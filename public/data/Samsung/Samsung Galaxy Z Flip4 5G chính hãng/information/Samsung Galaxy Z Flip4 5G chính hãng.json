@@ -1,0 +1,29 @@
+{
+  "Thẻ_SIM": "1 Nano SIM & 1 eSIM",
+  "Kiểu_thiết_kế": "mặt lưng kính, khung viền kim loại",
+  "Màn_hình": "6.7 inches, Foldable Dynamic AMOLED 2X, 120Hz, HDR10+, 1200 nits (peak)",
+  "Độ_phân_giải": "1080 x 2640 pixels",
+  "CPU": "Qualcomm SM8475 Snapdragon 8+ Gen 1 (4 nm)",
+  "RAM": "8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB/512GB",
+  "Camera_sau": "12 MP, f/1.8, 24mm (wide), 1/1.76\", 1.8µm, Dual Pixel PDAF, OIS; 12 MP, f/2.2, 123˚ (ultrawide), 1.12µm",
+  "Camera_trước": "10 MP, f/2.4, 26mm (wide), 1.22µm",
+  "Jack_3.5mm_Loa": "không / loa kép Stereo",
+  "Pin": "Li-Po 3700 mAh, sạc 25W",
+  "Màu_sắc": "Bora Purple, Graphite, Pink Gold, Blue, Yellow, White, Navy, Khaki, Red",
+  "GPU": "Adreno 730",
+  "Ngày_ra_mắt": "10/08/2022",
+  "Hệ_điều_hành": "Android 12, upgradable to Android 13, One UI 5.1",
+  "Mạng_Băng_tần": "3G, 4G, 5G",
+  "Kích_thước": {
+    "Unfolded": "165.2 x 71.9 x 6.9 mm",
+    "Folded": "84.9 x 71.9 x 15.9-17.1 mm"
+  },
+  "Trọng_lượng": "187 g",
+  "Bluetooth": "5.2, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 3.1",
+  "Chuẩn_âm_thanh": "32-bit/384kHz audio Tuned by AKG",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, Wi-Fi Direct",
+  "NFC": "có",
+  "Cổng_kết_nối": "USB Type-C 2.0, OTG"
+}
