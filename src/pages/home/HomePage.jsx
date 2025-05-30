@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 import xiaomiLogo from "../../assets/iconBrand/milogo_1592402136_1592534441.png";
 import logoRealme from "../../assets/iconBrand/apple_watch_menu-512_1592535236_1598409765.png";
@@ -21,15 +22,15 @@ import {
 
 const brands = [
   {
-    name: "Xiao mi",
+    name: "Xiaomi",
     logo: xiaomiLogo,
     title: "XIAOMI NỔI BẬT",
     component: <XiaomiSearch />,
   },
   {
-    name: "Real mi",
+    name: "Realme",
     logo: logoRealme,
-    title: "REDMI",
+    title: "REALME",
     component: <RealmeSearch />,
   },
   { name: "iQoo", logo: logoIqoo, title: "IQOO", component: <IqooSearch /> },
@@ -51,6 +52,50 @@ const brands = [
 ];
 
 const HomePage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchCompleted, setFetchCompleted] = useState(false);
+  const [updatedBrands, setUpdatedBrands] = useState(brands);
+  useEffect(() => {
+    const fetchProductsForBrands = async () => {
+      try {
+        setIsLoading(true);
+        const brandsWithProducts = [...brands];
+        for (let i = 0; i < brandsWithProducts.length; i++) {
+          const brand = brandsWithProducts[i];
+          if (brand.name === "Tin Tức") continue;
+          try {
+            const response = await axios.get(
+              `http://localhost:3000/api/v1/products/latest?brandName=${brand.name}`
+            );
+            brandsWithProducts[i] = {
+              ...brand,
+              data: response.data["data"],
+            };
+          } catch (error) {
+            console.error(`Error fetching products for ${brand.name}:`, error);
+            brandsWithProducts[i] = {
+              ...brand,
+              data: [],
+              error: true,
+            };
+          }
+        }
+
+        setUpdatedBrands(brandsWithProducts);
+        setFetchCompleted(true);
+      } catch (error) {
+        console.error("Overall fetch error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProductsForBrands();
+  }, []);
+
+  useEffect(() => {
+    console.log(updatedBrands);
+  }, [updatedBrands]);
   return (
     <div className="homepage">
       <div className="block-top-home">
@@ -67,41 +112,52 @@ const HomePage = () => {
         </div>
       </div>
       <div className="store">
-        {brands.map((brand, index) => (
-          <div className="item-store">
-            <div className="title">
-              <h2 className="title-name">
-                <p>{brand.title}</p>
-              </h2>
-            </div>
-            <div className="product-grid">
-              <div className="item">
-                <div className="frame_inner">
-                  <div className="text_small">Mới nguyên SEAL</div>
-                  <div className="image-product">
-                    <Link to="/product-detail" className="login-link">
-                      <img
-                        src="image/imageProduct/xiaomi/iqoo.jpg"
-                        alt=""
-                        className="img-product"
-                      />
-                      <h5 className="name">Iqoo neo10</h5>
-                    </Link>
-                  </div>
+        {isLoading ? (
+          <p>Đang tải dữ liệu sản phẩm...</p>
+        ) : fetchCompleted ? (
+          updatedBrands.map((brand, index) =>
+            brand.name === "Tin Tức" ? null : (
+              <div className="item-store" key={index}>
+                <div className="title">
+                  <h2 className="title-name">
+                    <p>{brand.title}</p>
+                  </h2>
+                </div>
+                <div className="product-grid">
+                  {brand.data?.data?.length > 0 ? (
+                    brand.data.data.map((product, idx) => (
+                      <div className="item" key={idx}>
+                        <div className="frame_inner">
+                          <div className="text_small">Mới nguyên SEAL</div>
+                          <div className="image-product">
+                            <Link
+                              to={`/product-detail/${product.code}`}
+                              className="login-link"
+                            >
+                              <img
+                                src={`data/Xiaomi/${product.code}/image/${product.color_name}.jpg`}
+                                alt={"image-review"}
+                                className="img-product"
+                              />
+                              <h5 className="name">{product.name}</h5>
+                            </Link>
+                            <p className="price">
+                              {product.price.toLocaleString()}₫
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>Không có sản phẩm nào.</p>
+                  )}
                 </div>
               </div>
-              <div className="item">item2</div>
-              <div className="item">item3</div>
-              <div className="item">item4</div>
-              <div className="item">item5</div>
-              <div className="item">item6</div>
-              <div className="item">item7</div>
-              <div className="item">item8</div>
-              <div className="item">item9</div>
-              <div className="item">item10</div>
-            </div>
-          </div>
-        ))}
+            )
+          )
+        ) : (
+          <p>Có lỗi xảy ra khi tải dữ liệu.</p>
+        )}
       </div>
     </div>
   );

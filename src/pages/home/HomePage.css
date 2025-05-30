@@ -137,13 +137,17 @@
 .store .product-grid .item .frame_inner .login-link {
   text-decoration: none;
 }
-
 .store .product-grid .item .frame_inner .name {
   margin-top: 10px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  max-height: 2.8em; 
-  overflow: hidden;
   color: black;
+  width: 100%;
+}
+
+.homepage .price{
+  margin-top: 10px;
+  color: #FF0000;
+  text-align: center;
 }

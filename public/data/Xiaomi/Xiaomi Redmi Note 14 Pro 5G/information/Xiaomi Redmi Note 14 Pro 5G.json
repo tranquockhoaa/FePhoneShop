@@ -1,0 +1,40 @@
+{
+  "thong_tin_dien_thoai": {
+    "the_sim": "2 sim nano, hỗ trợ 5G",
+    "kieu_thiet_ke": "Thanh cảm ứng",
+    "man_hinh": {
+      "kich_thuoc": "6.67 inch",
+      "cong_nghe": "AMOLED",
+      "mau_sac": "68B màu",
+      "toc_do_quet": "120Hz",
+      "hdr": "HDR10+, Dolby Vision",
+      "do_sang": "3000 nits (tối đa)",
+      "do_phan_giai": "1220 x 2712 pixels, 20:9"
+    },
+    "cpu": "Mediatek Dimensity 7300 Ultra (4 nm)",
+    "ram": ["8GB", "12GB"],
+    "bo_nho": ["128GB", "256GB", "512GB"],
+    "camera_sau": ["50 MP", "8 MP", "2 MP"],
+    "camera_truoc": "20 MP",
+    "jack_3_5mm": false,
+    "loa": "Loa kép",
+    "pin": {
+      "dung_luong": "5500 mAh",
+      "sac_nhanh": "45W"
+    },
+    "mau_sac": ["Black", "White", "Purple", "Green"],
+    "gpu": "Mali-G615 MC2",
+    "ngay_ra_mat": "26/09/2024",
+    "he_dieu_hanh": "Android 14, HyperOS",
+    "loai_san_pham": "Mới nguyên seal",
+    "mang_bang_tan": "GSM / CDMA / HSPA / CDMA2000 / LTE / 5G",
+    "kich_thuoc": ["162.3 x 74.4 x 8.2 mm", "162.3 x 74.4 x 8.5 mm"],
+    "trong_luong": "190 g (6.70 oz)",
+    "bluetooth": "5.4, A2DP, LE, LHDC",
+    "chuan_bo_nho": "UFS 2.2",
+    "chuan_am_thanh": "24-bit/192kHz Hi-Res audio",
+    "wifi": "Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, Wi-Fi Direct",
+    "nfc": true,
+    "cong_ket_noi": "USB Type-C 2.0, OTG"
+  }
+}
