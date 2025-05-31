@@ -1,0 +1,28 @@
+{
+  "Thẻ_SIM": "2 sim, 2 sóng",
+  "Màn_hình": "Amoled 6.43 inches, tần số quét 90Hz",
+  "Độ_phân_giải": "FullHD+ 1080 x 2400 pixels, 20:9 ratio",
+  "CPU": "MediaTek Helio G96",
+  "RAM": "8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB",
+  "Camera_sau": [
+    "Camera góc rộng: 108 MP, f/1.9, PDAF",
+    "Camera góc siêu rộng: 8 MP",
+    "Camera Tele: 2 MP, f/2.4",
+    "Camera chân dung: 2 MP, f/2.4"
+  ],
+  "Camera_trước": "16 MP, f/2.4",
+  "Jack_3.5mm_Loa": "có / loa kép Stereo",
+  "Pin": "Li-Po 5000 mAh, sạc nhanh 33W",
+  "Màu_sắc": ["Midnight Black", "Twilight Blue", "Star Blue"],
+  "GPU": "ARM Mali-G57 MC2",
+  "Hệ_điều_hành": "Android 11",
+  "Loại_sản_phẩm": "Fullbox chính hãng",
+  "Mạng_Băng_tần": "2G/3G/4G",
+  "Kích_thước": "159.87 x 73.87 x 8.09 mm",
+  "Trọng_lượng": "179g",
+  "Bluetooth": "5.1, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 2.2",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band, Wi-Fi Direct",
+  "Cổng_kết_nối": "USB Type-C 2.0, OTG"
+}

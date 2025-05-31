@@ -163,9 +163,8 @@ const ProductDetail = () => {
                           setSelectedColorIndex(0);
                         }}
                       >
-                        <div className="extend-name">
-                          {variant.ram}/{variant.storage}
-                        </div>
+                        {variant.ram ? `${variant.ram}/` : ""}
+                        {variant.storage}
                         <div className="price">
                           {variant.options[0]?.price.toLocaleString("vi-VN")}₫
                         </div>

@@ -1,0 +1,36 @@
+{
+  "Thẻ_SIM": "2 nano sim, 2 sóng online",
+  "Màn_hình": "6.55 inches, tấm nền SuperAMOLED, 1080 x 2400 pixels, 120Hz",
+  "Độ_phân_giải": "1080 x 2400 pixel, tỷ lệ 20:9",
+  "CPU": "MediaTek Dimensity 1000+ 5G (7 nm) 8 nhân",
+  "RAM": "6/8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB",
+  "Camera_sau": [
+    "64 MP, f/1.8, 26mm (wide), 1/1.72\", 0.8µm, PDAF",
+    "8 MP, f/2.3, 119˚, 16mm (ultrawide), 1/4.0\", 1.12µm",
+    "2 MP, f/2.4, (macro)",
+    "2 MP, f/2.4, (depth)",
+    "Features: LED flash, HDR, panorama"
+  ],
+  "Camera_trước": "32 MP, f/2.5, 24mm (wide), 1/2.8\", 0.8µm",
+  "Jack_3.5mm_Loa": "Có / Loa kép Stereo",
+  "Pin": "Li-Po 4500 mAh, non-removable, sạc nhanh 65W (35 phút đầy 100%)",
+  "Màu_sắc": [
+    "Iridescent (Fantasy)",
+    "Aerolite Black (Mystic Black)",
+    "Skyline White"
+  ],
+  "GPU": "Mali-G77 MC9",
+  "Ngày_ra_mắt": "07/09/2021",
+  "Hệ_điều_hành": "Android 10",
+  "Loại_sản_phẩm": "Mới nguyên seal 100%",
+  "Mạng_Băng_tần": "GSM / CDMA / HSPA / EVDO / LTE / 5G",
+  "Kích_thước": "160,8 x 75,1 x 8,5 mm",
+  "Trọng_lượng": "184 g",
+  "Bluetooth": "5.0, A2DP, LE, aptX HD",
+  "Chuẩn_bộ_nhớ": "UFS 2.1",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6, dual-band",
+  "NFC": "Có",
+  "Cổng_kết_nối": "USB Type-C"
+}

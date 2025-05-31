@@ -1,0 +1,23 @@
+{
+  "Thẻ_SIM": "2 SIM, Nano SIM",
+  "Màn_hình": "OLED, 68 tỷ màu, 144Hz, HDR10+, Dolby Vision, 2600 nits (peak), 6.67 inches, 2K (1440 x 3200 pixels)",
+  "Độ_phân_giải": "1440 x 3200 pixels",
+  "CPU": {
+    "Tên": "Mediatek Dimensity 9200 (4 nm)",
+    "Cấu_trúc": "8 nhân (1x3.05 GHz & 3x2.85 GHz & 4x1.80 GHz)"
+  },
+  "GPU": "Immortalis-G715 MC11",
+  "RAM": "12-16GB",
+  "Bộ_nhớ_Thẻ_nhớ": ["256GB", "512GB", "1TB"],
+  "Camera_sau": [
+    "50 MP, f/1.7, (wide), 1/1.49\", 1.0µm, PDAF, OIS",
+    "8 MP, 119˚ (ultrawide), 1/4\", 1.12µm",
+    "2 MP, f/2.4, (macro)"
+  ],
+  "Camera_trước": "20 MP, (wide), 1/2.0\", 0.8µm",
+  "Jack_3.5mm_Loa": "không",
+  "Pin": "Li-Po 5000 mAh, Sạc nhanh 120W",
+  "Hệ_điều_hành": "Android 13, MIUI 14",
+  "Chuẩn_bộ_nhớ": "UFS 4.0",
+  "NFC": "có"
+}

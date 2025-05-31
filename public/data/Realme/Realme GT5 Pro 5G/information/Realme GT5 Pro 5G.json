@@ -1,0 +1,31 @@
+{
+  "Thẻ_SIM": "2 Nano SIM, hỗ trợ 5G",
+  "Kiểu_thiết_kế": "Thanh cảm ứng",
+  "Màn_hình": "6.78 inches, AMOLED, 1B colors, 144Hz, HDR10+, Dolby Vision, 4500 nits",
+  "Độ_phân_giải": "1264 x 2780 pixels",
+  "CPU": "Qualcomm SM8650-AB Snapdragon 8 Gen 3 (4 nm)",
+  "RAM": "12GB/16GB",
+  "Bộ_nhớ_Thẻ_nhớ": "256GB/512GB/1TB",
+  "Camera_sau": [
+    "50 MP, f/1.7, 23mm (wide), 1/1.4\", 1.12µm, multi-directional PDAF, OIS",
+    "50 MP, f/2.6, 65mm (periscope telephoto), 1/1.56\", PDAF, OIS, 2.7x optical zoom",
+    "8 MP, f/2.2, 16mm, 112˚ (ultrawide), 1/4.0\", 1.12µm"
+  ],
+  "Camera_trước": "32 MP, f/2.5, 22mm (wide), 1/2.74\"",
+  "Jack_3.5mm_Loa": "Không / Loa kép Dolby Atmos",
+  "Pin": "Li-Po 5400 mAh, sạc nhanh 100W",
+  "Màu_sắc": ["đen", "trắng", "cam"],
+  "GPU": "Adreno 750",
+  "Ngày_ra_mắt": "7/12/2023",
+  "Hệ_điều_hành": "Android 14, Realme UI 5.0",
+  "Loại_sản_phẩm": "Mới nguyên SEAL",
+  "Mạng_Băng_tần": "GSM / CDMA / HSPA / CDMA2000 / LTE / 5G",
+  "Kích_thước": "161.7 x 75.1 x 9.2 mm",
+  "Trọng_lượng": "218 g",
+  "Bluetooth": "5.4, A2DP, LE, aptX HD",
+  "Chuẩn_bộ_nhớ": "UFS 4.0",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6/7, tri-band, Wi-Fi Direct",
+  "NFC": "có",
+  "Cổng_kết_nối": "USB Type-C 3.2"
+}

@@ -1,0 +1,30 @@
+{
+  "Thẻ_SIM": "Dual SIM (Nano-SIM, dual stand-by)",
+  "Kiểu_thiết_kế": "Điện thoại di động",
+  "Màn_hình": "IPS LCD, 120Hz, 450 nits (typ), 600 nits (HBM), 6.88 inches, 112.4 cm2 (~84.0% screen-to-body ratio)",
+  "Độ_phân_giải": "720 x 1640 pixels (~260 ppi density)",
+  "CPU": "Octa-core (2x2.2 GHz Cortex-A78 & 6x1.95 GHz Cortex-A55)",
+  "RAM": "4-8GB",
+  "Bộ_nhớ_Thẻ_nhớ": [
+    "128GB 4GB RAM",
+    "128GB 6GB RAM",
+    "128GB 8GB RAM",
+    "256GB 8GB RAM"
+  ],
+  "Camera_sau": "LED flash, HDR, 1080p@30fps",
+  "Camera_trước": "5 MP, 1080p@30fps",
+  "Jack_3.5mm_Loa": "Yes / Yes",
+  "Pin": "5160 mAh, non-removable",
+  "Màu_sắc": ["Midnight Black", "Sage Green", "Starry Blue", "Purple"],
+  "GPU": "Adreno 613",
+  "Ngày_ra_mắt": "14/09/2024",
+  "Hệ_điều_hành": "Android 14, HyperOS",
+  "Loại_sản_phẩm": "Mới Nguyên Seal",
+  "Kích_thước": "171.9 x 77.8 x 8.2 mm (6.77 x 3.06 x 0.32 in)",
+  "Trọng_lượng": "205.4 / 208.5 / 212.4 g (7.23 oz)",
+  "Bluetooth": "5.0, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 2.2",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band",
+  "NFC": "No",
+  "Cổng_kết_nối": "USB Type-C 2.0"
+}
