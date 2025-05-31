@@ -136,7 +136,9 @@ const HomePage = () => {
                               className="login-link"
                             >
                               <img
-                                src={`data/${brand.name}/${product.code}/image/${product.color_name}.jpg`}
+                                src={encodeURI(
+                                  `data/${brand.name}/${product.code}/image/${product.color_name}.jpg`
+                                )}
                                 alt={"image-review"}
                                 className="img-product"
                               />

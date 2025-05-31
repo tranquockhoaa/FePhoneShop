@@ -1,0 +1,30 @@
+{
+  "Thẻ_SIM": "2 nano sim, 2 sóng online",
+  "Màn_hình": "6.67 inches, OLED, 68B colors, 144Hz, HDR10+",
+  "Độ_phân_giải": "1220 x 2712 pixels, 20:9 ratio",
+  "CPU": "Qualcomm SM8475 Snapdragon 8+ Gen 1 (4 nm)",
+  "RAM": "8GB/12GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB/512GB",
+  "Camera_sau": [
+    "108 MP, f/1.6, (wide), 1/1.67\", PDAF, OIS",
+    "8 MP, f/2.2, 120˚, (ultrawide)",
+    "2 MP, f/2.4, (macro)"
+  ],
+  "Camera_trước": "20 MP, (wide), 1080p@30/60fps, 720p@120fps",
+  "Jack_3.5mm_Loa": "Không, Có âm thanh Stereo",
+  "Pin": "Li-Po 5000 mAh, Fast charging 120W",
+  "Màu_sắc": ["Black", "Gray", "Blue", "Mercedes AMG"],
+  "GPU": "Adreno 730",
+  "Ngày_ra_mắt": "11/08/2022",
+  "Hệ_điều_hành": "Android 12, MIUI 13",
+  "Loại_sản_phẩm": "Mới nguyên seal",
+  "Mạng_Băng_tần": "GSM / CDMA / HSPA / CDMA2000 / LTE / 5G",
+  "Kích_thước": "163.1 x 75.9 x 8.6 mm",
+  "Trọng_lượng": "202 g",
+  "Bluetooth": "5.2, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 3.1",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6e, dual-band, Wi-Fi Direct, hotspot",
+  "NFC": "Có",
+  "Cổng_kết_nối": "USB Type-C 2.0"
+}

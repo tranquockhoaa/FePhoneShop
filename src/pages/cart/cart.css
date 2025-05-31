@@ -15,7 +15,7 @@ body {
 
 .cart-container{
     border: 1px solid black;
-    width: 70vw;
+    width: 50vw;
     background-color: #f5f6f8;
 }
 
@@ -39,16 +39,19 @@ body {
 .cart-container .cart-detail{
     padding: 10px;
     width: 100%;
-    border: 1px solid black;
 }
 
 .cart-container .cart-detail .top-detail{
     width: 100%;
     padding: 15px 10px;
-    border: 1px solid black;
+    border-bottom: 1px solid #e5e5e5;
     display: flex;
     flex-direction: row;
     align-content: space-between;
+}
+
+.cart-container .table-wrap{
+    height: 148px;
 }
 
 .cart-container .cart-detail .top-detail .left,
@@ -63,4 +66,216 @@ body {
 .cart-container .cart-detail .top-detail .right {
     text-align: right;
     font-weight: 700;
+}
+
+.cart-container .cart-detail .table-wrap .small-image{
+    width: 84px;
+    height: 84px;
+}
+
+.cart-container .cart-detail .table-wrap .row-table {
+    height: 148px;
+
+    display: flex;
+    flex-direction: row;
+    padding: 10px 0px;
+}
+
+.cart-container .cart-detail .name-item{
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0px 0px 5px;
+}
+
+
+.cart-container  .col-td{
+    height: 100%;
+    width: 100px;
+    padding: 10px 8px 5px;
+    
+}
+
+.cart-container .cart-container .col-td .small-image{
+    height: 84px;
+    width: 84px;
+}
+
+.cart-container .cart-detail .info-extent{
+    font-size: 14px;
+}
+
+.cart-container .cart-detail .del-item{
+    font-size: 13px;
+    display: flex;
+    align-items: center;   
+    justify-content: center; 
+    gap: 4px;            
+    cursor: pointer;
+}
+.cart-container .cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.cart-container .cart-left {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.cart-container .product-img {
+    width: 80px;
+    height: auto;
+    object-fit: cover;
+}
+
+.cart-container .cart-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cart-container .cart-info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cart-container .cart-info p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.cart-container .delete-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cart-container .cart-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.cart-container .cart-price {
+    font-weight: bold;
+    color: #c00;
+    margin-bottom: 5px;
+}
+
+.cart-container .quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-container .quantity-control button {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    background: #eee;
+    cursor: pointer;
+}
+
+.cart-container .quantity-control span {
+    min-width: 20px;
+    text-align: center;
+}
+
+.cart-container .del-item{
+    align-self:flex-start;
+}
+
+.cart-container .total-cart{
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 0px 10px;
+}
+
+.cart-container .total-price{
+    align-items: end;
+}
+
+.cart-container .box-title{
+    font-size: 16px;
+    margin: 0px 0px 10px;
+}
+
+.cart-container .box-input{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cart-container .input-text-div{
+    font-size: 14px;
+    height: 46px;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+    background-color: #ffffff;
+}
+
+.cart-container .input-text-50{
+    flex: 1;
+
+}
+
+.cart-container .input-text{
+    width: 100%;
+}
+
+.cart-container .box-input input{
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    border: none;
+    padding: 6px 12px;
+    outline: none;
+}
+
+
+
+.cart-container textarea {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  font-size: 16px;
+  resize: none;
+}
+
+
+.cart-container .box-submit-btn{
+    width: 100%;
+    height: 100%;
+    margin: 10px 0px 0px;
+    padding: 20px 30px 0px;
+}
+
+.cart-container .box-submit-btn .btn-submit{
+    padding: 10px 15px;
+    text-align: center;
+    color: #eee;
+    font-weight: 700;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: 	#fd7e14;
+}
+
+.cart-container .box-submit-btn .btn-submit:hover{
+    background-color: red
+    
+    
+    ;
 }
