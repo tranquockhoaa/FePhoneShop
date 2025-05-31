@@ -41,7 +41,9 @@ const ProductDetail = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:3000/api/v1/products/getInfoDetail?codeProduct=${code}`
+          `http://localhost:3000/api/v1/products/getInfoDetail?codeProduct=${encodeURIComponent(
+            code
+          )}`
         );
         setProductDetail(response.data.data.data || []);
       } catch (error) {

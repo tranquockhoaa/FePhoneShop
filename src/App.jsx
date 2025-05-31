@@ -9,7 +9,7 @@ import ManageAccount from "./pages/manageAccount/ManageAccount";
 import MainLayouts from "./layouts/MainLayouts";
 import InfoAccount from "./pages/manageAccount/infoAccount";
 import Loggout from "./pages/manageAccount/Loggout";
-import ProductDetail from "./pages/productDetail/productDetail";
+import ProductDetail from "./pages/productDetail/ProductDetail";
 import Table from "./pages/table";
 import Cart from "./pages/cart/cart";
 // import Xiaomi from './components/homeMenu/Xiaomi';
