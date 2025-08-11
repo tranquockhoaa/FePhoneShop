@@ -1,0 +1,21 @@
+{
+  "Thẻ_SIM": "Nano-SIM and eSIM - International",
+  "Màn_hình": "6.7 inches, LTPO Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision",
+  "Độ_phân_giải": "1290 x 2796 pixels, 19.5:9 ratio (~460 ppi density)",
+  "CPU": "Apple A17 Bionic (3 nm)",
+  "RAM": "8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "256GB/512GB/1TB/2TB",
+  "Camera_sau": "48 MP, f/1.8, 24mm (wide), 1/1.28\", 1.22µm, dual pixel PDAF, sensor-shift OIS; 12.7 MP, f/2.8, 85mm (periscope telephoto), 1/1.9\", PDAF, OIS, 4x optical zoom; 13.4 MP, f/2.2, 13mm, 120˚ (ultrawide), dual pixel PDAF",
+  "Camera_trước": "12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF, OIS",
+  "Jack_3.5mm_Loa": "Không/ Loa kép",
+  "Pin": "Li-Ion 4852 mAh, sạc nhanh 30W",
+  "Màu_sắc": ["Space Black", "Silver", "Gold", "Deep Purple"],
+  "GPU": "Apple GPU (6-core graphics)",
+  "Hệ_điều_hành": "iOS 17",
+  "Mạng_Băng_tần": "GSM / CDMA / HSPA / EVDO / LTE / 5G",
+  "Bluetooth": "5.3, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "NVMe",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6e/7, dual-band, hotspot",
+  "NFC": "Có",
+  "Cổng_kết_nối": "USB Type-C 3.2, DisplayPort"
+}

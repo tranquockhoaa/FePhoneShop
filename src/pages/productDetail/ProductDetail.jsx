@@ -24,7 +24,7 @@ const ProductDetail = () => {
   const imagePaths =
     selectedVariant?.options.map((option) =>
       encodeURI(
-        `/data/${option.brandName}/${option.name}/image/${option.color}.jpg`
+        `/data/${option.brandName}/${option.code}/image/${option.color}.jpg`
       )
     ) || [];
 
@@ -62,7 +62,7 @@ const ProductDetail = () => {
 
       const { brandName, name } = product;
       const jsonPath = encodeURI(
-        `/data/${brandName}/${name}/information/${name}.json`
+        `/data/${brandName}/${code}/information/${code}.json`
       );
       console.log(jsonPath);
       try {
@@ -81,6 +81,29 @@ const ProductDetail = () => {
     }
   }, [productDetail]);
 
+  const handleAddToCart = async () => {
+    try {
+      const account = JSON.parse(localStorage.getItem("account") || "{}");
+      const token = account.token;
+      if (!token) {
+        alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+        return;
+      }
+      const productDetailId = selectedOption?.productDetailId;
+      if (!productDetailId) {
+        alert("Vui lòng chọn phiên bản/màu sắc!");
+        return;
+      }
+      await axios.post(
+        "http://localhost:3000/api/v1/cart/add",
+        { productDetailId, quantity: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      window.location.href = "/cart";
+    } catch (err) {
+      alert("Thêm vào giỏ hàng thất bại!");
+    }
+  };
   return (
     <div>
       <Header />
@@ -93,7 +116,7 @@ const ProductDetail = () => {
         </div>
 
         <p className="product-name">
-          {code}
+          {productDetail[0]?.options[0]?.name || code}{" "}
           <span className="name-small">
             Tặng gói BHV bảo hành cả nguồn, màn hình, vân tay
           </span>
@@ -195,7 +218,10 @@ const ProductDetail = () => {
                   </div>
 
                   <div className="order-box">
-                    <div className="add-cart-eventory">
+                    <div
+                      className="add-cart-eventory"
+                      onClick={handleAddToCart}
+                    >
                       <img
                         className="cart-icon"
                         src="/image/common/cart.png"
@@ -203,7 +229,7 @@ const ProductDetail = () => {
                       />
                     </div>
 
-                    <div className="order-button">
+                    <div className="order-button" onClick={handleAddToCart}>
                       <strong>MUA NGAY </strong>
                       <span>Giao hàng tận nơi hoặc mua tại cửa hàng</span>
                     </div>

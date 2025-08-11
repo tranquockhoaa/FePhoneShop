@@ -1,37 +1,37 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import userAxios from "./userAxios";
 
 function SignIn() {
   const navigate = useNavigate();
 
   const [account, setAccount] = useState({
-    email: '',
-    password: '',
-    full_name: '',
-    gender: '',
-    address: '',
-    phone_number: '',
-    status: '',
+    email: "",
+    password: "",
+    full_name: "",
+    gender: "",
+    address: "",
+    phone_number: "",
+    status: "",
   });
 
   useEffect(() => {
-    console.log('useEffect');
-    if (account.status == 'true') {
-      navigate('/');
+    console.log("useEffect");
+    if (account.status == "true") {
+      navigate("/");
     }
   }, [account.status]);
 
   const handleOnSubmit = () => {
     event.preventDefault();
     console.log(account);
-    axios
-      .post('http://127.0.0.1:3000/api/v1/auth/signup', account)
+    userAxios
+      .post("http://127.0.0.1:3000/api/v1/auth/signup", account)
       .then((res) => {
-        if (res.data.status === 'success') {
-          console.log('SignUp successful');
-          setAccount({ ...account, status: 'true' });
+        if (res.data.status === "success") {
+          console.log("SignUp successful");
+          setAccount({ ...account, status: "true" });
         }
       })
       .catch((err) => {

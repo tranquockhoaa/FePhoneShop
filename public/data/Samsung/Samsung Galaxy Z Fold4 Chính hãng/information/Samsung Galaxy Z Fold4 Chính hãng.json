@@ -1,0 +1,37 @@
+{
+  "Thẻ_SIM": "2 sim, hỗ trợ 5G",
+  "Kiểu_thiết_kế": "Cảm ứng dạng gập",
+  "Màn_hình": "6.2 inches Foldable Dynamic AMOLED 2X, 120Hz, HDR10+, 1200 nits",
+  "Độ_phân_giải": "1812 x 2176 pixels",
+  "CPU": "Qualcomm SM8475 Snapdragon 8+ Gen 1 (4 nm)",
+  "RAM": "12GB",
+  "Bộ_nhớ_Thẻ_nhớ": "256GB/512GB/1TB",
+  "Camera_sau": [
+    "50 MP, f/1.8, 23mm (wide), 1.0µm, Dual Pixel PDAF, OIS",
+    "10 MP, f/2.4, 66mm (telephoto), 1.0µm, PDAF, OIS, 3x optical zoom",
+    "12 MP, f/2.2, 123˚, 12mm (ultrawide), 1.12µm"
+  ],
+  "Camera_trước": [
+    "4 MP, f/1.8, 26mm (wide), 2.0µm, under display",
+    "10 MP, f/2.2, 24mm (wide), 1/3\", 1.22µm (cover camera)"
+  ],
+  "Jack_3.5mm_Loa": "Không / Loa kép",
+  "Pin": "Li-Po 4400 mAh, sạc nhanh 25W",
+  "Màu_sắc": ["Graygreen", "Phantom Black", "Beige"],
+  "GPU": "Adreno 730",
+  "Ngày_ra_mắt": "10/08/2022",
+  "Hệ_điều_hành": "Android 12L",
+  "Loại_sản_phẩm": "Chính hãng, fullbox",
+  "Mạng_Băng_tần": "3G, 4G, 5G",
+  "Kích_thước": {
+    "Gập": "155.1 x 130.1 x 6.3 mm",
+    "Mở": "155.1 x 67.1 x 14.2-15.8 mm"
+  },
+  "Trọng_lượng": "263 g",
+  "Bluetooth": "5.2, A2DP, LE, aptX HD",
+  "Chuẩn_bộ_nhớ": "UFS 3.1",
+  "Chuẩn_âm_thanh": "32-bit/384kHz audio Tuned by AKG",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6e, dual-band, Wi-Fi Direct",
+  "NFC": "Có",
+  "Cổng_kết_nối": "Type C"
+}

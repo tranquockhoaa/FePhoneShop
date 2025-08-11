@@ -1,12 +1,11 @@
-
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
   const navigate = useNavigate();
 
   const handleCancel = () => {
-    navigate('/login');
+    navigate("/login");
   };
   return (
     <div className="forgotPassword-container">

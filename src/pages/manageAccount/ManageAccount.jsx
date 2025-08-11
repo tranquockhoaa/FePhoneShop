@@ -1,48 +1,64 @@
-import './ManageAccount.css';
-import Header from '../../components/Header';
-import InfoAccount from './infoAccount';
-import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import Loggout from './Loggout';
-import { useNavigate } from 'react-router-dom';
+import "./ManageAccount.css";
+import Header from "../../components/Header";
+import React, { useState, useEffect } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import Loggout from "./Loggout";
+
+const menu = [
+  { icon: "🏠", label: "Về Trang chủ", path: "/" },
+  { icon: "👤", label: "Thông tin tài khoản", path: "infoAccount" },
+  { icon: "🚪", label: "Đăng xuất", action: "logout" },
+];
 
 const ManageAccount = () => {
   const [showLoggoutPopup, setLoggoutPopup] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const clickLoggoutPopup = () => {
-    setLoggoutPopup(!showLoggoutPopup);
+  // Khi vào /manageAccount thì tự động chuyển sang /manageAccount/infoAccount
+  useEffect(() => {
+    if (
+      location.pathname === "/manageAccount" ||
+      location.pathname === "/manageAccount/"
+    ) {
+      navigate("infoAccount", { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
+  const handleMenuClick = (item) => {
+    if (item.action === "logout") {
+      setLoggoutPopup(!showLoggoutPopup);
+    } else {
+      navigate(item.path);
+    }
   };
 
-  // useEffect(() => {}, [option]);
   return (
-    <div className="manage-container">
-      <div className="left-col">
-        <div className="block-menu">
-          <button className="block-item-menu" name="Home">
-            Trang chủ
-          </button>
-
-          <button
-            className="block-item-menu"
-            onClick={() => {
-              navigate('infoAccount');
-            }}
-          >
-            Thông tin tài khoản
-          </button>
-
-          <button className="block-item-menu" onClick={clickLoggoutPopup}>
-            Đăng xuất
-          </button>
-          {showLoggoutPopup && (
-            <Loggout clickLoggoutPopup={clickLoggoutPopup} />
-          )}
-        </div>
-      </div>
-
-      <div className="right-col">
-        <Outlet />
+    <div className="manage-account-root">
+      <Header />
+      <div className="manage-container">
+        <aside className="left-col">
+          <nav className="block-menu">
+            {menu.map((item) => (
+              <button
+                key={item.label}
+                className="block-item-menu"
+                onClick={() => handleMenuClick(item)}
+              >
+                <span style={{ marginRight: 10 }}>{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+            {showLoggoutPopup && (
+              <Loggout clickLoggoutPopup={() => setLoggoutPopup(false)} />
+            )}
+          </nav>
+        </aside>
+        <main className="right-col">
+          <div className="account-content">
+            <Outlet />
+          </div>
+        </main>
       </div>
     </div>
   );

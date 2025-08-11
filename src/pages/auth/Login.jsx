@@ -1,25 +1,34 @@
-import React from 'react';
-import '../../index.css';
-import { Outlet, Link } from 'react-router-dom';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import "../../index.css";
+import { Outlet, Link } from "react-router-dom";
+import userAxios from "./userAxios";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   let navigate = useNavigate();
 
   const [account, setAccount] = useState({
-    email: '',
-    password: '',
-    status: '',
+    email: "",
+    password: "",
+    status: "",
   });
 
   useEffect(() => {
-    console.log('navigate');
-    if (account.status == 'true') {
-      navigate('/');
+    if (account.status === "true") {
+      // Lấy role từ localStorage sau khi đăng nhập
+      const stored = window.localStorage.getItem("account");
+      let role = "";
+      if (stored) {
+        try {
+          role = JSON.parse(stored).role;
+        } catch {}
+      }
+      if (role === "admin") navigate("/admin");
+      else if (role === "user") navigate("/");
+      // Nếu có role khác, có thể bổ sung điều hướng tại đây
     }
-  }, [account.status]);
+  }, [account.status, navigate]);
 
   const handleInput = (event) => {
     setAccount({ ...account, [event.target.name]: event.target.value });
@@ -27,8 +36,8 @@ function Login() {
 
   const getInfoAccount = async () => {
     try {
-      const res = await axios.get(
-        `http://127.0.0.1:3000/api/v1/user/${account.email}`,
+      const res = await userAxios.get(
+        `http://127.0.0.1:3000/api/v1/user/${account.email}`
       );
       return res.data.data;
     } catch (err) {
@@ -36,27 +45,26 @@ function Login() {
     }
   };
 
-  const handleOnSubmit = () => {
+  const handleOnSubmit = (event) => {
     event.preventDefault();
-    console.log(account.status);
-    axios
-      .post('http://127.0.0.1:3000/api/v1/auth/login', account)
+    userAxios
+      .post("http://127.0.0.1:3000/api/v1/auth/login", account)
       .then(async (res) => {
-        if (res.data.status === 'success') {
-          console.log('Login successful');
+        if (res.data.status === "success") {
           const infoAccount = await getInfoAccount();
-          setAccount({ ...infoAccount, status: 'true' });
+          setAccount({ ...infoAccount, status: "true" });
           const updateAccount = {
             ...infoAccount,
-            status: 'true',
+            status: "true",
             token: res.data.token,
+            role: res.data.user?.role || infoAccount.role || "user", // Lưu role
           };
-          console.log(res.data.token);
-          window.localStorage.setItem('account', JSON.stringify(updateAccount));
+          window.localStorage.setItem("account", JSON.stringify(updateAccount));
+          window.localStorage.setItem("token", res.data.token); // Lưu token riêng cho adminAxios
         }
       })
       .catch((err) => {
-        if (err.response.data) {
+        if (err.response?.data) {
           alert(err.response.data.message);
         }
       });
@@ -104,7 +112,7 @@ function Login() {
       </form>
 
       <div className="sign-in">
-        Bạn chưa có tài khoản?{' '}
+        Bạn chưa có tài khoản?{" "}
         <span>
           <Link to="/signIn">Đăng kí ngay</Link>
         </span>

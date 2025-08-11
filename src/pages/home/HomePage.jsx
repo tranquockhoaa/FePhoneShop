@@ -99,68 +99,82 @@ const HomePage = () => {
   }, [updatedBrands]);
   return (
     <div className="homepage">
-      <div className="block-top-home">
-        <div className="wrap-menu">
-          {brands.map((brand, index) => (
-            <div className="menu">
-              <span className="icon" key={index}>
-                <img src={brand.logo} alt={brand.name} />
-              </span>
-              {brand.name}
-              <div className="option-list">{brand.component}</div>
-            </div>
-          ))}
+      <div className="homepage-container">
+        <div className="block-top-home">
+          <div className="wrap-menu">
+            {brands.map((brand, index) => (
+              <div className="menu" key={index}>
+                <span className="icon">
+                  <img src={brand.logo} alt={brand.name} />
+                </span>
+                {/* Nếu là Tin Tức thì không link */}
+                {brand.name !== "Tin Tức" ? (
+                  <Link
+                    to={`/products/${brand.name}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    {brand.name}
+                  </Link>
+                ) : (
+                  brand.name
+                )}
+                <div className="option-list">{brand.component}</div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="store">
-        {isLoading ? (
-          <p>Đang tải dữ liệu sản phẩm...</p>
-        ) : fetchCompleted ? (
-          updatedBrands.map((brand, index) =>
-            brand.name === "Tin Tức" ? null : (
-              <div className="item-store" key={index}>
-                <div className="title">
-                  <h2 className="title-name">
-                    <p>{brand.title}</p>
-                  </h2>
-                </div>
-                <div className="product-grid">
-                  {brand.data?.data?.length > 0 ? (
-                    brand.data.data.map((product, idx) => (
-                      <div className="item" key={idx}>
-                        <div className="frame_inner">
-                          <div className="text_small">Mới nguyên SEAL</div>
-                          <div className="image-product">
-                            <Link
-                              to={`/product-detail/${product.code}`}
-                              className="login-link"
-                            >
-                              <img
-                                src={encodeURI(
-                                  `data/${brand.name}/${product.code}/image/${product.color_name}.jpg`
-                                )}
-                                alt={"image-review"}
-                                className="img-product"
-                              />
-                              {/* <h5 className="name">{product.name}</h5> */}
-                            </Link>
-                            <p className="price">
-                              {product.price.toLocaleString()}₫
-                            </p>
+        <div className="store">
+          {isLoading ? (
+            <p>Đang tải dữ liệu sản phẩm...</p>
+          ) : fetchCompleted ? (
+            updatedBrands.map((brand, index) =>
+              brand.name === "Tin Tức" ? null : (
+                <div className="item-store" key={index}>
+                  <div className="title">
+                    <h2 className="title-name">
+                      <p>{brand.title}</p>
+                    </h2>
+                  </div>
+                  <div className="product-grid">
+                    {brand.data?.data?.length > 0 ? (
+                      brand.data.data.map((product, idx) => (
+                        <div className="item" key={idx}>
+                          <div className="frame_inner">
+                            <div className="text_small">Mới nguyên SEAL</div>
+                            <div className="image-product">
+                              <Link to={`/product-detail/${product.code}`}>
+                                <img
+                                  src={encodeURI(
+                                    `data/${brand.name}/${product.code}/image/${product.color_name}.jpg`
+                                  )}
+                                  alt="image-review"
+                                  className="img-product"
+                                />
+                                <div className="name">{product.name}</div>
+                              </Link>
+                              <div>
+                                RAM: {product.ram_size} | Storage:{" "}
+                                {product.storage_size}
+                              </div>
+                              <div>Color: {product.color_name}</div>
+                              <p className="price">
+                                {product.price.toLocaleString()}₫
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p>Không có sản phẩm nào.</p>
-                  )}
+                      ))
+                    ) : (
+                      <p>Không có sản phẩm nào.</p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )
             )
-          )
-        ) : (
-          <p>Có lỗi xảy ra khi tải dữ liệu.</p>
-        )}
+          ) : (
+            <p>Có lỗi xảy ra khi tải dữ liệu.</p>
+          )}
+        </div>
       </div>
     </div>
   );

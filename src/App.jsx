@@ -7,14 +7,23 @@ import NoPage from "./pages/NoPage";
 import HomePage from "./pages/home/HomePage";
 import ManageAccount from "./pages/manageAccount/ManageAccount";
 import MainLayouts from "./layouts/MainLayouts";
-import InfoAccount from "./pages/manageAccount/infoAccount";
+import InfoAccount from "./pages/manageAccount/InfoAccount";
 import Loggout from "./pages/manageAccount/Loggout";
 import ProductDetail from "./pages/productDetail/ProductDetail";
 import Table from "./pages/table";
 import Cart from "./pages/cart/cart";
-// import Xiaomi from './components/homeMenu/Xiaomi';
+import ProductList from "./pages/productList";
+import { useParams } from "react-router-dom";
+import AdminDashboard from "./pages/admin/AdminDashBoard";
+import OrderHistory from "./pages/order/OrderHistory";
+import OrderDetail from "./pages/order/OrderDetail";
 
-export const App = () => {
+// import Xiaomi from './components/homeMenu/Xiaomi';
+const ProductListWrapper = () => {
+  const { brandName } = useParams();
+  return <ProductList brandName={brandName} />;
+};
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -26,9 +35,12 @@ export const App = () => {
           </Route>
           <Route path="/product-detail/:code" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/products/:brandName" element={<ProductListWrapper />} />
+          <Route path="/order-lookup" element={<OrderHistory />} />
+          <Route path="/order-detail/:orderId" element={<OrderDetail />} />
         </Route>
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/login/forgotPassword" element={<ForgotPassword />} />
         <Route path="/signIn" element={<SingIn />} />
         <Route path="*" element={<NoPage />} />

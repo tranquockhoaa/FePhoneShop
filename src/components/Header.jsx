@@ -1,6 +1,6 @@
 import React from "react";
 import "./Header.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import AccountSetting from "../pages/auth/accountSetting";
 
 import { useState, useEffect } from "react";
@@ -46,7 +46,10 @@ const Header = () => {
         </div>
 
         <div className="contact">
-          <p>Gọi mua hàng</p> <br /> <b>0123456789</b>
+          <div className="contact">
+            <p>Gọi mua hàng</p>
+            <b>0123456789</b>
+          </div>
         </div>
 
         <div className="wish-list">Wishlist</div>
@@ -57,10 +60,18 @@ const Header = () => {
           </Link>
         </div>
 
+        {/* Thêm tra cứu đơn hàng */}
+        <div className="order-lookup">
+          <Link to="/order-lookup" className="title">
+            Tra cứu <br /> đơn hàng{" "}
+          </Link>
+        </div>
+
         {!accountInfo ? (
           <div className="header-login-button">
-            <Link to="/login" className="login-link"></Link>
-            <div className="login-status">Đăng nhập</div>
+            <Link to="/login" className="login-link login-status">
+              Đăng nhập
+            </Link>
           </div>
         ) : (
           <AccountSetting />

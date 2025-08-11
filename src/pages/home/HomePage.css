@@ -1,3 +1,4 @@
+/* Reset và font mặc định */
 * {
   margin: 0;
   padding: 0;
@@ -5,11 +6,13 @@
   font-family: Arial, 'Montserrat', sans-serif;
 }
 
-.homepage {
-  width: 100%;
-  border: 1px solid yellow;
+/* Container chính */
+.homepage-container {
+  width: 1200px;
+  margin: 0 auto;
 }
 
+/* Block top home */
 .homepage .block-top-home {
   width: 100%;
   height: 376px;
@@ -18,6 +21,7 @@
   position: relative;
 }
 
+/* Menu bên trái */
 .homepage .block-top-home .wrap-menu {
   width: 20%;
   height: 100%;
@@ -44,7 +48,7 @@
   background-color: rgba(200, 200, 200, 0.2);
 }
 
-.menu .icon img {
+.homepage .block-top-home .wrap-menu .menu .icon img {
   width: 20px;
   height: 24px;
   object-fit: contain;
@@ -53,7 +57,6 @@
 .homepage .block-top-home .wrap-menu .menu .option-list {
   width: 80%;
   height: 100%;
-  border: 1px solid blue;
   display: none;
   position: absolute;
   z-index: 1;
@@ -66,30 +69,38 @@
   display: block;
 }
 
+/* Khu vực store */
 .store .item-store {
   display: flex;
   flex-direction: column;
   height: 90vh;
-  border: 1px solid black;
   margin-top: 2vh;
+  background-color: white;
 }
 
 .store .item-store .title {
-  height: 4.5vh;
-  border: 1px solid blue;
+  height: 5vh;
   margin-bottom: 1rem;
 }
 
 .store .item-store .title .title-name {
   width: 40%;
   height: 100%;
-  border: 1px solid red;
+  border-radius: 8px;
   padding-left: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #E60000;
 }
 
+
+.store .item-store .title .title-name p{
+  font-size:  26px;
+  color: white;
+
+}
+/* Grid sản phẩm */
 .store .product-grid {
   padding: 0 20px;
   display: grid;
@@ -99,14 +110,13 @@
 }
 
 .store .product-grid .item {
-  border: 1px solid rgb(19, 70, 128);
   border-radius: 8px;
+  border: 1px solid #ccc;
   padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 300px; 
-  
+  height: 330px;
 }
 
 .store .product-grid .item .frame_inner {
@@ -117,6 +127,8 @@
   width: 100%;
 }
 
+
+
 .store .product-grid .item .frame_inner .text_small {
   background-color: #FF0000;
   color: white;
@@ -126,31 +138,71 @@
   align-self: flex-start;
 }
 
-.store .product-grid .item .frame_inner .img-product {
+.store .product-grid .item .frame_inner .image-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.store .product-grid .item .frame_inner .image-product a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.store .product-grid .item .frame_inner .image-product .img-product {
   width: 100%;
   height: 160px;
   object-fit: contain;
   border-radius: 8px;
-  display: block;
 }
 
-.store .product-grid .item .frame_inner .login-link {
-  text-decoration: none;
-}
-.store .product-grid .item .frame_inner .name {
-  margin-top: 10px;
+.store .product-grid .item .frame_inner .image-product .name {
+  .name {
+  min-height: 2.8em;   /* Luôn chiếm 2 dòng */
+  max-height: 2.8em;   /* Không vượt quá 2 dòng */
+  line-height: 1.4em;
+  overflow: hidden;
   text-align: center;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 700;
   color: black;
   width: 100%;
-   word-break: break-word;   /* Tự động xuống dòng khi quá dài */
-  white-space: normal;      /* Cho phép xuống dòng */
-  overflow-wrap: anywhere; 
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  border: 1px solid #1976d2;
+  border-radius: 6px;
+  box-sizing: border-box;
+  padding: 2px 6px;
+  background: #f5faff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 }
 
-.homepage .price{
+.store .product-grid .item .frame_inner .image-product > div:not(.name) {
+  font-size: 13px;
+  color: #333;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.store .product-grid .item .frame_inner .image-product .price {
   margin-top: 10px;
   color: #FF0000;
   text-align: center;
+  font-size: 16px;
+}
+
+/* Thông báo khi đang tải hoặc lỗi */
+.store p {
+  text-align: center;
+  font-size: 16px;
+  color: #333;
 }

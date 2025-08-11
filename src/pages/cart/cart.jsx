@@ -1,119 +1,427 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./cart.css";
-const cart = () => {
+import QRCode from "react-qr-code";
+
+const Cart = () => {
+  const [cartDetails, setCartDetails] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  // Thông tin khách hàng
+  const [customerInfo, setCustomerInfo] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    note: "",
+    address: "",
+  });
+
+  // Thêm state cho phương thức thanh toán
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  // State cho QR
+  const [showQR, setShowQR] = useState(false);
+  const [qrValue, setQrValue] = useState("");
+  const [qrSessionId, setQrSessionId] = useState(""); // dùng cho luồng QR chuẩn
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Lấy token từ localStorage
+  const account = JSON.parse(localStorage.getItem("account") || "{}");
+  const token = account.token;
+
+  // Lấy giỏ hàng từ backend
+  const [cartStatus, setCartStatus] = useState("ACTIVE");
+  useEffect(() => {
+    if (!token) return;
+    axios
+      .get("http://localhost:3000/api/v1/cart/my-cart", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const details = res.data.data.cartDetails || [];
+        setCartDetails(details);
+        setTotal(
+          details.reduce(
+            (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
+            0
+          )
+        );
+        setCartStatus(res.data.data.cart?.status || "ACTIVE");
+      });
+  }, [token]);
+
+  // Xử lý tăng/giảm số lượng
+  const handleQuantity = (cartDetailId, delta) => {
+    const item = cartDetails.find(
+      (i) =>
+        i.cartdetailid === cartDetailId ||
+        i.cart_detail_id === cartDetailId ||
+        i.cartDetailId === cartDetailId ||
+        i.id === cartDetailId
+    );
+    if (!item) return;
+    const newQty = item.quantity + delta;
+    if (newQty < 1) return;
+    axios
+      .patch(
+        `http://localhost:3000/api/v1/cart-detail/${cartDetailId}/quantity/${
+          delta > 0 ? "increase" : "decrease"
+        }`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then(() => {
+        // Reload cart
+        return axios.get("http://localhost:3000/api/v1/cart/my-cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      })
+      .then((res) => {
+        const details = res.data.data.cartDetails || [];
+        setCartDetails(details);
+        setTotal(
+          details.reduce(
+            (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
+            0
+          )
+        );
+      });
+  };
+
+  // Xóa sản phẩm khỏi cart
+  const handleDelete = (cartDetailId) => {
+    axios
+      .delete(`http://localhost:3000/api/v1/cart-detail/${cartDetailId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        // Reload cart
+        return axios.get("http://localhost:3000/api/v1/cart/my-cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      })
+      .then((res) => {
+        const details = res.data.data.cartDetails || [];
+        setCartDetails(details);
+        setTotal(
+          details.reduce(
+            (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
+            0
+          )
+        );
+      });
+  };
+
+  // Hàm build url ảnh sản phẩm giống homepage/productlist
+  const buildImageUrl = (item) => {
+    if (item.image) return encodeURI(item.image);
+    if (item.brand_name && item.code && item.color) {
+      return encodeURI(
+        `data/${item.brand_name}/${item.code}/image/${item.color}.jpg`
+      );
+    }
+    return "/image/common/no_image.png";
+  };
+
+  // Luồng chuẩn QR: Gửi yêu cầu tạo QR session (chưa tạo đơn hàng)
+  const handleCreateQR = async (e) => {
+    e.preventDefault();
+    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
+      alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
+      return;
+    }
+    try {
+      // Gửi thông tin tạm thời lên server để tạo QR (API này bạn cần backend hỗ trợ)
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/payment/create-qr-session",
+        {
+          amount: total,
+          customer: customerInfo,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Server trả về qrValue (chuỗi để render QR) và qrSessionId (id để kiểm tra trạng thái)
+      setQrValue(res.data.qrValue);
+      setQrSessionId(res.data.qrSessionId);
+      setShowQR(true);
+    } catch (err) {
+      alert("Không tạo được mã QR!");
+    }
+  };
+
+  // Khi xác nhận đã thanh toán thành công (giả lập bằng nút)
+  const handleConfirmQRPayment = async () => {
+    try {
+      // Gọi API kiểm tra trạng thái thanh toán QR
+      const res = await axios.get(
+        `http://localhost:3000/api/v1/payment/check-qr-session/${qrSessionId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.status === "success" && res.data.paid) {
+        // Đã thanh toán thành công, tạo đơn hàng và payment
+        const orderRes = await axios.post(
+          "http://localhost:3000/api/v1/order/checkout",
+          {
+            name: customerInfo.name,
+            phone: customerInfo.phone,
+            email: customerInfo.email,
+            note: customerInfo.note,
+            address: customerInfo.address,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const orderId = orderRes.data?.data?.order_id;
+        // Tạo payment với trạng thái SUCCESS
+        await axios.post(
+          "http://localhost:3000/api/v1/payment",
+          {
+            order_id: orderId,
+            amount: total,
+            payment_method: "QR",
+            payment_status: "SUCCESS",
+            transaction_code: res.data.transaction_code, // nếu có
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        localStorage.removeItem("cart");
+        alert("Đặt hàng và thanh toán thành công!");
+        window.location.href = "/";
+      } else {
+        alert("Chưa nhận được thanh toán. Vui lòng thử lại sau!");
+      }
+    } catch (err) {
+      alert("Lỗi kiểm tra trạng thái thanh toán!");
+    }
+  };
+
+  // Đặt hàng và thanh toán COD
+  const handleOrder = async (e) => {
+    e.preventDefault();
+    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
+      alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
+      return;
+    }
+    try {
+      // Đặt hàng
+      const orderRes = await axios.post(
+        "http://localhost:3000/api/v1/order/checkout",
+        {
+          name: customerInfo.name,
+          phone: customerInfo.phone,
+          email: customerInfo.email,
+          note: customerInfo.note,
+          address: customerInfo.address,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const orderData = orderRes.data?.data;
+      if (!orderData || !orderData.order_id) {
+        alert("Không lấy được mã đơn hàng từ server!");
+        return;
+      }
+      const orderId = orderData.order_id;
+
+      // Tạo payment
+      await axios.post(
+        "http://localhost:3000/api/v1/payment",
+        {
+          order_id: orderId,
+          amount: total,
+          payment_method: paymentMethod,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      localStorage.removeItem("cart");
+      alert("Đặt hàng và thanh toán thành công!");
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Lỗi:", err);
+      alert(
+        "Đặt hàng/thanh toán thất bại!\n" +
+          (err?.response?.data?.message || err.message)
+      );
+    }
+  };
+
   return (
     <div className="cart-container">
-      {/* <div className="empty-cart">
-        <h2 className="text">Chưa có sản phẩm nào trong giỏ hàng</h2>
-        <img
-          className="empty-cart-image"
-          src="/image/common/empty_cart.png"
-          alt="image"
-        />
-      </div> */}
       <div className="cart-detail">
         <div className="top-detail">
-          <div className="left">{"Mua thêm sản phẩm khác"}</div>
+          <div
+            className="left"
+            onClick={() => (window.location.href = "/")}
+            style={{ cursor: "pointer" }}
+          >
+            Mua thêm sản phẩm khác
+          </div>
           <div className="right">GIỎ HÀNG CỦA BẠN</div>
         </div>
         <div className="table-wrap">
-          <div class="cart-item">
-            <div class="cart-left">
+          {cartDetails.length === 0 || cartStatus === "ORDERED" ? (
+            <div className="empty-cart">
+              <h2 className="text">Chưa có sản phẩm nào trong giỏ hàng</h2>
               <img
-                src="/data/Realme/Realme%20C65%205G/image/%C4%90en.jpg"
-                alt="Product Image"
-                className="product-img"
+                className="empty-cart-image"
+                src="/image/common/empty_cart.png"
+                alt="empty"
               />
-              <div class="cart-info">
-                <h4>iQOO Neo9S Pro Plus 5G</h4>
-                <p>12GB / 256GB</p>
-                <div className="del-item">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="14px"
-                    viewBox="-40 0 427 427.00131"
-                    width="14px"
-                  >
-                    <path d="m232.398438 154.703125c-5.523438 0-10 4.476563-10 10v189c0 5.519531 4.476562 10 10 10 5.523437 0 10-4.480469 10-10v-189c0-5.523437-4.476563-10-10-10zm0 0"></path>
-                    <path d="m114.398438 154.703125c-5.523438 0-10 4.476563-10 10v189c0 5.519531 4.476562 10 10 10 5.523437 0 10-4.480469 10-10v-189c0-5.523437-4.476563-10-10-10zm0 0"></path>
-                    <path d="m28.398438 127.121094v246.378906c0 14.5625 5.339843 28.238281 14.667968 38.050781 9.285156 9.839844 22.207032 15.425781 35.730469 15.449219h189.203125c13.527344-.023438 26.449219-5.609375 35.730469-15.449219 9.328125-9.8125 14.667969-23.488281 14.667969-38.050781v-246.378906c18.542968-4.921875 30.558593-22.835938 28.078124-41.863282-2.484374-19.023437-18.691406-33.253906-37.878906-33.257812h-51.199218v-12.5c.058593-10.511719-4.097657-20.605469-11.539063-28.03125-7.441406-7.421875-17.550781-11.5546875-28.0625-11.46875h-88.796875c-10.511719-.0859375-20.621094 4.046875-28.0625 11.46875-7.441406 7.425781-11.597656 17.519531-11.539062 28.03125v12.5h-51.199219c-19.1875.003906-35.394531 14.234375-37.878907 33.257812-2.480468 19.027344 9.535157 36.941407 28.078126 41.863282zm239.601562 279.878906h-189.203125c-17.097656 0-30.398437-14.6875-30.398437-33.5v-245.5h250v245.5c0 18.8125-13.300782 33.5-30.398438 33.5zm-158.601562-367.5c-.066407-5.207031 1.980468-10.21875 5.675781-13.894531 3.691406-3.675781 8.714843-5.695313 13.925781-5.605469h88.796875c5.210937-.089844 10.234375 1.929688 13.925781 5.605469 3.695313 3.671875 5.742188 8.6875 5.675782 13.894531v12.5h-128zm-71.199219 32.5h270.398437c9.941406 0 18 8.058594 18 18s-8.058594 18-18 18h-270.398437c-9.941407 0-18-8.058594-18-18s8.058593-18 18-18zm0 0"></path>
-                    <path d="m173.398438 154.703125c-5.523438 0-10 4.476563-10 10v189c0 5.519531 4.476562 10 10 10 5.523437 0 10-4.480469 10-10v-189c0-5.523437-4.476563-10-10-10zm0 0"></path>
-                  </svg>
-                  Xóa
+            </div>
+          ) : (
+            cartDetails.map((item) => {
+              const cartDetailId =
+                item.cartdetailid ||
+                item.cart_detail_id ||
+                item.cartDetailId ||
+                item.id;
+              return (
+                <div className="cart-item" key={cartDetailId}>
+                  <div className="cart-left">
+                    <img
+                      src={buildImageUrl(item)}
+                      alt={item.name}
+                      className="product-img"
+                    />
+                    <div className="cart-info">
+                      <h4>{item.name}</h4>
+                      <p>
+                        {item.ram_size || item.ram} /{" "}
+                        {item.storage_size || item.storage} / {item.color}
+                      </p>
+                      <div
+                        className="del-item"
+                        onClick={() => handleDelete(cartDetailId)}
+                      >
+                        Xóa
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cart-right">
+                    <div className="cart-price">
+                      {item.unit_price?.toLocaleString()}₫
+                    </div>
+                    <div className="quantity-control">
+                      <button onClick={() => handleQuantity(cartDetailId, -1)}>
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => handleQuantity(cartDetailId, 1)}>
+                        +
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="cart-right">
-              <div class="cart-price">7.890.000₫</div>
-              <div class="quantity-control">
-                <button>-</button>
-                <span>1</span>
-                <button>+</button>
-              </div>
-            </div>
+              );
+            })
+          )}
+        </div>
+        {cartDetails.length > 0 && cartStatus !== "ORDERED" && (
+          <div className="total-cart">
+            <font>Thanh toán:</font>{" "}
+            <span className="total-price">{total.toLocaleString()}₫</span>
           </div>
-        </div>
-
-        <div className="total-cart">
-          <font>Thanh toán:</font>{" "}
-          <span className="total-price">12.040.000₫</span>
-        </div>
-
-        <div className="form-info-order">
-          <div className="box-title">THÔNG TIN KHÁCH HÀNG</div>
-          <div className="box-input">
-            <div className="input-text-div input-text-50">
+        )}
+        {/* Form đặt hàng */}
+        {cartDetails.length > 0 && !showQR && (
+          <form
+            className="checkout-form"
+            onSubmit={paymentMethod === "QR" ? handleCreateQR : handleOrder}
+          >
+            <div className="checkout-title">THÔNG TIN KHÁCH HÀNG</div>
+            <div className="checkout-row">
               <input
                 type="text"
-                placeholder="Họ và tên *"
-                id="name-user"
+                name="name"
+                placeholder="Họ tên *"
+                value={customerInfo.name}
+                onChange={handleInputChange}
                 required
               />
-            </div>
-            <div className="input-text-div input-text-50">
-              {" "}
               <input
                 type="text"
+                name="phone"
                 placeholder="Điện thoại *"
-                id="telephone-number"
+                value={customerInfo.phone}
+                onChange={handleInputChange}
                 required
               />
             </div>
-            <div className="input-text-div input-text">
+            <div className="checkout-row">
               <input
-                type="email *"
-                placeholder="Email"
-                id="email-user"
+                type="email"
+                name="email"
+                placeholder="Email *"
+                value={customerInfo.email}
+                onChange={handleInputChange}
                 required
               />
             </div>
-            <div className="input-text-div input-text">
+            <div className="checkout-row">
               <input
                 type="text"
+                name="note"
                 placeholder="Lưu ý hoặc yêu cầu trước khi giao hàng"
+                value={customerInfo.note}
+                onChange={handleInputChange}
               />
             </div>
-            <div className="input-text-div input-text">
+            <div className="checkout-row">
               <textarea
-                name=""
-                placeholder="Địa chỉ nhận hàng"
-                id="address-user"
-                type="text"
-                rows="3"
-              ></textarea>
+                name="address"
+                placeholder="Địa chỉ nhận hàng *"
+                value={customerInfo.address}
+                onChange={handleInputChange}
+                required
+                rows={2}
+              />
             </div>
+            {/* Chọn phương thức thanh toán */}
+            <div className="checkout-row">
+              <label>
+                <input
+                  type="radio"
+                  name="payment_method"
+                  value="COD"
+                  checked={paymentMethod === "COD"}
+                  onChange={() => setPaymentMethod("COD")}
+                />
+                Thanh toán khi nhận hàng (COD)
+              </label>
+              <label style={{ marginLeft: 16 }}>
+                <input
+                  type="radio"
+                  name="payment_method"
+                  value="QR"
+                  checked={paymentMethod === "QR"}
+                  onChange={() => setPaymentMethod("QR")}
+                />
+                Thanh toán QR
+              </label>
+            </div>
+            <button type="submit" className="checkout-btn">
+              ĐẶT HÀNG
+            </button>
+          </form>
+        )}
+        {/* Hiển thị QR nếu chọn QR */}
+        {showQR && (
+          <div className="qr-modal">
+            <h3>Quét mã QR để thanh toán</h3>
+            <QRCode value={qrValue} size={256} />
+            <div style={{ margin: "16px 0" }}>{qrValue}</div>
+            <button onClick={handleConfirmQRPayment}>
+              Tôi đã thanh toán xong
+            </button>
+            <button onClick={() => window.location.reload()}>Hủy</button>
           </div>
-        </div>
-
-        <div className="box-submit-btn">
-          <div className="btn-submit">
-            <div>ĐẶT HÀNG</div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default cart;
+export default Cart;
