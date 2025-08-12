@@ -1,0 +1,30 @@
+{
+  "Thẻ_SIM": "2 SIM (Nano-SIM)",
+  "Kiểu_thiết_kế": "Mặt lưng kính, khung viền nhựa",
+  "Màn_hình": "6.55 inches, AMOLED, 68B colors, 120Hz, Dolby Vision, HDR10+, 950 nits (peak)",
+  "Độ_phân_giải": "1080 x 2400 pixels, 20:9 ratio",
+  "CPU": "Qualcomm SM7325 Snapdragon 778G 5G (6 nm)",
+  "RAM": "6GB/8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB",
+  "Camera_sau": [
+    "108 MP, f/1.9, 26mm (wide), 1/1.52\", 0.7µm, PDAF",
+    "8 MP, f/2.2, 120˚ (ultrawide), 1/4.0\", 1.12µm",
+    "2 MP, f/2.4, (macro)"
+  ],
+  "Camera_trước": "32 MP, f/2.5, (wide), 1/2.8\", 0.8µm, AF",
+  "Jack_3.5mm_Loa": "không / loa kép",
+  "Pin": "Li-Po 4300 mAh, sạc nhanh 67W",
+  "Màu_sắc": ["Đen", "xanh", "hồng"],
+  "GPU": "Adreno 642L",
+  "Ngày_ra_mắt": "09/07/2022",
+  "Hệ_điều_hành": "Android 12, MIUI 13",
+  "Mạng_Băng_tần": "GSM/HSPA/LTE/5G",
+  "Kích_thước": "159.3 x 73.7 x 7.3 mm",
+  "Trọng_lượng": "173 g",
+  "Bluetooth": "5.2, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 2.2",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, Wi-Fi Direct",
+  "NFC": "Có",
+  "Cổng_kết_nối": "USB Type-C 2.0, OTG"
+}

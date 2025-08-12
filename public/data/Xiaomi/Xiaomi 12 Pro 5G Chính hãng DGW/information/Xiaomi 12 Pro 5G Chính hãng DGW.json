@@ -1,0 +1,30 @@
+{
+  "Thẻ_SIM": "2 sim",
+  "Kiểu_thiết_kế": "mặt lưng kính, khung viền nhôm",
+  "Màn_hình": "6.73 inches, LTPO AMOLED, 1B colors, 120Hz, Dolby Vision, HDR10+, 1000 nits (HBM), 1500 nits",
+  "Độ_phân_giải": "1440 x 3200 pixels, 20:9 ratio",
+  "CPU": "Qualcomm SM8450 Snapdragon 8 Gen 1 (4 nm)",
+  "RAM": "8GB/12GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB",
+  "Camera_sau": [
+    "50 MP, f/1.9, 24mm (wide), 1/1.28\", 1.22µm, Dual Pixel PDAF, OIS",
+    "50 MP, f/1.9, 48mm (telephoto), PDAF, 2x optical zoom",
+    "50 MP, f/2.2, 115˚ (ultrawide)"
+  ],
+  "Camera_trước": "32 MP, f/2.5, 26mm (wide), 0.7µm",
+  "Jack_3.5mm_Loa": "không/ stereo speakers (4 speakers)",
+  "Pin": "Li-Po 4600 mAh, sạc nhanh 120W",
+  "Màu_sắc": ["Gray", "Blue", "Purple", "Green"],
+  "GPU": "Adreno 730",
+  "Ngày_ra_mắt": "28/12/2021",
+  "Hệ_điều_hành": "Android 12, MIUI 13",
+  "Mạng_Băng_tần": "2G/3G/4G/5G",
+  "Kích_thước": "163.6 x 74.6 x 8.2 mm",
+  "Trọng_lượng": "204 g or 205 g",
+  "Bluetooth": "5.2, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 3.1",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6 or 6e",
+  "NFC": "có",
+  "Cổng_kết_nối": "USB Type-C 2.0, OTG"
+}

@@ -1,0 +1,30 @@
+{
+  "Thẻ_SIM": "2 SIM nano",
+  "Màn_hình": "6.6 inches, 104.9 cm2, IPS LCD, 90Hz, 400 nits (typ)",
+  "Độ_phân_giải": "1080 x 2408 pixels, 20:9 ratio",
+  "CPU": "Mediatek MT6833 Dimensity 700 (7 nm)",
+  "RAM": "8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB / 256GB",
+  "Camera_sau": [
+    "50 MP, f/1.8, (wide), 1/2.76\", 0.64µm, PDAF",
+    "Unspecified MP, f/2.8, 46mm (telephoto)",
+    "2 MP, f/2.4, (macro)"
+  ],
+  "Camera_trước": "8 MP, f/2.0, 27mm (wide)",
+  "Jack_3.5mm_Loa": "Có",
+  "Pin": "Li-Po 5000 mAh, Sạc nhanh 33W",
+  "Màu_sắc": ["BLACK", "GOLD"],
+  "GPU": "Mali-G57 MC2",
+  "Ngày_ra_mắt": "11/11/2022",
+  "Hệ_điều_hành": "Android 12, Realme UI 3.0",
+  "Loại_sản_phẩm": "Mới Nguyên Seal",
+  "Mạng_Băng_tần": "GSM / HSPA / LTE",
+  "Kích_thước": "164.4 x 75.1 x 8.1 mm",
+  "Trọng_lượng": "191 g",
+  "Bluetooth": "5.3, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 2.2",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band",
+  "NFC": "Không",
+  "Cổng_kết_nối": "USB Type-C 2.0, OTG"
+}

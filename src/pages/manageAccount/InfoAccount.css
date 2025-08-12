@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+.form-group {
+  width: 600px;
+  height: 100%;
+
+  border: 1px solid blue;
+}
+
+.form-group .avata-name {
+  width: 100%;
+  height: 40px;
+  margin-top: 60px;
+  margin-bottom: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-group .field {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.form-group .field .name-item {
+  width: 100%;
+  height: 40px;
+
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.form-group .field .name-item:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid red;
+}
+
+.form-group .field .name-item::placeholder {
+  font-size: 14px;
+}

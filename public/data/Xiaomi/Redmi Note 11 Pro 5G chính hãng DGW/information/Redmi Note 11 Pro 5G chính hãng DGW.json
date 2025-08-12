@@ -1,0 +1,30 @@
+{
+  "Thẻ_SIM": "2 sim",
+  "Kiểu_thiết_kế": "mặt lưng kính, khung viền nhựa",
+  "Màn_hình": "6.67 inches, 107.4 cm2 , Super AMOLED, 120Hz, 700 nits, 1200 nits (peak)",
+  "Độ_phân_giải": "1080 x 2400 pixels, 20:9 ratio",
+  "CPU": "Qualcomm SM6375 Snapdragon 695 5G (6 nm)",
+  "RAM": "8GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB",
+  "Camera_sau": [
+    "108 MP, f/1.9, 26mm (wide), 1/1.52\", 0.7µm, PDAF",
+    "8 MP, f/2.2, 118˚ (ultrawide)",
+    "2 MP, f/2.4, (macro)"
+  ],
+  "Camera_trước": "16 MP, f/2.5, (wide), 1/3.06\" 1.0µm",
+  "Jack_3.5mm_Loa": "có/ loa kép stereo",
+  "Pin": "Li-Po 5000 mAh, sạc 67W",
+  "Màu_sắc": ["Graphite Gray", "Polar White", "Atlantic Blue"],
+  "GPU": "Adreno 619",
+  "Ngày_ra_mắt": "26/11/2022",
+  "Hệ_điều_hành": "Android 11, MIUI 13",
+  "Mạng_Băng_tần": "GSM / HSPA / LTE / 5G",
+  "Kích_thước": "164.2 x 76.1 x 8.1 mm",
+  "Trọng_lượng": "202 g",
+  "Bluetooth": "5.1, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 2.2",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band, Wi-Fi Direct",
+  "NFC": "có",
+  "Cổng_kết_nối": "USB Type-C 2.0, OTG"
+}

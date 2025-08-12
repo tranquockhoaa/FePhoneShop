@@ -1,0 +1,38 @@
+{
+  "thong_tin_dien_thoai": {
+    "the_sim": "2 SIM, 5G",
+    "kieu_thiet_ke": "Thanh cảm ứng",
+    "man_hinh": {
+      "kich_thuoc": "6.79 inch",
+      "cong_nghe": "IPS LCD",
+      "toc_do_quet": "90Hz",
+      "do_sang": "550 nits",
+      "do_phan_giai": "1080 x 2460 pixels (~396 ppi density)"
+    },
+    "cpu": "Qualcomm SM4450 Snapdragon 4 Gen 2 (4 nm)",
+    "ram": ["4GB", "6GB", "8GB"],
+    "bo_nho": ["128GB", "256GB"],
+    "camera_sau": ["50 MP", "2 MP"],
+    "camera_truoc": "8 MP",
+    "jack_3_5mm": true,
+    "loa": "Loa đơn",
+    "pin": {
+      "loai": "Li-Po",
+      "dung_luong": "5000 mAh",
+      "sac_nhanh": "18W"
+    },
+    "mau_sac": ["Jade Black", "Pastel Blue", "Moonstone Silver"],
+    "gpu": "Adreno 613",
+    "ngay_ra_mat": "01/08/2023",
+    "he_dieu_hanh": "Android 13, upgradable to Android 14, HyperOS",
+    "loai_san_pham": "Mới nguyên seal",
+    "mang_bang_tan": "GSM / HSPA / LTE / 5G",
+    "kich_thuoc": "168.6 x 76.3 x 8.2 mm (6.64 x 3.00 x 0.32 in)",
+    "trong_luong": "199 g (7.02 oz)",
+    "bluetooth": "5.3, A2DP, LE",
+    "chuan_bo_nho": "UFS 2.2",
+    "wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band",
+    "nfc": true,
+    "cong_ket_noi": "USB Type-C"
+  }
+}
