@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./productList.css";
-import ProductItem from "../components/productItem/product-item";
+import ProductItem from "../components/product-item/product-item";
 
 const PAGE_SIZE = 20;
 

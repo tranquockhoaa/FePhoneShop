@@ -1,4 +1,4 @@
-.item {
+.product-item {
   border-radius: 8px;
   border: 1px solid #ccc;
   padding: 10px;
@@ -7,14 +7,14 @@
   align-items: center;
   height: 330px;
 }
-.item .frame_inner {
+.product-item .frame_inner {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   width: 100%;
 }
-.item .frame_inner .text_small {
+.product-item .frame_inner .text_small {
   background-color: #ff0000;
   color: white;
   font-size: 12px;
@@ -22,13 +22,13 @@
   padding: 2px 6px;
   align-self: flex-start;
 }
-.item .frame_inner .image-product {
+.product-item .frame_inner .image-product {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-.item .frame_inner .image-product a {
+.product-item .frame_inner .image-product a {
   text-decoration: none;
   color: inherit;
   width: 100%;
@@ -36,13 +36,13 @@
   flex-direction: column;
   align-items: center;
 }
-.item .frame_inner .image-product .img-product {
+.product-item .frame_inner .image-product .img-product {
   width: 100%;
   height: 160px;
   object-fit: contain;
   border-radius: 8px;
 }
-.item .frame_inner .image-product .name {
+.product-item .frame_inner .image-product .name {
   .name {
     min-height: 2.8em; /* Luôn chiếm 2 dòng */
     max-height: 2.8em; /* Không vượt quá 2 dòng */
@@ -66,13 +66,13 @@
     justify-content: center;
   }
 }
-.item .frame_inner .image-product > div:not(.name) {
+.product-item .frame_inner .image-product > div:not(.name) {
   font-size: 13px;
   color: #333;
   text-align: center;
   margin-top: 8px;
 }
-.item .frame_inner .image-product .price {
+.product-item .frame_inner .image-product .price {
   margin-top: 10px;
   color: #ff0000;
   text-align: center;

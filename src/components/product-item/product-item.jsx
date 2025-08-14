@@ -12,7 +12,7 @@ export default function ProductItem({
   productPrice,
 }) {
   return (
-    <div className="item">
+    <div className="product-item">
       <div className="frame_inner">
         <div className="text_small">Mới nguyên SEAL</div>
         <div className="image-product">

@@ -16,7 +16,7 @@ import {
   SamsungSearch,
   XiaomiSearch,
 } from "../../components/homeMenu/HoverMenu";
-import ProductItem from "../../components/productItem/product-item";
+import ProductItem from "../../components/product-item/product-item";
 
 const brands = [
   {
