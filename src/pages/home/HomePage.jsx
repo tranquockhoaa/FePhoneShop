@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
+import ProductItem from "../../components/product-item/product-item";
 import "./HomePage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -53,7 +53,7 @@ const brands = [
     title: "IPHONE",
   },
 
-  { name: "Dịch vụ", logo: logoInfo, component: <Information /> },
+  { name: "Dịch vụ", logo: logoInfo },
 ];
 
 const HomePage = () => {
