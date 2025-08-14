@@ -11,6 +11,7 @@ body {
   font-family: "Arial", sans-serif;
   position: relative;
   margin-top: auto; /* Đẩy footer xuống dưới cùng */
+  border-radius: 15px;
 }
 
 .footer-container {

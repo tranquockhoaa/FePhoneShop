@@ -177,9 +177,9 @@
   border-radius: 8px;
   padding: 8px 8px;
   text-decoration: none;
-  box-shadow: none; /* Bỏ bóng */
+  box-shadow: none;
   background: none;
-  border: none; /* Bỏ viền */
+  border: none;
   font-size: 1rem;
   transition: background 0.2s, color 0.2s;
   outline: none;
