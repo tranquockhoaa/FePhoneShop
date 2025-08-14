@@ -9,7 +9,8 @@ import {
   FaEnvelope,
   FaClock,
 } from "react-icons/fa";
-import "./Footer.css";
+import "./footer.css";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -44,10 +45,10 @@ const Footer = () => {
               <FaMapMarkerAlt /> 123 Đường ABC, Quận XYZ, TP.HCM
             </li>
             <li>
-              <FaPhone /> 0123 456 789
+              <FaPhone /> 0345697125
             </li>
             <li>
-              <FaEnvelope /> info@dienthoai.vn
+              <FaEnvelope /> buynewphone.vn
             </li>
             <li>
               <FaClock /> 8:00 - 22:00 (T2 - CN)
@@ -56,43 +57,17 @@ const Footer = () => {
         </div>
 
         <div className="footer-section">
-          <h3 className="footer-title">Hỗ trợ</h3>
+          <h3 className="footer-title">Dịch vụ</h3>
           <ul className="footer-links">
             <li>
-              <a href="/">Trang chủ</a>
+              {/* <a href="/chinh-sach-bao-hanh">Chính sách bảo hành</a> */}
+              <Link to={"/chinh-sach-bao-hanh"}>Chính sách bảo hành</Link>
             </li>
             <li>
-              <a href="/">Sản phẩm</a>
+              <a href="/chinh-sach-van-chuyen">Chính sách vận chuyển</a>
             </li>
             <li>
-              <a href="/">Giới thiệu</a>
-            </li>
-            <li>
-              <a href="/">Tin tức</a>
-            </li>
-            <li>
-              <a href="/">Liên hệ</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3 className="footer-title">Chính sách</h3>
-          <ul className="footer-links">
-            <li>
-              <a href="/">Chính sách bảo hành</a>
-            </li>
-            <li>
-              <a href="/">Chính sách đổi trả</a>
-            </li>
-            <li>
-              <a href="/">Chính sách vận chuyển</a>
-            </li>
-            <li>
-              <a href="/">Chính sách thanh toán</a>
-            </li>
-            <li>
-              <a href="/">Bảo mật thông tin</a>
+              <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
             </li>
           </ul>
         </div>

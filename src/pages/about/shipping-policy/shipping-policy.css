@@ -1,0 +1,32 @@
+.shipping-policy {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #333;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.shipping-policy h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.shipping-policy h2 {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.shipping-policy ul,
+.shipping-policy ol {
+  padding-left: 20px;
+}
+
+.shipping-policy li {
+  margin-bottom: 6px;
+}
