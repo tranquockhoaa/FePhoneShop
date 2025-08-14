@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./productItem.css";
+import "./product-item.css";
 
 export default function ProductItem({
   productCode,
