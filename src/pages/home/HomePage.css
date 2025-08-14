@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, 'Montserrat', sans-serif;
+  font-family: Arial, "Montserrat", sans-serif;
 }
 
 /* Container chính */
@@ -91,14 +91,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #E60000;
+  background-color: #e60000;
 }
 
-
-.store .item-store .title .title-name p{
-  font-size:  26px;
+.store .item-store .title .title-name p {
+  font-size: 26px;
   color: white;
-
 }
 /* Grid sản phẩm */
 .store .product-grid {
@@ -107,97 +105,6 @@
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 10px;
-}
-
-.store .product-grid .item {
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 330px;
-}
-
-.store .product-grid .item .frame_inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
-
-
-.store .product-grid .item .frame_inner .text_small {
-  background-color: #FF0000;
-  color: white;
-  font-size: 12px;
-  border-radius: 12px;
-  padding: 2px 6px;
-  align-self: flex-start;
-}
-
-.store .product-grid .item .frame_inner .image-product {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.store .product-grid .item .frame_inner .image-product a {
-  text-decoration: none;
-  color: inherit;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.store .product-grid .item .frame_inner .image-product .img-product {
-  width: 100%;
-  height: 160px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.store .product-grid .item .frame_inner .image-product .name {
-  .name {
-  min-height: 2.8em;   /* Luôn chiếm 2 dòng */
-  max-height: 2.8em;   /* Không vượt quá 2 dòng */
-  line-height: 1.4em;
-  overflow: hidden;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
-  color: black;
-  width: 100%;
-  word-break: break-word;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  border: 1px solid #1976d2;
-  border-radius: 6px;
-  box-sizing: border-box;
-  padding: 2px 6px;
-  background: #f5faff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-}
-
-.store .product-grid .item .frame_inner .image-product > div:not(.name) {
-  font-size: 13px;
-  color: #333;
-  text-align: center;
-  margin-top: 8px;
-}
-
-.store .product-grid .item .frame_inner .image-product .price {
-  margin-top: 10px;
-  color: #FF0000;
-  text-align: center;
-  font-size: 16px;
 }
 
 /* Thông báo khi đang tải hoặc lỗi */

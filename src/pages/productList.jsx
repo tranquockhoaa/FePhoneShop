@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./productList.css";
+import ProductItem from "../components/productItem/productItem";
 
 const PAGE_SIZE = 20;
 
@@ -83,33 +84,19 @@ const ProductList = ({ brandName }) => {
             Giá thấp đến cao
           </button>
         </div>
+        {/* <ProductItem /> */}
         <div className="product-list-grid-homepage">
           {products.map((product) => (
-            <div
-              className="item"
+            <ProductItem
               key={product.product_id}
-              onClick={() => navigate(`/product-detail/${product.code}`)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="frame_inner">
-                <img
-                  src={encodeURI(
-                    `/data/${product.brand_name}/${product.code}/image/${product.color_name}.jpg`
-                  )}
-                  alt={product.name}
-                  className="img-product"
-                  onError={(e) => (e.target.style.display = "none")}
-                />
-                <div className="name">{product.name}</div>
-                <div style={{ fontSize: 13, color: "#333" }}>
-                  RAM: {product.ram_size} | Storage: {product.storage_size}
-                </div>
-                <div style={{ fontSize: 13, color: "#333" }}>
-                  Color: {product.color_name}
-                </div>
-                <p className="price">{product.price?.toLocaleString()} VND</p>
-              </div>
-            </div>
+              productCode={product.code}
+              brandName={product.brand_name}
+              productColorName={product.color_name}
+              productName={product.name}
+              productRamSize={product.ram_size}
+              productStorageSize={product.storage_size}
+              productPrice={product.price}
+            />
           ))}
         </div>
         <div className="pagination">

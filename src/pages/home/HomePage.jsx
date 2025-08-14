@@ -16,6 +16,7 @@ import {
   SamsungSearch,
   XiaomiSearch,
 } from "../../components/homeMenu/HoverMenu";
+import ProductItem from "../../components/productItem/productItem";
 
 const brands = [
   {
@@ -44,7 +45,7 @@ const brands = [
     component: <IphoneSearch />,
   },
 
-  { name: "Tin Tức", logo: logoInfo, component: <Information /> },
+  { name: "Dịch vụ", logo: logoInfo, component: <Information /> },
 ];
 
 const HomePage = () => {
@@ -58,7 +59,7 @@ const HomePage = () => {
         const brandsWithProducts = [...brands];
         for (let i = 0; i < brandsWithProducts.length; i++) {
           const brand = brandsWithProducts[i];
-          if (brand.name === "Tin Tức") continue;
+          if (brand.name === "Dịch vụ") continue;
           try {
             const response = await axios.get(
               `http://localhost:3000/api/v1/products/latest?brandName=${brand.name}`
@@ -102,8 +103,8 @@ const HomePage = () => {
                 <span className="icon">
                   <img src={brand.logo} alt={brand.name} />
                 </span>
-                {/* Nếu là Tin Tức thì không link */}
-                {brand.name !== "Tin Tức" ? (
+                {/* Nếu là Dịch vụ thì không link */}
+                {brand.name !== "Dịch vụ" ? (
                   <Link
                     to={`/products/${brand.name}`}
                     style={{ textDecoration: "none", color: "inherit" }}
@@ -123,7 +124,7 @@ const HomePage = () => {
             <p>Đang tải dữ liệu sản phẩm...</p>
           ) : fetchCompleted ? (
             updatedBrands.map((brand, index) =>
-              brand.name === "Tin Tức" ? null : (
+              brand.name === "Dịch vụ" ? null : (
                 <div className="item-store" key={index}>
                   <div className="title">
                     <h2 className="title-name">
@@ -133,31 +134,16 @@ const HomePage = () => {
                   <div className="product-grid">
                     {brand.data?.data?.length > 0 ? (
                       brand.data.data.map((product, idx) => (
-                        <div className="item" key={idx}>
-                          <div className="frame_inner">
-                            <div className="text_small">Mới nguyên SEAL</div>
-                            <div className="image-product">
-                              <Link to={`/product-detail/${product.code}`}>
-                                <img
-                                  src={encodeURI(
-                                    `data/${brand.name}/${product.code}/image/${product.color_name}.jpg`
-                                  )}
-                                  alt="image-review"
-                                  className="img-product"
-                                />
-                                <div className="name">{product.name}</div>
-                              </Link>
-                              <div>
-                                RAM: {product.ram_size} | Storage:{" "}
-                                {product.storage_size}
-                              </div>
-                              <div>Color: {product.color_name}</div>
-                              <p className="price">
-                                {product.price.toLocaleString()}₫
-                              </p>
-                            </div>
-                          </div>
-                        </div>
+                        <ProductItem
+                          productCode={product.code}
+                          brandName={brand.name}
+                          productColorName={product.color_name}
+                          productName={product.name}
+                          productRamSize={product.ram_size}
+                          productStorageSize={product.storage_size}
+                          productPrice={product.price}
+                          key={idx}
+                        />
                       ))
                     ) : (
                       <p>Không có sản phẩm nào.</p>
