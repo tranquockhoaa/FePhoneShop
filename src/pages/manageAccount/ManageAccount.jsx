@@ -1,5 +1,5 @@
 import "./ManageAccount.css";
-import Header from "../../components/Header";
+import Header from "../../components/header/Header";
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Loggout from "./Loggout";

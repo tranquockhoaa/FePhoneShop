@@ -16,23 +16,24 @@
 .homepage .block-top-home {
   width: 100%;
   height: 376px;
-  border: 1px solid black;
   display: flex;
   position: relative;
+  gap: 10px;
 }
 
 /* Menu bên trái */
 .homepage .block-top-home .wrap-menu {
   width: 20%;
   height: 100%;
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
+  gap: 1px;
 }
 
 .homepage .block-top-home .wrap-menu .menu {
   height: 12.5%;
   width: 100%;
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -45,7 +46,7 @@
 }
 
 .homepage .block-top-home .wrap-menu .menu:hover {
-  background-color: rgba(200, 200, 200, 0.2);
+  background: #42a5f5;
 }
 
 .homepage .block-top-home .wrap-menu .menu .icon img {
@@ -112,4 +113,34 @@
   text-align: center;
   font-size: 16px;
   color: #333;
+}
+
+.banner {
+  width: 80%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #444;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
