@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
 import Header from "../../components/header/Header";
 import TableInfor from "./TableInfor";
 import "./ProductDetail.css";
 import js from "@eslint/js";
+
 
 const ProductDetail = () => {
   const { code } = useParams();
