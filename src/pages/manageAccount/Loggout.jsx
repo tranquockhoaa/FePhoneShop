@@ -1,31 +1,40 @@
-import React from 'react';
-import './Loggout.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import "./Loggout.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Loggout = ({ clickLoggoutPopup }) => {
   const navigate = useNavigate();
-  const accountInfo = JSON.parse(localStorage.getItem('account'));
 
   const onLoggout = async () => {
     try {
-      const res = await axios.post(
-        'http://127.0.0.1:3000/api/v1/auth/logout',
+      // 1. Lấy token từ localStorage (kiểm tra tồn tại)
+      const accountInfo = JSON.parse(localStorage.getItem("account"));
+      if (!accountInfo || !accountInfo.token) {
+        throw new Error("No account info found");
+      }
+
+      // 2. Gọi API logout
+      await axios.post(
+        "http://127.0.0.1:3000/api/v1/auth/logout",
         {},
         {
           headers: {
             Authorization: `Bearer ${accountInfo.token}`,
           },
-        },
+        }
       );
 
-      console.log(res.data.message);
-      localStorage.removeItem('account');
-      clickLoggoutPopup();
-      window.dispatchEvent(new Event('accountChange'));
-      navigate('/');
+      // 3. Xóa dữ liệu localStorage và chuyển hướng
+      localStorage.removeItem("account");
+      window.dispatchEvent(new Event("storage")); // Kích hoạt sự kiện để các component khác biết
+      navigate("/");
+      clickLoggoutPopup(); // Đóng popup
     } catch (error) {
-      console.error('Logout failed:', error.response?.data || error.message);
+      console.error("Logout failed:", error);
+      // Xóa localStorage ngay cả khi API fail (đảm bảo UX)
+      localStorage.removeItem("account");
+      navigate("/");
     }
   };
 

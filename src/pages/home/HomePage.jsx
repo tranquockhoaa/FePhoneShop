@@ -7,7 +7,6 @@ import xiaomiLogo from "../../assets/iconBrand/milogo_1592402136_1592534441.png"
 import logoRealme from "../../assets/iconBrand/apple_watch_menu-512_1592535236_1598409765.png";
 import logoIqoo from "../../assets/iconBrand/logo_iqoo.png";
 import logoIphone from "../../assets/iconBrand/logo_iphone.png";
-import logoIpad from "../../assets/iconBrand/logo_ipad.png";
 import logoInfo from "../../assets/iconBrand/icon_info.png";
 import {
   Information,
@@ -16,8 +15,6 @@ import {
   RealmeSearch,
   SamsungSearch,
   XiaomiSearch,
-  IpadSearch,
-  OppoSearch,
 } from "../../components/homeMenu/HoverMenu";
 
 const brands = [
@@ -46,9 +43,7 @@ const brands = [
     title: "IPHONE",
     component: <IphoneSearch />,
   },
-  { name: "iPad", logo: logoIpad, title: "IPAD", component: <IpadSearch /> },
 
-  { name: "Oppo", logo: logoIphone, title: "OPPO", component: <OppoSearch /> },
   { name: "Tin Tức", logo: logoInfo, component: <Information /> },
 ];
 

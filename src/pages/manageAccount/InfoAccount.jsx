@@ -44,7 +44,7 @@ const InfoAccount = () => {
           {accountInfo.birthDate || "Chưa cập nhật"}
         </span>
       </div>
-      <button className="account-info-edit-btn">Cập nhật</button>
+      {/* <button className="account-info-edit-btn">Cập nhật</button> */}
     </div>
   );
 };

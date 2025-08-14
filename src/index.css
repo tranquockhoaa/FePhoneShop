@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 body {
@@ -63,6 +63,8 @@ body {
 }
 
 .forgot-pass-link {
+  color: #3b82f6;
+  font-size: large;
   text-align: right;
   font-size: 13px;
   margin-top: 0.3rem;
@@ -82,7 +84,7 @@ body {
 
 .login-container .separator::after {
   position: absolute;
-  content: ' ';
+  content: " ";
   width: 100%;
   height: 1px;
   background: black;
@@ -129,7 +131,7 @@ body {
 
 .forgotPassword-container .separator::after {
   position: absolute;
-  content: ' ';
+  content: " ";
   width: 100%;
   height: 1px;
   background: #ccc;
@@ -159,7 +161,11 @@ body {
 }
 
 .forgotPassword-container .button-form-container .button {
-  width: 40%;
+  width: 100%;
+  background: #fff;
+  &:hover {
+    background: #fff;
+  }
   margin-left: auto;
   height: 100%;
   display: flex;
@@ -172,6 +178,10 @@ body {
   height: 80%;
   cursor: pointer;
   border-radius: 6px;
+  background: #fff;
+  &:hover {
+    background: #f0f0f0;
+  }
 }
 
 .forgotPassword-container .button-form-container .button .submit-button {
@@ -180,6 +190,9 @@ body {
   cursor: pointer;
   border-radius: 6px;
   background: #3b82f6;
+  &:hover {
+    background: #2563eb;
+  }
 }
 
 .sign-in-container {

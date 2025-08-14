@@ -94,7 +94,7 @@ const ProductList = ({ brandName }) => {
               <div className="frame_inner">
                 <img
                   src={encodeURI(
-                    `/data/${product.brand_name}/${product.name}/image/${product.color_name}.jpg`
+                    `/data/${product.brand_name}/${product.code}/image/${product.color_name}.jpg`
                   )}
                   alt={product.name}
                   className="img-product"
