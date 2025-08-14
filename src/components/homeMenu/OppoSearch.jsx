@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function OppoSearch() {
-  return (
-    <div>OppoSearch</div>
-  )
+  return <div>OppoSearch</div>;
 }
 
-export default OppoSearch
+export default OppoSearch;

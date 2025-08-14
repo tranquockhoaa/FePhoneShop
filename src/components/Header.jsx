@@ -7,18 +7,24 @@ import { useState, useEffect } from "react";
 
 const Header = () => {
   const [accountInfo, setAccountInfo] = useState(
-    JSON.parse(localStorage.getItem("account"))
+    JSON.parse(localStorage.getItem("account")) || null
   );
 
+  // Thêm event listener để theo dõi thay đổi localStorage
   useEffect(() => {
-    // Handler mỗi khi bạn bắn event 'accountChange'
-    const onAccountChange = () => {
-      setAccountInfo(JSON.parse(localStorage.getItem("account")));
+    const handleStorageChange = () => {
+      setAccountInfo(JSON.parse(localStorage.getItem("account")) || null);
     };
 
-    window.addEventListener("accountChange", onAccountChange);
+    // Lắng nghe sự kiện storage (khi localStorage thay đổi)
+    window.addEventListener("storage", handleStorageChange);
+
+    // Lắng nghe cả custom event accountChange (nếu có component khác dispatch)
+    window.addEventListener("accountChange", handleStorageChange);
+
     return () => {
-      window.removeEventListener("accountChange", onAccountChange);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("accountChange", handleStorageChange);
     };
   }, []);
 
@@ -32,16 +38,16 @@ const Header = () => {
         </div>
 
         <div className="navbar-search">
-          <form action="">
+          <form action="" className="search-form">
+            <button type="submit">
+              <i className="fa fa-search"></i>
+            </button>
             <input
               type="text"
               name="searchWord"
               placeholder="Tìm kiếm sản phẩm"
               className="search"
             />
-            <button type="submit">
-              <i className="fa fa-search"></i>
-            </button>
           </form>
         </div>
 
@@ -52,7 +58,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="wish-list">Wishlist</div>
+        {/* <div className="wish-list">Wishlist</div> */}
 
         <div className="order-button">
           <Link to="/cart" className="title">
@@ -74,7 +80,7 @@ const Header = () => {
             </Link>
           </div>
         ) : (
-          <AccountSetting />
+          <AccountSetting accountInfo={accountInfo} />
         )}
       </div>
     </div>

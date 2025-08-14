@@ -1,0 +1,17 @@
+{
+  "Thẻ_SIM": "Nano SIM và eSIM",
+  "Màn_hình": "6.1 inches, LTPO Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (typ), 2000 nits (HBM)",
+  "Độ_phân_giải": "1179 x 2556 pixels",
+  "CPU": "Apple A17 Bionic (4 nm)",
+  "RAM": "6GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB/512GB/1TB",
+  "Camera_sau": "48 MP, f/1.8, 24mm (góc rộng), dual pixel PDAF, sensor-shift OIS; 12 MP, f/2.8, 77mm (tele), PDAF, OIS, zoom quang 3x; 12 MP, f/2.2, 13mm, 120˚ (góc siêu rộng), dual pixel PDAF",
+  "Camera_trước": "12 MP, f/1.9, 23mm (góc rộng), PDAF, OIS",
+  "Jack_3.5mm_Loa": "không / loa kép",
+  "Pin": "Li-Ion 3650 mAh; Sạc nhanh có dây; Sạc không dây (MagSafe) 15W; Sạc ngược không dây (Qi) 7.5W",
+  "GPU": "Apple GPU (5-lõi đồ họa)",
+  "Hệ_điều_hành": "iOS 17",
+  "Bluetooth": "5.3, A2DP, LE",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, hotspot",
+  "NFC": "có"
+}
