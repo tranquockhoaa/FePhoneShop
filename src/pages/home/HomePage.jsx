@@ -1,50 +1,59 @@
 import React, { useEffect, useState } from "react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 import "./HomePage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
 import xiaomiLogo from "../../assets/iconBrand/milogo_1592402136_1592534441.png";
 import logoRealme from "../../assets/iconBrand/apple_watch_menu-512_1592535236_1598409765.png";
 import logoIqoo from "../../assets/iconBrand/logo_iqoo.png";
 import logoIphone from "../../assets/iconBrand/logo_iphone.png";
 import logoInfo from "../../assets/iconBrand/icon_info.png";
-import {
-  Information,
-  IphoneSearch,
-  IqooSearch,
-  RealmeSearch,
-  SamsungSearch,
-  XiaomiSearch,
-} from "../../components/homeMenu/HoverMenu";
+
+const data_banner = [
+  {
+    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/redmi-turbo-4-pro_1751163164.jpg",
+  },
+
+  {
+    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
+  },
+  {
+    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
+  },
+  {
+    url: "https://dienthoaihay.vn/images/banners/original/q5-pro_1736649129.jpg",
+  },
+];
 
 const brands = [
   {
     name: "Realme",
     logo: logoRealme,
     title: "REALME",
-    component: <RealmeSearch />,
   },
   {
     name: "Xiaomi",
     logo: xiaomiLogo,
     title: "XIAOMI NỔI BẬT",
-    component: <XiaomiSearch />,
   },
   {
     name: "Samsung",
     logo: logoIphone,
     title: "SAMSUNG",
-    component: <SamsungSearch />,
   },
-  { name: "iQOO", logo: logoIqoo, title: "IQOO", component: <IqooSearch /> },
+  { name: "iQOO", logo: logoIqoo, title: "IQOO" },
   {
     name: "iPhone",
     logo: logoIphone,
     title: "IPHONE",
-    component: <IphoneSearch />,
   },
 
-  { name: "Tin Tức", logo: logoInfo, component: <Information /> },
+  { name: "Tin Tức", logo: logoInfo },
 ];
 
 const HomePage = () => {
@@ -116,6 +125,20 @@ const HomePage = () => {
                 <div className="option-list">{brand.component}</div>
               </div>
             ))}
+          </div>
+          <div className="banner">
+            <Swiper
+              pagination={{ type: "bullets", clickable: true }}
+              autoplay={true}
+              loop={true}
+              modules={[Autoplay, Pagination]}
+            >
+              {data_banner?.map((data, id) => (
+                <SwiperSlide key={id} autoplay={true}>
+                  <img src={data.url} alt="banner-img" className="banner-img" />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
         <div className="store">

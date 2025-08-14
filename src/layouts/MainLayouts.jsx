@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../components/Header.jsx";
+import Header from "../components/header/Header.jsx";
 import { Outlet } from "react-router-dom";
 import "./MainLayouts.css";
-import Footer from "../components/footer.jsx";
+import Footer from "../components/footer/footer.jsx";
 const MainLayouts = () => {
   return (
     <div>

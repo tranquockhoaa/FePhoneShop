@@ -1,7 +1,7 @@
 import React from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
-import AccountSetting from "../pages/auth/accountSetting";
+import AccountSetting from "../../pages/auth/accountSetting";
 
 import { useState, useEffect } from "react";
 
@@ -43,6 +43,7 @@ const Header = () => {
               <i className="fa fa-search"></i>
             </button>
             <input
+              style={{ height: "100%" }}
               type="text"
               name="searchWord"
               placeholder="Tìm kiếm sản phẩm"
