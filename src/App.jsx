@@ -10,14 +10,16 @@ import MainLayouts from "./layouts/MainLayouts";
 import InfoAccount from "./pages/manageAccount/InfoAccount";
 import Loggout from "./pages/manageAccount/Loggout";
 import ProductDetail from "./pages/productDetail/ProductDetail";
-import Table from "./pages/table";
+
 import Cart from "./pages/cart/cart";
 import ProductList from "./pages/productList";
 import { useParams } from "react-router-dom";
 import AdminDashboard from "./pages/admin/AdminDashBoard";
 import OrderHistory from "./pages/order/OrderHistory";
 import OrderDetail from "./pages/order/OrderDetail";
-
+import WarrantyPolicy from "./pages/about/warranty-policy/warranty-policy";
+import ShippingPolicy from "./pages/about/shipping-policy/shipping-policy";
+import PrivacyPolicy from "./pages/about/privacy-policy/privacy-policy";
 // import Xiaomi from './components/homeMenu/Xiaomi';
 const ProductListWrapper = () => {
   const { brandName } = useParams();
@@ -38,6 +40,9 @@ const App = () => {
           <Route path="/products/:brandName" element={<ProductListWrapper />} />
           <Route path="/order-lookup" element={<OrderHistory />} />
           <Route path="/order-detail/:orderId" element={<OrderDetail />} />
+          <Route path="/chinh-sach-bao-hanh" element={<WarrantyPolicy />} />
+          <Route path="/chinh-sach-van-chuyen" element={<ShippingPolicy />} />
+          <Route path="/chinh-sach-bao-mat" element={<PrivacyPolicy />} />
         </Route>
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/login" element={<Login />} />

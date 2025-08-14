@@ -10,6 +10,7 @@ import {
   FaClock,
 } from "react-icons/fa";
 import "./footer.css";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -44,10 +45,10 @@ const Footer = () => {
               <FaMapMarkerAlt /> 123 Đường ABC, Quận XYZ, TP.HCM
             </li>
             <li>
-              <FaPhone /> 0123 456 789
+              <FaPhone /> 0345697125
             </li>
             <li>
-              <FaEnvelope /> info@dienthoai.vn
+              <FaEnvelope /> buynewphone.vn
             </li>
             <li>
               <FaClock /> 8:00 - 22:00 (T2 - CN)
@@ -59,12 +60,8 @@ const Footer = () => {
           <h3 className="footer-title">Dịch vụ</h3>
           <ul className="footer-links">
             <li>
-              <a href="/mua-hang-tra-gop">
-                Chính sách và hướng dẫn mua hàng trả góp
-              </a>
-            </li>
-            <li>
-              <a href="/chinh-sach-bao-mat">Chính sách bảo hành</a>
+              {/* <a href="/chinh-sach-bao-hanh">Chính sách bảo hành</a> */}
+              <Link to={"/chinh-sach-bao-hanh"}>Chính sách bảo hành</Link>
             </li>
             <li>
               <a href="/chinh-sach-van-chuyen">Chính sách vận chuyển</a>

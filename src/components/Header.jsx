@@ -54,7 +54,7 @@ const Header = () => {
         <div className="contact">
           <div className="contact">
             <p>Gọi mua hàng</p>
-            <b>0123456789</b>
+            <b>0345697125</b>
           </div>
         </div>
 
