@@ -1,10 +1,12 @@
 .warranty-policy {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
   line-height: 1.6;
   font-size: 15px;
   color: #333;
+  background-color: #f9f9f9;
+  border-radius: 10px;
 }
 
 .warranty-policy h1 {
