@@ -9,7 +9,7 @@ import {
   FaEnvelope,
   FaClock,
 } from "react-icons/fa";
-import "./Footer.css";
+import "./footer.css";
 
 const Footer = () => {
   return (
@@ -56,43 +56,21 @@ const Footer = () => {
         </div>
 
         <div className="footer-section">
-          <h3 className="footer-title">Hỗ trợ</h3>
+          <h3 className="footer-title">Dịch vụ</h3>
           <ul className="footer-links">
             <li>
-              <a href="/">Trang chủ</a>
+              <a href="/mua-hang-tra-gop">
+                Chính sách và hướng dẫn mua hàng trả góp
+              </a>
             </li>
             <li>
-              <a href="/">Sản phẩm</a>
+              <a href="/chinh-sach-bao-mat">Chính sách bảo hành</a>
             </li>
             <li>
-              <a href="/">Giới thiệu</a>
+              <a href="/chinh-sach-van-chuyen">Chính sách vận chuyển</a>
             </li>
             <li>
-              <a href="/">Tin tức</a>
-            </li>
-            <li>
-              <a href="/">Liên hệ</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3 className="footer-title">Chính sách</h3>
-          <ul className="footer-links">
-            <li>
-              <a href="/">Chính sách bảo hành</a>
-            </li>
-            <li>
-              <a href="/">Chính sách đổi trả</a>
-            </li>
-            <li>
-              <a href="/">Chính sách vận chuyển</a>
-            </li>
-            <li>
-              <a href="/">Chính sách thanh toán</a>
-            </li>
-            <li>
-              <a href="/">Bảo mật thông tin</a>
+              <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
             </li>
           </ul>
         </div>
