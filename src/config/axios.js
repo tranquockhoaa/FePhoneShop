@@ -20,4 +20,15 @@ authorizedRequest.interceptors.request.use(async (config) => {
   return config;
 });
 
+authorizedRequest.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("account");
+    }
+    return Promise.reject(error?.response);
+  }
+);
 export default authorizedRequest;
