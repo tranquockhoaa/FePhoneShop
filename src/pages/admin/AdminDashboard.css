@@ -1,25 +1,31 @@
 .admin-layout {
   display: flex;
+  width: 100vw;
   min-height: 100vh;
   background: #f7f8fa;
 }
 .admin-header {
+  width: 100%;
+
   font-size: 1.2rem;
   font-weight: 700;
   color: #1976d2;
   margin: 24px 0 12px 0;
+  padding-left: 32px;
+  height: 68px;
 }
 
 .admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 240px;
+  height: 100vh;
   background: #fff;
   border-right: 1px solid #e3f2fd;
   display: flex;
   flex-direction: column;
-  padding: 0;
-  min-height: 100vh;
 }
-
 .sidebar-logo {
   font-size: 1.5rem;
   font-weight: 700;
@@ -63,6 +69,9 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  margin-left: 240px;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .admin-template-content {
@@ -163,7 +172,8 @@
   border-collapse: collapse;
   font-size: 1rem;
 }
-.recent-table th, .recent-table td {
+.recent-table th,
+.recent-table td {
   padding: 10px 8px;
   text-align: left;
 }
@@ -222,7 +232,8 @@
   .admin-template-main-row {
     gap: 10px;
   }
-  .admin-template-main-left, .admin-template-main-right {
+  .admin-template-main-left,
+  .admin-template-main-right {
     gap: 10px;
   }
   .admin-template-chart-card {
@@ -236,13 +247,15 @@
   .recent-title {
     font-size: 1rem;
   }
-  .recent-table th, .recent-table td {
+  .recent-table th,
+  .recent-table td {
     padding: 6px 4px;
     font-size: 0.95rem;
   }
 }
 
 .admin-product-page {
+  margin-top: 50px;
   padding: 24px 0;
 }
 

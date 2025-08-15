@@ -37,7 +37,7 @@ const Sidebar = ({ active, onSelect }) => {
   const [openProduct, setOpenProduct] = useState(false);
 
   return (
-    <div className="admin-sidebar admin-template-sidebar">
+    <div className="admin-sidebar ">
       <div className="sidebar-logo">Dreams POS</div>
       <div
         className={`sidebar-item${active === "dashboard" ? " active" : ""}`}

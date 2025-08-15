@@ -124,7 +124,7 @@ const OrderHistory = () => {
               <div>
                 <b>Tổng tiền:</b> {order.total_amount?.toLocaleString()} đ
               </div>
-              {/* Hiển thị danh sách sản phẩm trong đơn */}
+
               <div style={{ marginTop: 8 }}>
                 <b>Sản phẩm:</b>
                 <ul style={{ margin: 0, paddingLeft: 18 }}>

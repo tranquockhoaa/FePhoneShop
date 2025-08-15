@@ -3,9 +3,12 @@ import adminAxios from "./adminAxios";
 import { FaPlus, FaSearch, FaTrash, FaEdit } from "react-icons/fa";
 import "./AdminProduct.css";
 import "./AdminProductList.css";
-
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import Button from "@mui/material/Button";
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
+  const [brandName, setBrandName] = useState("");
+
   const [allProducts, setAllProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
@@ -119,6 +122,28 @@ const AdminProductList = () => {
     setProducts(sorted);
   };
 
+  const handleChangeBrandName = (event) => {
+    setBrandName(event.target.value);
+  };
+
+  const brands = [
+    {
+      name: "Realme",
+    },
+    {
+      name: "Xiaomi",
+    },
+    {
+      name: "Samsung",
+    },
+    {
+      name: "iQoo",
+    },
+    {
+      name: "iPhone",
+    },
+  ];
+
   return (
     <div
       className="admin-product-page"
@@ -197,14 +222,26 @@ const AdminProductList = () => {
                 setNewProduct({ ...newProduct, name: e.target.value })
               }
             />
-            <input
-              required
-              placeholder="Thương hiệu"
-              value={newProduct.brandName}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, brandName: e.target.value })
-              }
-            />
+            <FormControl fullWidth style={{ marginTop: 8, height: 45 }}>
+              <InputLabel sx={{ height: 40, lineHeight: "35px" }}>
+                {brandName}
+              </InputLabel>
+              <Select
+                value={brandName}
+                onChange={(e) => {
+                  setNewProduct({ ...newProduct, brandName: e.target.value });
+                  handleChangeBrandName(e);
+                }}
+                required
+              >
+                {brands?.map((brand, id) => (
+                  <MenuItem key={id} value={brand.name}>
+                    {brand.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
             <div style={{ marginTop: 8 }}>
               <button type="submit" className="admin-btn add-btn">
                 Tạo
@@ -259,74 +296,25 @@ const AdminProductList = () => {
         <table className="admin-product-table">
           <thead>
             <tr>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 STT
               </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 Mã sản phẩm
               </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 Tên sản phẩm
               </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 Thương hiệu
               </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 Tổng tồn kho
               </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 Ngày nhập
               </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
+              <th style={{ position: "sticky", top: 0, background: "#fff" }}>
                 Hành động
               </th>
             </tr>
