@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./productList.css";
 import ProductItem from "../components/product-item/product-item";
+import { searchProductByBrandName } from "../api/productlist";
 
 const PAGE_SIZE = 20;
 
@@ -16,13 +17,7 @@ const ProductList = ({ brandName }) => {
   useEffect(() => {
     if (!brandName) return;
     setIsLoading(true);
-    axios;
-    axios
-      .get(
-        `http://localhost:3000/api/v1/products/search?brandName=${brandName}&_page=${page}&_limit=${PAGE_SIZE}${
-          sortOrder ? `&sortPrice=${sortOrder}` : ""
-        }`
-      )
+    searchProductByBrandName(brandName, page, sortOrder)
       .then((res) => {
         console.log("API response:", res.data);
         // Lấy đúng key mới từ backend: res.data.products và res.data.total
