@@ -13,6 +13,7 @@ import logoRealme from "../../assets/iconBrand/apple_watch_menu-512_1592535236_1
 import logoIqoo from "../../assets/iconBrand/logo_iqoo.png";
 import logoIphone from "../../assets/iconBrand/logo_iphone.png";
 import logoInfo from "../../assets/iconBrand/icon_info.png";
+import { getProductLatestProductByBrand } from "../../api/homepage";
 
 const data_banner = [
   {
@@ -69,9 +70,7 @@ const HomePage = () => {
           const brand = brandsWithProducts[i];
           if (brand.name === "Dịch vụ") continue;
           try {
-            const response = await axios.get(
-              `http://localhost:3000/api/v1/products/latest?brandName=${brand.name}`
-            );
+            const response = await getProductLatestProductByBrand(brand.name);
             brandsWithProducts[i] = {
               ...brand,
               data: response.data["data"],
