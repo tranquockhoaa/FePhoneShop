@@ -22,12 +22,15 @@ import OrderDetail from './pages/order/OrderDetail';
 import WarrantyPolicy from './pages/about/warranty-policy/warranty-policy';
 import ShippingPolicy from './pages/about/shipping-policy/shipping-policy';
 import PrivacyPolicy from './pages/about/privacy-policy/privacy-policy';
-import AsyncAdminUsersPage from './pages/admin/users/Users';
 import LayoutAdmin from './layouts/admin';
 
-// export const AsyncAdminUsersPage = lazy(() =>
-//   import('./pages/admin/users/Users')
-// );
+export const AsyncAdminUsersPage = lazy(() =>
+  import('./pages/admin/users/Users')
+);
+
+export const AsyncAdminProductsPage = lazy(() =>
+  import('./pages/admin/AdminProductList')
+);
 
 // import Xiaomi from './components/homeMenu/Xiaomi';
 
@@ -105,6 +108,10 @@ const App = () => {
           <Route
             path="/admin/users"
             element={<AsyncAdminUsersPage />}
+          />
+          <Route
+            path="/admin/products"
+            element={<AsyncAdminProductsPage />}
           />
           <Route
             path="/admin"

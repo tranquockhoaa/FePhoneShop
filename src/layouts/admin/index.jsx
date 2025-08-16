@@ -29,6 +29,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { useNavigate } from 'react-router-dom';
+
 import '../../pages/admin/AdminDashboard.css';
 import AdminHeader from '../../pages/admin/AdminHeader';
 import LogoutPopup from '../../pages/manageAccount/LogoutPopup';
@@ -36,6 +38,7 @@ import LogoutPopup from '../../pages/manageAccount/LogoutPopup';
 const Sidebar = ({ active, onSelect }) => {
   const [openProduct, setOpenProduct] = useState(false);
   const [showLogoutPopup, setLogoutPopup] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="admin-sidebar admin-template-sidebar">
@@ -64,7 +67,7 @@ const Sidebar = ({ active, onSelect }) => {
             className={`sidebar-item${
               active === 'product-list' ? ' active' : ''
             }`}
-            onClick={() => onSelect('product-list')}
+            onClick={() => navigate('/admin/products')}
           >
             Danh sách sản phẩm
           </div>
@@ -92,7 +95,7 @@ const Sidebar = ({ active, onSelect }) => {
       </div>
       <div
         className={`sidebar-item${active === 'customers' ? ' active' : ''}`}
-        onClick={() => onSelect('customers')}
+        onClick={() => navigate('/admin/users')}
       >
         <FaUserFriends /> Khách hàng
       </div>
