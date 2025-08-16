@@ -36,14 +36,9 @@ import AdminManageBrand from "./pages/manage-brand";
 import StatCard from "./components/StatCard";
 import TopProductsTable from "./components/TopProductsTable";
 import Sidebar from "./components/SideBar";
-=======
-} from 'recharts';
-import './AdminDashboard.css';
-import AdminHeader from './AdminHeader';
-import AdminProductList from './AdminProductList';
-import AdminProductDetail from './AdminProductDetail';
-import LogoutPopup from '../manageAccount/LogoutPopup';
-import AdminOrderList from './AdminOrderList'; // Thêm dòng này
+
+import "./AdminDashboard.css";
+import LogoutPopup from "../manageAccount/LogoutPopup";
 
 const Sidebar = ({ active, onSelect }) => {
   const [openProduct, setOpenProduct] = useState(false);
@@ -53,17 +48,17 @@ const Sidebar = ({ active, onSelect }) => {
     <div className="admin-sidebar admin-template-sidebar">
       <div className="sidebar-logo">Dreams POS</div>
       <div
-        className={`sidebar-item${active === 'dashboard' ? ' active' : ''}`}
-        onClick={() => onSelect('dashboard')}
+        className={`sidebar-item${active === "dashboard" ? " active" : ""}`}
+        onClick={() => onSelect("dashboard")}
       >
         <FaHome /> Dashboard
       </div>
       <div
         className={`sidebar-item${
-          active.startsWith('product') ? ' active' : ''
+          active.startsWith("product") ? " active" : ""
         }`}
         onClick={() => setOpenProduct((v) => !v)}
-        style={{ justifyContent: 'space-between' }}
+        style={{ justifyContent: "space-between" }}
       >
         <span>
           <FaBoxOpen /> Sản phẩm
@@ -74,43 +69,43 @@ const Sidebar = ({ active, onSelect }) => {
         <div className="sidebar-submenu">
           <div
             className={`sidebar-item${
-              active === 'product-list' ? ' active' : ''
+              active === "product-list" ? " active" : ""
             }`}
-            onClick={() => onSelect('product-list')}
+            onClick={() => onSelect("product-list")}
           >
             Danh sách sản phẩm
           </div>
           <div
             className={`sidebar-item${
-              active === 'product-detail' ? ' active' : ''
+              active === "product-detail" ? " active" : ""
             }`}
-            onClick={() => onSelect('product-detail')}
+            onClick={() => onSelect("product-detail")}
           >
             Chi tiết sản phẩm
           </div>
         </div>
       )}
       <div
-        className={`sidebar-item${active === 'orders' ? ' active' : ''}`}
-        onClick={() => onSelect('orders')}
+        className={`sidebar-item${active === "orders" ? " active" : ""}`}
+        onClick={() => onSelect("orders")}
       >
         <FaClipboardList /> Đơn hàng
       </div>
       <div
-        className={`sidebar-item${active === 'sales' ? ' active' : ''}`}
-        onClick={() => onSelect('sales')}
+        className={`sidebar-item${active === "sales" ? " active" : ""}`}
+        onClick={() => onSelect("sales")}
       >
         <FaChartBar /> Doanh thu
       </div>
       <div
-        className={`sidebar-item${active === 'customers' ? ' active' : ''}`}
-        onClick={() => onSelect('customers')}
+        className={`sidebar-item${active === "customers" ? " active" : ""}`}
+        onClick={() => onSelect("customers")}
       >
         <FaUserFriends /> Khách hàng
       </div>
       <div
-        className={`sidebar-item${active === 'settings' ? ' active' : ''}`}
-        onClick={() => onSelect('settings')}
+        className={`sidebar-item${active === "settings" ? " active" : ""}`}
+        onClick={() => onSelect("settings")}
       >
         <FaCog /> Cài đặt
       </div>
@@ -132,7 +127,7 @@ const Sidebar = ({ active, onSelect }) => {
 const StatCard = ({ label, value, icon, color }) => (
   <div
     className="stat-card admin-template-stat-card"
-    style={{ '--stat-bg': color }}
+    style={{ "--stat-bg": color }}
   >
     <div className="stat-icon">{icon}</div>
     <div className="stat-value">{value}</div>
@@ -143,7 +138,7 @@ const StatCard = ({ label, value, icon, color }) => (
 const TopProductsTable = ({ data }) => (
   <div className="recent-table admin-template-products">
     <div className="recent-title">
-      <FaTrophy style={{ color: '#ff9800', marginRight: 6 }} />
+      <FaTrophy style={{ color: "#ff9800", marginRight: 6 }} />
       Sản phẩm bán chạy nhất
     </div>
     <table>
@@ -158,10 +153,7 @@ const TopProductsTable = ({ data }) => (
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td
-              colSpan={4}
-              style={{ textAlign: 'center', color: '#888' }}
-            >
+            <td colSpan={4} style={{ textAlign: "center", color: "#888" }}>
               Không có dữ liệu
             </td>
           </tr>
@@ -171,7 +163,7 @@ const TopProductsTable = ({ data }) => (
               <td>{idx + 1}</td>
               <td>{row.product_id}</td>
               <td>{row.name}</td>
-              <td style={{ fontWeight: 600, color: '#1976d2' }}>
+              <td style={{ fontWeight: 600, color: "#1976d2" }}>
                 {row.totalSold}
               </td>
             </tr>
@@ -181,7 +173,6 @@ const TopProductsTable = ({ data }) => (
     </table>
   </div>
 );
->>>>>>> 44c3f2e98d542bc39cb05ce4d95b5215d802fe6e
 
 const LowStockTable = ({ data }) => (
   <div className="recent-table admin-template-products">
@@ -314,9 +305,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-layout admin-template-layout">
-      <Sidebar active={activeMenu} onSelect={setActiveMenu} />
       <div className="admin-content admin-template-content">
-        <AdminHeader adminName={adminName} />
         {activeMenu === "dashboard" && (
           <>
             <div className="admin-template-stat-row">
