@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import adminAxios from './adminAxios';
+import adminAxios from '../../pages/admin/adminAxios';
+import { Outlet } from 'react-router-dom';
+
 import {
   FaHome,
   FaUserFriends,
@@ -27,12 +29,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import './AdminDashboard.css';
-import AdminHeader from './AdminHeader';
-import AdminProductList from './AdminProductList';
-import AdminProductDetail from './AdminProductDetail';
-import LogoutPopup from '../manageAccount/LogoutPopup';
-import AdminOrderList from './AdminOrderList'; // Thêm dòng này
+import '../../pages/admin/AdminDashboard.css';
+import AdminHeader from '../../pages/admin/AdminHeader';
+import LogoutPopup from '../../pages/manageAccount/LogoutPopup';
 
 const Sidebar = ({ active, onSelect }) => {
   const [openProduct, setOpenProduct] = useState(false);
@@ -255,7 +254,7 @@ const RecentOrdersTable = ({ data }) => (
   </div>
 );
 
-const AdminDashboard = () => {
+const LayoutAdmin = () => {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [stats, setStats] = useState({});
   const [topProducts, setTopProducts] = useState([]);
@@ -308,132 +307,17 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-layout admin-template-layout">
+      <Sidebar
+        active={activeMenu}
+        onSelect={setActiveMenu}
+      />
       <div className="admin-content admin-template-content">
-        {activeMenu === 'dashboard' && (
-          <>
-            <div className="admin-template-stat-row">
-              <StatCard
-                label="Tổng doanh thu"
-                value={stats.totalRevenue?.toLocaleString() || 0}
-                icon={<FaChartLine size={32} />}
-                color="#1976d2"
-              />
-              <StatCard
-                label="Tổng đơn hàng"
-                value={stats.totalOrders || 0}
-                icon={<FaClipboardList size={32} />}
-                color="#4caf50"
-              />
-              <StatCard
-                label="Tổng sản phẩm"
-                value={stats.totalProducts || 0}
-                icon={<FaBox size={32} />}
-                color="#ff9800"
-              />
-              <StatCard
-                label="Tổng khách hàng"
-                value={stats.totalUsers || 0}
-                icon={<FaUsers size={32} />}
-                color="#e53935"
-              />
-            </div>
-            <div className="admin-template-main-row">
-              <div className="admin-template-main-left">
-                <div className="admin-template-chart-card">
-                  <div className="admin-template-chart-title">
-                    Doanh thu theo tháng
-                  </div>
-                  <div className="admin-template-chart-real">
-                    <ResponsiveContainer
-                      width="100%"
-                      height={300}
-                    >
-                      <BarChart
-                        data={revenueByMonth.map((item) => ({
-                          ...item,
-                          month: new Date(item.month).toLocaleString(
-                            'default',
-                            { month: 'short', year: '2-digit' }
-                          ),
-                          revenue: Number(item.revenue),
-                        }))}
-                        margin={{ top: 16, right: 24, left: 0, bottom: 0 }}
-                      >
-                        <XAxis
-                          dataKey="month"
-                          stroke="#888"
-                        />
-                        <YAxis stroke="#888" />
-                        <Tooltip />
-                        <Legend />
-                        <Bar
-                          dataKey="revenue"
-                          fill="#1976d2"
-                          name="Doanh thu"
-                          radius={[6, 6, 0, 0]}
-                          barSize={28}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-                <div className="admin-template-chart-card">
-                  <div className="admin-template-chart-title">
-                    Số đơn hàng theo tháng
-                  </div>
-                  <div className="admin-template-chart-real">
-                    <ResponsiveContainer
-                      width="100%"
-                      height={300}
-                    >
-                      <BarChart
-                        data={orderCountByMonth.map((item) => ({
-                          ...item,
-                          month: new Date(item.month).toLocaleString(
-                            'default',
-                            { month: 'short', year: '2-digit' }
-                          ),
-                          orderCount: Number(item.orderCount),
-                        }))}
-                        margin={{ top: 16, right: 24, left: 0, bottom: 0 }}
-                      >
-                        <XAxis
-                          dataKey="month"
-                          stroke="#888"
-                        />
-                        <YAxis
-                          stroke="#888"
-                          allowDecimals={false}
-                        />
-                        <Tooltip />
-                        <Legend />
-                        <Bar
-                          dataKey="orderCount"
-                          fill="#4caf50"
-                          name="Đơn hàng"
-                          radius={[6, 6, 0, 0]}
-                          barSize={28}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-                <TopProductsTable data={topProducts} />
-                <LowStockTable data={lowStock} />
-              </div>
-              <div className="admin-template-main-right">
-                <RecentOrdersTable data={recentOrders} />
-              </div>
-            </div>
-          </>
-        )}
-        {activeMenu === 'product-list' && <AdminProductList />}
-        {activeMenu === 'product-detail' && <AdminProductDetail />}
-        {activeMenu === 'orders' && <AdminOrderList />}
-        {/* Các tab khác có thể bổ sung sau */}
+        <AdminHeader adminName={adminName} />
+
+        <Outlet />
       </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default LayoutAdmin;

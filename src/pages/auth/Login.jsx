@@ -1,81 +1,59 @@
-import React from "react";
-import "../../index.css";
-import { Outlet, Link } from "react-router-dom";
-import userAxios from "./userAxios";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserProfileApiRq } from "../../store/profile/profile.action";
+import React from 'react';
+import '../../index.css';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfileRequest } from '../../store/profile/profile.action';
+
+import { loginApi } from '../../api/profile.api';
 
 function Login() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const profile = useSelector((state) => {
-    state.profile;
-  });
+  const { profile } = useSelector((state) => state.profile);
   console.log(profile);
   const [account, setAccount] = useState({
-    email: "",
-    password: "",
-    status: "",
+    email: '',
+    password: '',
+    status: '',
   });
 
   useEffect(() => {
-    if (account.status === "true") {
-      // Lấy role từ localStorage sau khi đăng nhập
-      const stored = window.localStorage.getItem("account");
-      let role = "";
-      if (stored) {
-        try {
-          role = JSON.parse(stored).role;
-        } catch {}
-      }
-      if (role === "admin") navigate("/admin");
-      else if (role === "user") navigate("/");
-      // Nếu có role khác, có thể bổ sung điều hướng tại đây
-    }
-  }, [account.status, navigate]);
+    // Lấy role từ localStorage sau khi đăng nhập
+
+    if (profile?.role === 'admin') navigate('/admin');
+    else if (profile?.role === 'user') navigate('/');
+    // Nếu có role khác, có thể bổ sung điều hướng tại đây
+  }, [profile]);
 
   const handleInput = (event) => {
     setAccount({ ...account, [event.target.name]: event.target.value });
   };
 
-  const getInfoAccount = async () => {
-    console.log("dispatch running");
-    dispatch(getUserProfileApiRq());
-    console.log(profile);
-  };
-
-  const handleOnSubmit = (event) => {
+  const handleOnSubmit = async (event) => {
     event.preventDefault();
-    userAxios
-      .post("http://127.0.0.1:3000/api/v1/auth/login", account)
-      .then(async (res) => {
-        if (res.data.status === "success") {
-          console.log(res);
-          window.localStorage.setItem("token", res.data.token);
-          const infoAccount = await getInfoAccount();
-          setAccount({ ...infoAccount, status: "true" });
-          const updateAccount = {
-            ...infoAccount,
-            status: "true",
-            token: res.data.token,
-            role: res.data.user?.role || infoAccount.role || "user", // Lưu role
-          };
-          window.localStorage.setItem("account", JSON.stringify(updateAccount));
-        }
-      })
-      .catch((err) => {
-        if (err.response?.data) {
-          alert(err.response.data.message);
-        }
-      });
+
+    try {
+      const dataLogin = await loginApi(account);
+      setAccount({ ...account, status: 'true' });
+      window.localStorage.setItem('token', dataLogin.token);
+      dispatch(getUserProfileRequest());
+      // Handle successful login here if needed
+      console.log('Login successful:', dataLogin);
+    } catch (error) {
+      // todo
+      console.error('Login error:', error);
+    }
   };
 
   return (
     <div className="login-container">
       <h2 className="login-title">Đăng nhập</h2>
-      <form className="login-form" onSubmit={handleOnSubmit}>
+      <form
+        className="login-form"
+        onSubmit={handleOnSubmit}
+      >
         <div className="input-wrapper">
           <input
             type="email"
@@ -100,21 +78,27 @@ function Login() {
 
         <div className="forgot-pass-link">
           <span>
-            <Link to="/login/forgotPassword" className="forgot-pass-link">
+            <Link
+              to="/login/forgotPassword"
+              className="forgot-pass-link"
+            >
               Quên mật khẩu
             </Link>
           </span>
         </div>
 
         <div>
-          <button type="submit" className="login-button">
+          <button
+            type="submit"
+            className="login-button"
+          >
             Đăng nhập
           </button>
         </div>
       </form>
 
       <div className="sign-in">
-        Bạn chưa có tài khoản?{" "}
+        Bạn chưa có tài khoản?{' '}
         <span>
           <Link to="/signIn">Đăng kí ngay</Link>
         </span>
