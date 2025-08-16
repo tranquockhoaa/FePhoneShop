@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import adminAxios from './adminAxios';
+import React, { useEffect, useState } from "react";
+import adminAxios from "../admin/adminAxios";
 import {
   FaHome,
   FaUserFriends,
@@ -17,7 +17,7 @@ import {
   FaTrophy,
   FaChevronDown,
   FaChevronUp,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 import {
   BarChart,
   Bar,
@@ -26,13 +26,19 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import './AdminDashboard.css';
-import AdminHeader from './AdminHeader';
-import AdminProductList from './AdminProductList';
-import AdminProductDetail from './AdminProductDetail';
-import LogoutPopup from '../manageAccount/LogoutPopup';
-import AdminOrderList from './AdminOrderList'; // Thêm dòng này
+} from "recharts";
+import "./AdminDashboard.css";
+import AdminHeader from "./AdminHeader";
+import AdminProductList from "./AdminProductList";
+import AdminProductDetail from "./AdminProductDetail";
+import AdminOrderList from "./AdminOrderList";
+import AdminManageBrand from "./pages/manage-brand";
+import StatCard from "./components/StatCard";
+import TopProductsTable from "./components/TopProductsTable";
+import Sidebar from "./components/SideBar";
+
+import "./AdminDashboard.css";
+import LogoutPopup from "../manageAccount/LogoutPopup";
 
 const Sidebar = ({ active, onSelect }) => {
   const [openProduct, setOpenProduct] = useState(false);
@@ -42,17 +48,17 @@ const Sidebar = ({ active, onSelect }) => {
     <div className="admin-sidebar admin-template-sidebar">
       <div className="sidebar-logo">Dreams POS</div>
       <div
-        className={`sidebar-item${active === 'dashboard' ? ' active' : ''}`}
-        onClick={() => onSelect('dashboard')}
+        className={`sidebar-item${active === "dashboard" ? " active" : ""}`}
+        onClick={() => onSelect("dashboard")}
       >
         <FaHome /> Dashboard
       </div>
       <div
         className={`sidebar-item${
-          active.startsWith('product') ? ' active' : ''
+          active.startsWith("product") ? " active" : ""
         }`}
         onClick={() => setOpenProduct((v) => !v)}
-        style={{ justifyContent: 'space-between' }}
+        style={{ justifyContent: "space-between" }}
       >
         <span>
           <FaBoxOpen /> Sản phẩm
@@ -63,43 +69,43 @@ const Sidebar = ({ active, onSelect }) => {
         <div className="sidebar-submenu">
           <div
             className={`sidebar-item${
-              active === 'product-list' ? ' active' : ''
+              active === "product-list" ? " active" : ""
             }`}
-            onClick={() => onSelect('product-list')}
+            onClick={() => onSelect("product-list")}
           >
             Danh sách sản phẩm
           </div>
           <div
             className={`sidebar-item${
-              active === 'product-detail' ? ' active' : ''
+              active === "product-detail" ? " active" : ""
             }`}
-            onClick={() => onSelect('product-detail')}
+            onClick={() => onSelect("product-detail")}
           >
             Chi tiết sản phẩm
           </div>
         </div>
       )}
       <div
-        className={`sidebar-item${active === 'orders' ? ' active' : ''}`}
-        onClick={() => onSelect('orders')}
+        className={`sidebar-item${active === "orders" ? " active" : ""}`}
+        onClick={() => onSelect("orders")}
       >
         <FaClipboardList /> Đơn hàng
       </div>
       <div
-        className={`sidebar-item${active === 'sales' ? ' active' : ''}`}
-        onClick={() => onSelect('sales')}
+        className={`sidebar-item${active === "sales" ? " active" : ""}`}
+        onClick={() => onSelect("sales")}
       >
         <FaChartBar /> Doanh thu
       </div>
       <div
-        className={`sidebar-item${active === 'customers' ? ' active' : ''}`}
-        onClick={() => onSelect('customers')}
+        className={`sidebar-item${active === "customers" ? " active" : ""}`}
+        onClick={() => onSelect("customers")}
       >
         <FaUserFriends /> Khách hàng
       </div>
       <div
-        className={`sidebar-item${active === 'settings' ? ' active' : ''}`}
-        onClick={() => onSelect('settings')}
+        className={`sidebar-item${active === "settings" ? " active" : ""}`}
+        onClick={() => onSelect("settings")}
       >
         <FaCog /> Cài đặt
       </div>
@@ -121,7 +127,7 @@ const Sidebar = ({ active, onSelect }) => {
 const StatCard = ({ label, value, icon, color }) => (
   <div
     className="stat-card admin-template-stat-card"
-    style={{ '--stat-bg': color }}
+    style={{ "--stat-bg": color }}
   >
     <div className="stat-icon">{icon}</div>
     <div className="stat-value">{value}</div>
@@ -132,7 +138,7 @@ const StatCard = ({ label, value, icon, color }) => (
 const TopProductsTable = ({ data }) => (
   <div className="recent-table admin-template-products">
     <div className="recent-title">
-      <FaTrophy style={{ color: '#ff9800', marginRight: 6 }} />
+      <FaTrophy style={{ color: "#ff9800", marginRight: 6 }} />
       Sản phẩm bán chạy nhất
     </div>
     <table>
@@ -147,10 +153,7 @@ const TopProductsTable = ({ data }) => (
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td
-              colSpan={4}
-              style={{ textAlign: 'center', color: '#888' }}
-            >
+            <td colSpan={4} style={{ textAlign: "center", color: "#888" }}>
               Không có dữ liệu
             </td>
           </tr>
@@ -160,7 +163,7 @@ const TopProductsTable = ({ data }) => (
               <td>{idx + 1}</td>
               <td>{row.product_id}</td>
               <td>{row.name}</td>
-              <td style={{ fontWeight: 600, color: '#1976d2' }}>
+              <td style={{ fontWeight: 600, color: "#1976d2" }}>
                 {row.totalSold}
               </td>
             </tr>
@@ -174,7 +177,7 @@ const TopProductsTable = ({ data }) => (
 const LowStockTable = ({ data }) => (
   <div className="recent-table admin-template-products">
     <div className="recent-title">
-      <FaExclamationTriangle style={{ color: '#e53935', marginRight: 6 }} />
+      <FaExclamationTriangle style={{ color: "#e53935", marginRight: 6 }} />
       Sản phẩm sắp hết hàng
     </div>
     <table>
@@ -189,10 +192,7 @@ const LowStockTable = ({ data }) => (
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td
-              colSpan={4}
-              style={{ textAlign: 'center', color: '#888' }}
-            >
+            <td colSpan={4} style={{ textAlign: "center", color: "#888" }}>
               Không có dữ liệu
             </td>
           </tr>
@@ -202,7 +202,7 @@ const LowStockTable = ({ data }) => (
               <td>{idx + 1}</td>
               <td>{row.id}</td>
               <td>{row.name}</td>
-              <td style={{ fontWeight: 600, color: '#e53935' }}>
+              <td style={{ fontWeight: 600, color: "#e53935" }}>
                 {row.quantity}
               </td>
             </tr>
@@ -216,7 +216,7 @@ const LowStockTable = ({ data }) => (
 const RecentOrdersTable = ({ data }) => (
   <div className="recent-table admin-template-products">
     <div className="recent-title">
-      <FaClipboardList style={{ color: '#1976d2', marginRight: 6 }} />
+      <FaClipboardList style={{ color: "#1976d2", marginRight: 6 }} />
       Đơn hàng mới nhất
     </div>
     <table>
@@ -231,10 +231,7 @@ const RecentOrdersTable = ({ data }) => (
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td
-              colSpan={4}
-              style={{ textAlign: 'center', color: '#888' }}
-            >
+            <td colSpan={4} style={{ textAlign: "center", color: "#888" }}>
               Không có dữ liệu
             </td>
           </tr>
@@ -242,9 +239,9 @@ const RecentOrdersTable = ({ data }) => (
           data.map((row, idx) => (
             <tr key={row.id || idx}>
               <td>{idx + 1}</td>
-              <td>{row.customerName || row.userName || 'Không rõ'}</td>
-              <td style={{ fontWeight: 600, color: '#1976d2' }}>
-                {row.total_price?.toLocaleString() || ''}
+              <td>{row.customerName || row.userName || "Không rõ"}</td>
+              <td style={{ fontWeight: 600, color: "#1976d2" }}>
+                {row.total_price?.toLocaleString() || ""}
               </td>
               <td>{row.status}</td>
             </tr>
@@ -256,7 +253,7 @@ const RecentOrdersTable = ({ data }) => (
 );
 
 const AdminDashboard = () => {
-  const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [activeMenu, setActiveMenu] = useState("dashboard");
   const [stats, setStats] = useState({});
   const [topProducts, setTopProducts] = useState([]);
   const [lowStock, setLowStock] = useState([]);
@@ -265,51 +262,51 @@ const AdminDashboard = () => {
   const [orderCountByMonth, setOrderCountByMonth] = useState([]);
 
   useEffect(() => {
-    adminAxios.get('/overview').then((res) => {
+    adminAxios.get("/overview").then((res) => {
       setStats(res.data.data || {});
     });
-    adminAxios.get('/products/top-selling').then((res) => {
+    adminAxios.get("/products/top-selling").then((res) => {
       const topProducts = (res.data.topSelling || []).map((item) => ({
         ...item,
         totalSold: Number(item.totalsold),
       }));
       setTopProducts(topProducts);
     });
-    adminAxios.get('/products/low-stock').then((res) => {
+    adminAxios.get("/products/low-stock").then((res) => {
       const lowStock = (res.data.lowStock || []).map((item) => ({
         id: item.product_detail_id,
-        code: item.product?.code || '',
-        name: item.product?.name || '',
+        code: item.product?.code || "",
+        name: item.product?.name || "",
         quantity: item.quantity,
       }));
       setLowStock(lowStock);
     });
-    adminAxios.get('/orders?limit=5').then((res) => {
+    adminAxios.get("/orders?limit=5").then((res) => {
       setRecentOrders(res.data.data || []);
     });
-    adminAxios.get('/orders/revenue-by-month').then((res) => {
+    adminAxios.get("/orders/revenue-by-month").then((res) => {
       setRevenueByMonth(res.data.revenueByMonth || []);
     });
-    adminAxios.get('/orders/count-by-month').then((res) => {
+    adminAxios.get("/orders/count-by-month").then((res) => {
       setOrderCountByMonth(res.data.orderCountByMonth || []);
     });
   }, []);
 
   const adminName = (() => {
-    const stored = window.localStorage.getItem('account');
+    const stored = window.localStorage.getItem("account");
     if (stored) {
       try {
         const acc = JSON.parse(stored);
-        if (acc.role === 'admin') return acc.full_name;
+        if (acc.role === "admin") return acc.full_name;
       } catch {}
     }
-    return 'Admin';
+    return "Admin";
   })();
 
   return (
     <div className="admin-layout admin-template-layout">
       <div className="admin-content admin-template-content">
-        {activeMenu === 'dashboard' && (
+        {activeMenu === "dashboard" && (
           <>
             <div className="admin-template-stat-row">
               <StatCard
@@ -344,25 +341,19 @@ const AdminDashboard = () => {
                     Doanh thu theo tháng
                   </div>
                   <div className="admin-template-chart-real">
-                    <ResponsiveContainer
-                      width="100%"
-                      height={300}
-                    >
+                    <ResponsiveContainer width="100%" height={300}>
                       <BarChart
                         data={revenueByMonth.map((item) => ({
                           ...item,
                           month: new Date(item.month).toLocaleString(
-                            'default',
-                            { month: 'short', year: '2-digit' }
+                            "default",
+                            { month: "short", year: "2-digit" }
                           ),
                           revenue: Number(item.revenue),
                         }))}
                         margin={{ top: 16, right: 24, left: 0, bottom: 0 }}
                       >
-                        <XAxis
-                          dataKey="month"
-                          stroke="#888"
-                        />
+                        <XAxis dataKey="month" stroke="#888" />
                         <YAxis stroke="#888" />
                         <Tooltip />
                         <Legend />
@@ -382,29 +373,20 @@ const AdminDashboard = () => {
                     Số đơn hàng theo tháng
                   </div>
                   <div className="admin-template-chart-real">
-                    <ResponsiveContainer
-                      width="100%"
-                      height={300}
-                    >
+                    <ResponsiveContainer width="100%" height={300}>
                       <BarChart
                         data={orderCountByMonth.map((item) => ({
                           ...item,
                           month: new Date(item.month).toLocaleString(
-                            'default',
-                            { month: 'short', year: '2-digit' }
+                            "default",
+                            { month: "short", year: "2-digit" }
                           ),
                           orderCount: Number(item.orderCount),
                         }))}
                         margin={{ top: 16, right: 24, left: 0, bottom: 0 }}
                       >
-                        <XAxis
-                          dataKey="month"
-                          stroke="#888"
-                        />
-                        <YAxis
-                          stroke="#888"
-                          allowDecimals={false}
-                        />
+                        <XAxis dataKey="month" stroke="#888" />
+                        <YAxis stroke="#888" allowDecimals={false} />
                         <Tooltip />
                         <Legend />
                         <Bar
@@ -427,9 +409,10 @@ const AdminDashboard = () => {
             </div>
           </>
         )}
-        {activeMenu === 'product-list' && <AdminProductList />}
-        {activeMenu === 'product-detail' && <AdminProductDetail />}
-        {activeMenu === 'orders' && <AdminOrderList />}
+        {activeMenu === "product-list" && <AdminProductList />}
+        {activeMenu === "product-detail" && <AdminProductDetail />}
+        {activeMenu === "orders" && <AdminOrderList />}
+        {activeMenu === "manage-brand" && <AdminManageBrand />}
         {/* Các tab khác có thể bổ sung sau */}
       </div>
     </div>
