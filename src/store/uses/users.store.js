@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUserProfileRequest } from './profile.action';
+import { getUserProfileRequest } from './users.action';
 
 const initialState = {
   profile: null,
@@ -7,8 +7,8 @@ const initialState = {
   error: '',
 };
 
-export const profileSlide = createSlice({
-  name: 'profile',
+export const usersSlide = createSlice({
+  name: 'users',
   initialState,
   reducers: {
     resetProfile: (state) => {
@@ -33,6 +33,6 @@ export const profileSlide = createSlice({
   },
 });
 
-export const profileAction = profileSlide.actions;
+export const profileAction = usersSlide.actions;
 
-export default profileSlide.reducer;
+export default usersSlide.reducer;

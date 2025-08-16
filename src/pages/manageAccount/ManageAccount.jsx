@@ -1,13 +1,13 @@
-import "./ManageAccount.css";
-import Header from "../../components/header/Header";
-import React, { useState, useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import Loggout from "./Loggout";
+import './ManageAccount.css';
+import Header from '../../components/header/Header';
+import React, { useState, useEffect } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import Loggout from './LogoutPopup';
 
 const menu = [
-  { icon: "🏠", label: "Về Trang chủ", path: "/" },
-  { icon: "👤", label: "Thông tin tài khoản", path: "infoAccount" },
-  { icon: "🚪", label: "Đăng xuất", action: "logout" },
+  { icon: '🏠', label: 'Về Trang chủ', path: '/' },
+  { icon: '👤', label: 'Thông tin tài khoản', path: 'infoAccount' },
+  { icon: '🚪', label: 'Đăng xuất', action: 'logout' },
 ];
 
 const ManageAccount = () => {
@@ -18,15 +18,15 @@ const ManageAccount = () => {
   // Khi vào /manageAccount thì tự động chuyển sang /manageAccount/infoAccount
   useEffect(() => {
     if (
-      location.pathname === "/manageAccount" ||
-      location.pathname === "/manageAccount/"
+      location.pathname === '/manageAccount' ||
+      location.pathname === '/manageAccount/'
     ) {
-      navigate("infoAccount", { replace: true });
+      navigate('infoAccount', { replace: true });
     }
   }, [location.pathname, navigate]);
 
   const handleMenuClick = (item) => {
-    if (item.action === "logout") {
+    if (item.action === 'logout') {
       setLoggoutPopup(!showLoggoutPopup);
     } else {
       navigate(item.path);
@@ -50,7 +50,7 @@ const ManageAccount = () => {
               </button>
             ))}
             {showLoggoutPopup && (
-              <Loggout clickLoggoutPopup={() => setLoggoutPopup(false)} />
+              <Loggout clickLogoutPopup={() => setLoggoutPopup(false)} />
             )}
           </nav>
         </aside>
