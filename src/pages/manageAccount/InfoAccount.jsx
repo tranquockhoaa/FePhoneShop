@@ -1,47 +1,43 @@
 import React from "react";
 import "./InfoAccount.css";
+import { useSelector } from "react-redux";
 
 const InfoAccount = () => {
-  const accountInfo = JSON.parse(localStorage.getItem("account")) || {};
+  const profile = useSelector((state) => state.profile.profile);
+  console.log(profile.profile);
   return (
     <div className="form-group">
       <div className="avata-name">
-        <h3> Hello {accountInfo.fullName}</h3>
+        <h3> Hello {profile.full_name}</h3>
       </div>
       <div className="info-row">
         <span className="info-label">Họ và tên:</span>
         <span className="info-value">
-          {accountInfo.fullName || "Chưa cập nhật"}
+          {profile.full_name || "Chưa cập nhật"}
         </span>
       </div>
       <div className="info-row">
         <span className="info-label">Giới tính:</span>
-        <span className="info-value">
-          {accountInfo.gende || "Chưa cập nhật"}
-        </span>
+        <span className="info-value">{profile.gender || "Chưa cập nhật"}</span>
       </div>
       <div className="info-row">
         <span className="info-label">Email:</span>
-        <span className="info-value">
-          {accountInfo.email || "Chưa cập nhật"}
-        </span>
+        <span className="info-value">{profile.email || "Chưa cập nhật"}</span>
       </div>
       <div className="info-row">
         <span className="info-label">Số điện thoại:</span>
         <span className="info-value">
-          {accountInfo.phoneNumber || "Chưa cập nhật"}
+          {profile.phoneNumber || "Chưa cập nhật"}
         </span>
       </div>
       <div className="info-row">
         <span className="info-label">Địa chỉ:</span>
-        <span className="info-value">
-          {accountInfo.address || "Chưa cập nhật"}
-        </span>
+        <span className="info-value">{profile.address || "Chưa cập nhật"}</span>
       </div>
       <div className="info-row">
         <span className="info-label">Ngày sinh:</span>
         <span className="info-value">
-          {accountInfo.birthDate || "Chưa cập nhật"}
+          {profile.birth_date || "Chưa cập nhật"}
         </span>
       </div>
       {/* <button className="account-info-edit-btn">Cập nhật</button> */}
