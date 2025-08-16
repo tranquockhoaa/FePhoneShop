@@ -4,10 +4,16 @@ import { Outlet, Link } from "react-router-dom";
 import userAxios from "./userAxios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfileApiRq } from "../../store/profile/profile.action";
 
 function Login() {
   let navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => {
+    state.profile;
+  });
+  console.log(profile);
   const [account, setAccount] = useState({
     email: "",
     password: "",
@@ -35,14 +41,9 @@ function Login() {
   };
 
   const getInfoAccount = async () => {
-    try {
-      const res = await userAxios.get(
-        `http://127.0.0.1:3000/api/v1/user/${account.email}`
-      );
-      return res.data.data;
-    } catch (err) {
-      console.log(err);
-    }
+    console.log("dispatch running");
+    dispatch(getUserProfileApiRq());
+    console.log(profile);
   };
 
   const handleOnSubmit = (event) => {
@@ -51,6 +52,8 @@ function Login() {
       .post("http://127.0.0.1:3000/api/v1/auth/login", account)
       .then(async (res) => {
         if (res.data.status === "success") {
+          console.log(res);
+          window.localStorage.setItem("token", res.data.token);
           const infoAccount = await getInfoAccount();
           setAccount({ ...infoAccount, status: "true" });
           const updateAccount = {
@@ -60,7 +63,6 @@ function Login() {
             role: res.data.user?.role || infoAccount.role || "user", // Lưu role
           };
           window.localStorage.setItem("account", JSON.stringify(updateAccount));
-          window.localStorage.setItem("token", res.data.token); // Lưu token riêng cho adminAxios
         }
       })
       .catch((err) => {

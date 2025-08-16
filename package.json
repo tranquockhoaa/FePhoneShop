@@ -20,8 +20,10 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-qr-code": "^2.0.15",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.5.0",
-    "recharts": "^2.15.3"
+    "recharts": "^2.15.3",
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
