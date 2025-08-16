@@ -1,9 +1,9 @@
 const getToken = () => {
   try {
-    const account = JSON.parse(localStorage.getItem("account") || "{}");
-    return account?.token || "";
+    const token = localStorage.getItem("token") || "{}";
+    return token || "";
   } catch (error) {
-    console.error("Error parsing account from localStorage:", error);
+    console.error("Error parsing token from localStorage:", error);
     return "";
   }
 };
