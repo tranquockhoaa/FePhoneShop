@@ -1,14 +1,15 @@
-import axios from "axios";
-import { stringify } from "qs";
-import getToken from "./token";
+import axios from 'axios';
+import { stringify } from 'qs';
+import getToken from './token';
+import { CONFIG } from '../config/env';
 
 const authorizedRequest = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: CONFIG.BASE_URL + CONFIG.BASE_URL_VERSION,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   paramsSerializer: (params) => {
-    return stringify(params, { arrayFormat: "repeat" });
+    return stringify(params, { arrayFormat: 'repeat' });
   },
 });
 
@@ -26,7 +27,7 @@ authorizedRequest.interceptors.response.use(
   },
   async (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("account");
+      localStorage.removeItem('account');
     }
     return Promise.reject(error?.response);
   }
