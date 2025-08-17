@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import UserFormModal from './user-form-modal';
-import { Table, notification } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import UserFormModal from "./user-form-modal";
+import { Table, notification } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 
-import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
-import { getUsersRequest } from '../../../store/uses/users.action';
-import { createUserApi, updateUserApi } from '../../../api/users.api';
+import { FaPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { getUsersRequest } from "../../../store/uses/users.action";
+import { createUserApi, updateUserApi } from "../../../api/users.api";
 
 const AdminUsers = () => {
   const dispatch = useDispatch();
   const { listUsers } = useSelector((state) => state.users);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showUserModal, setShowModal] = useState(false);
   const [userDetail, setUserDetail] = useState();
   const [loading, setLoading] = useState(false);
@@ -36,14 +36,14 @@ const AdminUsers = () => {
       if (userDetail) {
         await updateUserApi({ id: userDetail.user_id, body: formData });
         notification.success({
-          message: 'Thành công',
-          description: 'Cập nhật người dùng thành công!',
+          message: "Thành công",
+          description: "Cập nhật người dùng thành công!",
         });
       } else {
         await createUserApi(formData);
         notification.success({
-          message: 'Thành công',
-          description: 'Tạo người dùng mới thành công!',
+          message: "Thành công",
+          description: "Tạo người dùng mới thành công!",
         });
       }
 
@@ -57,10 +57,10 @@ const AdminUsers = () => {
       setShowModal(false);
       setUserDetail(null);
     } catch (error) {
-      console.error('Error submitting user:', error);
+      console.error("Error submitting user:", error);
       notification.error({
-        message: 'Lỗi',
-        description: 'Có lỗi xảy ra! Vui lòng thử lại.',
+        message: "Lỗi",
+        description: "Có lỗi xảy ra! Vui lòng thử lại.",
       });
     } finally {
       setLoading(false);
@@ -69,30 +69,30 @@ const AdminUsers = () => {
 
   const columns = [
     {
-      title: 'Tên',
-      dataIndex: 'full_name',
-      key: 'full_name',
+      title: "Tên",
+      dataIndex: "full_name",
+      key: "full_name",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'SDT',
-      dataIndex: 'phone_number',
-      key: 'phone_number',
+      title: "SDT",
+      dataIndex: "phone_number",
+      key: "phone_number",
     },
     {
-      title: 'role',
-      key: 'role',
-      dataIndex: 'role',
+      title: "role",
+      key: "role",
+      dataIndex: "role",
     },
     {
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
       render: (_, value) => (
         <>
           <button
@@ -140,12 +140,9 @@ const AdminUsers = () => {
           placeholder="Tìm kiếm theo mã sản phẩm..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          className="admin-btn search-btn"
-          onClick={handleSearch}
-        >
+        <button className="admin-btn search-btn" onClick={handleSearch}>
           <FaSearch />
         </button>
       </div>
@@ -176,10 +173,7 @@ const AdminUsers = () => {
       />
 
       <div className="admin-product-table-wrapper">
-        <Table
-          columns={columns}
-          dataSource={listUsers?.users || []}
-        />
+        <Table columns={columns} dataSource={listUsers?.users || []} />
       </div>
     </div>
   );
