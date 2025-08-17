@@ -1,75 +1,124 @@
 import React, { useState, useEffect } from 'react';
-import adminAxios from '../adminAxios';
+import UserFormModal from './user-form-modal';
+import { Table, notification } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
-// import "./AdminUsers.css";
+import { getUsersRequest } from '../../../store/uses/users.action';
+import { createUserApi, updateUserApi } from '../../../api/users.api';
 
 const AdminUsers = () => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showBrandModal, setShowBrandModal] = useState(false);
-  const [brandTab, setBrandTab] = useState('info');
-  const [allProducts, setAllProducts] = useState([]);
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const { listUsers } = useSelector((state) => state.users);
+
   const [search, setSearch] = useState('');
-  const [showCreate, setShowCreate] = useState(false);
-  const [newProduct, setNewProduct] = useState({
-    code: '',
-    name: '',
-    price: '',
-    stock: '',
-    brand: '',
-    status: 'Đang bán',
-    createdAt: new Date().toISOString().slice(0, 10),
-  });
+  const [showUserModal, setShowModal] = useState(false);
+  const [userDetail, setUserDetail] = useState();
+  const [loading, setLoading] = useState(false);
+  const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
 
   useEffect(() => {
-    adminAxios
-      .get('http://localhost:3000/api/v1/admin/product-details')
-      .then((res) => {
-        setAllProducts(res.data.productDetails || []);
-        setProducts(res.data.productDetails || []);
+    dispatch(
+      getUsersRequest({
+        page: 1,
+        limit: 30,
       })
-      .catch(() => {
-        setAllProducts([]);
-        setProducts([]);
-      });
+    );
   }, []);
 
   const handleSearch = () => {
     const keyword = search.trim();
-    setProducts(
-      allProducts.filter((sp) => String(sp.product_detail_id).includes(keyword))
-    );
   };
 
-  const handleCreate = (e) => {
-    e.preventDefault();
-    const newItem = {
-      product_detail_id: Date.now(),
-      price: Number(newProduct.price),
-      quantity: Number(newProduct.stock),
-      createdAt: new Date().toISOString(),
-      product: {
-        code: newProduct.code,
-        name: newProduct.name,
-        brand: { name: newProduct.brand },
-      },
-      color: { name: '' },
-      memory: { ram_size: '', storage_size: '' },
-      status: newProduct.status,
-    };
-    setAllProducts([...allProducts, newItem]);
-    setProducts([...products, newItem]);
-    setShowCreate(false);
-    setNewProduct({
-      code: '',
-      name: '',
-      price: '',
-      stock: '',
-      brand: '',
-      status: 'Đang bán',
-      createdAt: new Date().toISOString().slice(0, 10),
-    });
+  const handleUserSubmit = async (formData) => {
+    setLoading(true);
+    try {
+      if (userDetail) {
+        await updateUserApi({ id: userDetail.user_id, body: formData });
+        notification.success({
+          message: 'Thành công',
+          description: 'Cập nhật người dùng thành công!',
+        });
+      } else {
+        await createUserApi(formData);
+        notification.success({
+          message: 'Thành công',
+          description: 'Tạo người dùng mới thành công!',
+        });
+      }
+
+      dispatch(
+        getUsersRequest({
+          page: 1,
+          limit: 30,
+        })
+      );
+
+      setShowModal(false);
+      setUserDetail(null);
+    } catch (error) {
+      console.error('Error submitting user:', error);
+      notification.error({
+        message: 'Lỗi',
+        description: 'Có lỗi xảy ra! Vui lòng thử lại.',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const columns = [
+    {
+      title: 'Tên',
+      dataIndex: 'full_name',
+      key: 'full_name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'SDT',
+      dataIndex: 'phone_number',
+      key: 'phone_number',
+    },
+    {
+      title: 'role',
+      key: 'role',
+      dataIndex: 'role',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      render: (_, value) => (
+        <>
+          <button
+            className="admin-btn edit-btn"
+            title="Sửa"
+            onClick={() => {
+              setShowModal(true);
+              setUserDetail(value);
+            }}
+          >
+            <FaEdit />
+          </button>
+          <button
+            className="admin-btn delete-btn"
+            title="Xóa"
+            onClick={() => {
+              setIsModalConfirmOpen(true);
+              setUserDetail(value);
+            }}
+          >
+            <FaTrash />
+          </button>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="admin-product-page">
@@ -77,7 +126,10 @@ const AdminUsers = () => {
         <h2>Quản lý sản phẩm</h2>
         <button
           className="admin-btn add-btn"
-          onClick={() => setShowCreate(true)}
+          onClick={() => {
+            setShowModal(true);
+            setUserDetail(null);
+          }}
         >
           <FaPlus /> Thêm sản phẩm
         </button>
@@ -97,238 +149,38 @@ const AdminUsers = () => {
           <FaSearch />
         </button>
       </div>
-      {showCreate && (
-        <div className="admin-product-create-modal">
-          <form
-            className="admin-product-create-form"
-            onSubmit={handleCreate}
-          >
-            <h3>Thêm sản phẩm mới</h3>
-            <input
-              required
-              placeholder="Mã sản phẩm"
-              value={newProduct.code}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, code: e.target.value })
-              }
-            />
-            <input
-              required
-              placeholder="Tên sản phẩm"
-              value={newProduct.name}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-            />
-            <input
-              required
-              type="number"
-              placeholder="Giá bán"
-              value={newProduct.price}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, price: e.target.value })
-              }
-            />
-            <input
-              required
-              type="number"
-              placeholder="Tồn kho"
-              value={newProduct.stock}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, stock: e.target.value })
-              }
-            />
-            <input
-              required
-              placeholder="Thương hiệu"
-              value={newProduct.brand}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, brand: e.target.value })
-              }
-            />
-            <select
-              value={newProduct.status}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, status: e.target.value })
-              }
-            >
-              <option>Đang bán</option>
-              <option>Ngừng bán</option>
-            </select>
-            <div style={{ marginTop: 8 }}>
-              <button
-                type="submit"
-                className="admin-btn add-btn"
-              >
-                Tạo
-              </button>
-              <button
-                type="button"
-                className="admin-btn"
-                onClick={() => setShowCreate(false)}
-                style={{ marginLeft: 8 }}
-              >
-                Hủy
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+
+      <UserFormModal
+        visible={showUserModal}
+        onCancel={() => {
+          setShowModal(false);
+          setUserDetail(null);
+        }}
+        onOk={handleUserSubmit}
+        userData={userDetail}
+        isEdit={!!userDetail}
+        loading={loading}
+      />
+
+      <ModalConfirm
+        isOpen={isModalConfirmOpen}
+        onClose={() => {
+          setIsModalConfirmOpen(false);
+          setUserDetail(null);
+        }}
+        onConfirm={() => {}}
+        title="Xác nhận xóa sản phẩm"
+        message={`Bạn có chắc chắn muốn xóa "${userDetail?.full_name}"? Hành động này không thể hoàn tác.`}
+        confirmText="Xóa"
+        cancelText="Hủy"
+      />
+
       <div className="admin-product-table-wrapper">
-        <table className="admin-product-table">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Mã sản phẩm</th>
-              <th>Tên sản phẩm</th>
-              <th>Màu</th>
-              <th>RAM</th>
-              <th>Bộ nhớ</th>
-              <th>Giá bán</th>
-              <th>Tồn kho</th>
-              <th>Thương hiệu</th>
-              <th>Trạng thái</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((sp, idx) => (
-              <tr
-                key={sp.product_detail_id || idx}
-                onClick={() => {
-                  setSelectedProduct(sp);
-                  setBrandTab('info');
-                  setShowBrandModal(true);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                <td>{idx + 1}</td>
-                <td>{sp.product_detail_id}</td>
-                <td>{sp.product?.name}</td>
-                <td>{sp.color?.name || ''}</td>
-                <td>{sp.memory?.ram_size || ''}</td>
-                <td>{sp.memory?.storage_size || ''}</td>
-                <td>{sp.price?.toLocaleString()} đ</td>
-                <td>{sp.quantity}</td>
-                <td>{sp.product?.brand?.name || ''}</td>
-                <td>{sp.quantity > 0 ? 'Đang bán' : 'Ngừng bán'}</td>
-                <td>
-                  <button
-                    className="admin-btn edit-btn"
-                    title="Sửa"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="admin-btn delete-btn"
-                    title="Xóa"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {Array.from({ length: Math.max(0, 10 - products.length) }).map(
-              (_, i) => (
-                <tr key={`empty-${i}`}>
-                  {Array.from({ length: 11 }).map((_, j) => (
-                    <td
-                      key={j}
-                      style={{ height: 52, background: '#fff' }}
-                    ></td>
-                  ))}
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
+        <Table
+          columns={columns}
+          dataSource={listUsers?.users || []}
+        />
       </div>
-      {showBrandModal && selectedProduct && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowBrandModal(false)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ display: 'flex', minWidth: 500 }}
-          >
-            <div className="brand-modal-sidebar">
-              <div
-                className={
-                  brandTab === 'info' ? 'brand-tab active' : 'brand-tab'
-                }
-                onClick={() => setBrandTab('info')}
-              >
-                Quản lý sản phẩm
-              </div>
-              <div
-                className={
-                  brandTab === 'brand' ? 'brand-tab active' : 'brand-tab'
-                }
-                onClick={() => setBrandTab('brand')}
-              >
-                Quản lý thương hiệu
-              </div>
-            </div>
-            <div className="brand-modal-content">
-              {brandTab === 'info' && (
-                <>
-                  <h3>Thông tin sản phẩm</h3>
-                  <p>
-                    <b>Mã sản phẩm:</b> {selectedProduct.product_detail_id}
-                  </p>
-                  <p>
-                    <b>Tên sản phẩm:</b> {selectedProduct.product?.name}
-                  </p>
-                  <p>
-                    <b>Thương hiệu:</b>{' '}
-                    {selectedProduct.product?.brand?.name || ''}
-                  </p>
-                  <p>
-                    <b>Màu:</b> {selectedProduct.color?.name || ''}
-                  </p>
-                  <p>
-                    <b>RAM:</b> {selectedProduct.memory?.ram_size || ''}
-                  </p>
-                  <p>
-                    <b>Bộ nhớ:</b> {selectedProduct.memory?.storage_size || ''}
-                  </p>
-                  <p>
-                    <b>Giá bán:</b> {selectedProduct.price?.toLocaleString()} đ
-                  </p>
-                  <p>
-                    <b>Tồn kho:</b> {selectedProduct.quantity}
-                  </p>
-                  <p>
-                    <b>Trạng thái:</b>{' '}
-                    {selectedProduct.quantity > 0 ? 'Đang bán' : 'Ngừng bán'}
-                  </p>
-                </>
-              )}
-              {brandTab === 'brand' && (
-                <>
-                  <h3>Quản lý thương hiệu</h3>
-                  <p>Chức năng quản lý thương hiệu...</p>
-                </>
-              )}
-              <button
-                className="admin-btn"
-                onClick={() => setShowBrandModal(false)}
-                style={{ marginTop: 16 }}
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

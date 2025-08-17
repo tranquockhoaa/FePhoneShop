@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 body {
@@ -84,7 +84,7 @@ body {
 
 .login-container .separator::after {
   position: absolute;
-  content: " ";
+  content: ' ';
   width: 100%;
   height: 1px;
   background: black;
@@ -131,7 +131,7 @@ body {
 
 .forgotPassword-container .separator::after {
   position: absolute;
-  content: " ";
+  content: ' ';
   width: 100%;
   height: 1px;
   background: #ccc;
@@ -152,6 +152,13 @@ body {
   border-radius: 0.31rem;
   border: 1px solid #ccc;
   padding: 0 1.25rem 0 1rem;
+}
+
+.forgotPassword-container .wrap-button {
+  display: flex;
+  justify-content: space-between;
+  max-width: 200px;
+  margin: 0 auto;
 }
 
 .forgotPassword-container .button-form-container {
