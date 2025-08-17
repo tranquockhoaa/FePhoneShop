@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserProfileApi } from '../../api/profile.api';
+import { getUsersApi } from '../../api/users.api';
 
-export const getUserProfileRequest = createAsyncThunk(
-  'user/profile',
-  async (_, { rejectWithValue }) => {
+export const getUsersRequest = createAsyncThunk(
+  'users/getUsersRequest',
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await getUserProfileApi();
-      return response.data?.data;
+      const response = await getUsersApi(data);
+      return response;
     } catch (error) {
       return rejectWithValue(error.message || 'Lỗi API');
     }

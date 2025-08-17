@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, lazy } from 'react';
+import { ConfigProvider, notification } from 'antd';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import ForgotPassword from './pages/auth/ForgotPassword';
@@ -32,6 +33,10 @@ export const AsyncAdminProductsPage = lazy(() =>
   import('./pages/admin/AdminProductList')
 );
 
+notification.config({
+  placement: 'topRight',
+});
+
 // import Xiaomi from './components/homeMenu/Xiaomi';
 
 const ProductListWrapper = () => {
@@ -49,93 +54,95 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayouts />}>
-          <Route
-            path="/"
-            element={<HomePage />}
-          />
-          <Route
-            path="manageAccount"
-            element={<ManageAccount />}
-          >
+    <ConfigProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<MainLayouts />}>
             <Route
-              path="infoAccount"
-              element={<InfoAccount />}
-            ></Route>
+              path="/"
+              element={<HomePage />}
+            />
             <Route
-              path="loggout"
-              element={<Loggout />}
-            ></Route>
+              path="manageAccount"
+              element={<ManageAccount />}
+            >
+              <Route
+                path="infoAccount"
+                element={<InfoAccount />}
+              ></Route>
+              <Route
+                path="loggout"
+                element={<Loggout />}
+              ></Route>
+            </Route>
+            <Route
+              path="/product-detail/:code"
+              element={<ProductDetail />}
+            />
+            <Route
+              path="/cart"
+              element={<Cart />}
+            />
+            <Route
+              path="/products/:brandName"
+              element={<ProductListWrapper />}
+            />
+            <Route
+              path="/order-lookup"
+              element={<OrderHistory />}
+            />
+            <Route
+              path="/order-detail/:orderId"
+              element={<OrderDetail />}
+            />
+            <Route
+              path="/chinh-sach-bao-hanh"
+              element={<WarrantyPolicy />}
+            />
+            <Route
+              path="/chinh-sach-van-chuyen"
+              element={<ShippingPolicy />}
+            />
+            <Route
+              path="/chinh-sach-bao-mat"
+              element={<PrivacyPolicy />}
+            />
+          </Route>
+
+          <Route element={<LayoutAdmin />}>
+            {' '}
+            <Route
+              path="/admin/users"
+              element={<AsyncAdminUsersPage />}
+            />
+            <Route
+              path="/admin/products"
+              element={<AsyncAdminProductsPage />}
+            />
+            <Route
+              path="/admin"
+              element={<AdminDashboard />}
+            />
           </Route>
           <Route
-            path="/product-detail/:code"
-            element={<ProductDetail />}
+            path="/login"
+            element={<Login />}
           />
           <Route
-            path="/cart"
-            element={<Cart />}
+            path="/login/forgotPassword"
+            element={<ForgotPassword />}
           />
           <Route
-            path="/products/:brandName"
-            element={<ProductListWrapper />}
+            path="/signIn"
+            element={<SingIn />}
           />
           <Route
-            path="/order-lookup"
-            element={<OrderHistory />}
+            path="*"
+            element={<NoPage />}
           />
-          <Route
-            path="/order-detail/:orderId"
-            element={<OrderDetail />}
-          />
-          <Route
-            path="/chinh-sach-bao-hanh"
-            element={<WarrantyPolicy />}
-          />
-          <Route
-            path="/chinh-sach-van-chuyen"
-            element={<ShippingPolicy />}
-          />
-          <Route
-            path="/chinh-sach-bao-mat"
-            element={<PrivacyPolicy />}
-          />
-        </Route>
-
-        <Route element={<LayoutAdmin />}>
-          {' '}
-          <Route
-            path="/admin/users"
-            element={<AsyncAdminUsersPage />}
-          />
-          <Route
-            path="/admin/products"
-            element={<AsyncAdminProductsPage />}
-          />
-          <Route
-            path="/admin"
-            element={<AdminDashboard />}
-          />
-        </Route>
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-        <Route
-          path="/login/forgotPassword"
-          element={<ForgotPassword />}
-        />
-        <Route
-          path="/signIn"
-          element={<SingIn />}
-        />
-        <Route
-          path="*"
-          element={<NoPage />}
-        />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </ConfigProvider>
   );
 };
 
