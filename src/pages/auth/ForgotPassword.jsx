@@ -1,44 +1,116 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, notification, Form, Input } from 'antd';
+import { forgotPasswordApi, resetPasswordApi } from '../../api/profile.api';
 
 function ForgotPassword() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+
+  const [api, contextHolder] = notification.useNotification();
 
   const handleCancel = () => {
-    navigate("/login");
+    navigate('/login');
   };
+
+  const onFinishSendCode = async (values) => {
+    try {
+      await forgotPasswordApi(values);
+      setEmail(values.email);
+      api.success({
+        message: 'Email',
+        description: 'Vui lòng kiểm tra email để nhận mã xác thực',
+      });
+    } catch (error) {
+      api.error({
+        message: 'Error',
+        description: 'Error',
+      });
+    }
+  };
+
+  const onFinishChangePassword = async (values) => {
+    console.log('Success:', values);
+
+    try {
+      await resetPasswordApi({ ...values, email });
+
+      api.success({
+        message: 'Thành công',
+        description: 'Đổi mật khẩu thành công',
+      });
+      navigate('/login');
+    } catch (error) {
+      api.error({
+        message: 'Error',
+        description: 'Error',
+      });
+    }
+  };
+
   return (
     <div className="forgotPassword-container">
+      {contextHolder}
       <h2>Quên Mật Khẩu</h2>
       <div className="separator"></div>
       <p className="description">Nhập email để lấy lại mật khẩu</p>
-      <form
-        action="http://localhost:3000/api/v1/auth/forgotPassword"
-        method="post"
-        className="forgotpassword-form"
-      >
-        <div className="input-wrapper">
-          <input
-            type="email"
-            name="email"
-            className="input-field"
-            placeholder="Nhập địa chỉ email"
-          />
-        </div>
-        <div className="separator"></div>
-        <div className="button-form-container">
-          <div className="button">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="cancel-button"
+      {email ? (
+        <Form
+          name="basic"
+          onFinish={onFinishChangePassword}
+        >
+          <Form.Item
+            name="code"
+            rules={[{ required: true, message: 'Code is required' }]}
+          >
+            <Input placeholder="Nhập mã code" />
+          </Form.Item>
+          <Form.Item
+            name="newPassword"
+            rules={[
+              { required: true, message: 'Please input your new password!' },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <div className="wrap-button">
+            <Button onClick={handleCancel}>Hủy</Button>
+
+            <Button
+              type="primary"
+              htmlType="submit"
             >
-              Hủy
-            </button>
-            <input type="submit" className="submit-button" value="Tiếp tục" />
+              Tiếp tục
+            </Button>
           </div>
-        </div>
-      </form>
+        </Form>
+      ) : (
+        <Form
+          name="basic"
+          onFinish={onFinishSendCode}
+        >
+          <Form.Item
+            name="email"
+            rules={[
+              { required: true, type: 'email', message: 'Email is required' },
+            ]}
+          >
+            <Input placeholder="Nhập địa chỉ email" />
+          </Form.Item>
+
+          <div className="wrap-button">
+            <Button onClick={handleCancel}>Hủy</Button>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+            >
+              Tiếp tục
+            </Button>
+          </div>
+        </Form>
+      )}
     </div>
   );
 }

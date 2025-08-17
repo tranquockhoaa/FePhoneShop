@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUserProfileRequest } from './users.action';
+import { getUsersRequest } from './users.action';
 
 const initialState = {
-  profile: null,
+  listUsers: null,
   loading: false,
   error: '',
 };
@@ -12,27 +12,27 @@ export const usersSlide = createSlice({
   initialState,
   reducers: {
     resetProfile: (state) => {
-      state.profile = null;
+      state.listUsers = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getUserProfileRequest.pending, (state) => {
+      .addCase(getUsersRequest.pending, (state) => {
         state.loading = true;
         state.error = '';
       })
-      .addCase(getUserProfileRequest.fulfilled, (state, action) => {
+      .addCase(getUsersRequest.fulfilled, (state, action) => {
         state.loading = false;
         state.error = '';
-        state.profile = action.payload;
+        state.listUsers = action.payload;
       })
-      .addCase(getUserProfileRequest.rejected, (state, action) => {
+      .addCase(getUsersRequest.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       });
   },
 });
 
-export const profileAction = usersSlide.actions;
+export const usersAction = usersSlide.actions;
 
 export default usersSlide.reducer;
