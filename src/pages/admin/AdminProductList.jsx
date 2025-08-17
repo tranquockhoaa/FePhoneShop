@@ -3,6 +3,8 @@ import adminAxios from "./adminAxios";
 import { FaPlus, FaSearch, FaTrash, FaEdit } from "react-icons/fa";
 import "./AdminProduct.css";
 import "./AdminProductList.css";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllAdminBrandApiRq } from "../../store/admin-list-brand/admin-list-brand.action";
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
@@ -10,14 +12,24 @@ const AdminProductList = () => {
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [newProduct, setNewProduct] = useState({
-    sku: "",
     name: "",
-    brandName: "",
+    code: "code",
     description: "",
+    brand_id: "",
+    sku: "",
   });
+
+  console.log(allProducts);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllAdminBrandApiRq());
+  }, [dispatch]);
+
+  const listBrands = useSelector((state) => state.listBrands.listBrand?.data);
+  console.log("listBrands", listBrands);
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -37,12 +49,13 @@ const AdminProductList = () => {
       setProducts(allProducts);
       return;
     }
+    console.log("allProducts", keyword);
     setProducts(
       allProducts.filter(
         (sp) =>
           sp.product_id.toString().includes(keyword) ||
-          sp.code.toLowerCase().includes(keyword) ||
-          sp.name.toLowerCase().includes(keyword) ||
+          sp.name?.toLowerCase().includes(keyword) ||
+          sp.sku?.toLowerCase().includes(keyword) ||
           (sp.brand &&
             sp.brand.name &&
             sp.brand.name.toLowerCase().includes(keyword)) ||
@@ -53,11 +66,12 @@ const AdminProductList = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    await adminAxios.post("/products", {
+    await adminAxios.post("products/create", {
       sku: newProduct.sku,
       name: newProduct.name,
-      brandName: newProduct.brandName,
+      brand_id: newProduct.brand_id,
       description: newProduct.description,
+      code: newProduct.code,
     });
     setShowCreate(false);
     setNewProduct({ sku: "", name: "", brandName: "", description: "" });
@@ -77,13 +91,21 @@ const AdminProductList = () => {
     setEditProduct({
       product_id: product.product_id,
       name: product.name,
+      sku: product.sku,
+      description: product.description || "",
+      brand_id: product.brand.brand_id || "",
+      status: product.status || "ACTIVE",
     });
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    await adminAxios.put(`/products/${editProduct.product_id}/name`, {
+    await adminAxios.put(`/products/${editProduct.product_id}`, {
       name: editProduct.name,
+      sku: editProduct.sku,
+      brand_id: editProduct.brand_id,
+      description: editProduct.description,
+      status: editProduct.status,
     });
     setEditProduct(null);
     fetchProducts();
@@ -138,7 +160,7 @@ const AdminProductList = () => {
       <div className="admin-product-toolbar">
         <input
           className="admin-product-search"
-          placeholder="Tìm kiếm theo ID, mã, tên hoặc thương hiệu..."
+          placeholder="Tìm kiếm theo mã sp (sku), tên sản phẩm hoặc thương hiệu"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -199,14 +221,22 @@ const AdminProductList = () => {
                 setNewProduct({ ...newProduct, name: e.target.value })
               }
             />
-            <input
+            <select
+              style={{ width: "100%", height: 35, marginBottom: 14 }}
               required
-              placeholder="Thương hiệu"
-              value={newProduct.brandName}
+              value={newProduct.brand_id}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, brandName: e.target.value })
+                setNewProduct({ ...newProduct, brand_id: e.target.value })
               }
-            />
+            >
+              <option value="">Chọn thương hiệu</option>
+              {listBrands &&
+                listBrands.map((brand) => (
+                  <option key={brand.brand_id} value={brand.brand_id}>
+                    {brand.name}
+                  </option>
+                ))}
+            </select>
 
             <input
               required
@@ -216,7 +246,6 @@ const AdminProductList = () => {
                 setNewProduct({ ...newProduct, description: e.target.value })
               }
             />
-
             <div style={{ marginTop: 8 }}>
               <button type="submit" className="admin-btn add-btn">
                 Tạo
@@ -241,40 +270,91 @@ const AdminProductList = () => {
             style={{ minWidth: 400 }}
           >
             <h3>Cập nhật sản phẩm</h3>
-            <form onSubmit={handleUpdate}>
-              <input
-                required
-                placeholder="Tên sản phẩm"
-                value={editProduct.name}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, name: e.target.value })
-                }
-              />
+            <form
+              onSubmit={handleUpdate}
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              <div>
+                <label>
+                  <b>Tên sản phẩm</b>
+                </label>
+                <input
+                  required
+                  placeholder="Tên sản phẩm"
+                  value={editProduct.name}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, name: e.target.value })
+                  }
+                />
+              </div>
 
-              <input
-                required
-                placeholder="Mã sản phẩm"
-                value={editProduct.sku}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, name: e.target.value })
-                }
-              />
-              <input
-                required
-                placeholder="Mô tả"
-                value={editProduct.description}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, name: e.target.value })
-                }
-              />
-              <input
-                required
-                placeholder="Tên sản phẩm"
-                value={editProduct.name}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, name: e.target.value })
-                }
-              />
+              <div>
+                <label>
+                  <b>Mã sản phẩm (SKU)</b>
+                </label>
+                <input
+                  required
+                  placeholder="Mã sản phẩm"
+                  value={editProduct.sku}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, sku: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label>
+                  <b>Thương hiệu</b>
+                </label>
+                <select
+                  style={{ width: "100%", height: 35, marginBottom: 14 }}
+                  required
+                  value={editProduct.brand_id}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, brand_id: e.target.value })
+                  }
+                >
+                  <option value="">{editProduct.brand_id}</option>
+                  {listBrands &&
+                    listBrands.map((brand) => (
+                      <option key={brand.brand_id} value={brand.brand_id}>
+                        {brand.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div>
+                <label>
+                  <b>Mô tả</b>
+                </label>
+                <input
+                  placeholder="Mô tả"
+                  value={editProduct.description}
+                  onChange={(e) =>
+                    setEditProduct({
+                      ...editProduct,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <label>
+                  <b>Trạng thái</b>
+                </label>
+                <select
+                  style={{ width: "100%", height: 35, marginBottom: 14 }}
+                  required
+                  value={editProduct.status}
+                  onChange={(e) =>
+                    setEditProduct({ ...editProduct, status: e.target.value })
+                  }
+                >
+                  <option value="ACTIVE">Đang bán</option>
+                  <option value="INACTIVE">Ngừng bán</option>
+                </select>
+              </div>
 
               <div style={{ marginTop: 8 }}>
                 <button type="submit" className="admin-btn add-btn">
@@ -293,6 +373,7 @@ const AdminProductList = () => {
           </div>
         </div>
       )}
+
       <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
         <table className="admin-product-table">
           <thead>
@@ -315,7 +396,7 @@ const AdminProductList = () => {
                   zIndex: 2,
                 }}
               >
-                SKU
+                Mã sản phẩm (SKU)
               </th>
               <th
                 style={{
@@ -365,6 +446,16 @@ const AdminProductList = () => {
                   zIndex: 2,
                 }}
               >
+                Trạng thái
+              </th>
+              <th
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  background: "#fff",
+                  zIndex: 2,
+                }}
+              >
                 Hành động
               </th>
             </tr>
@@ -374,7 +465,7 @@ const AdminProductList = () => {
               <tr
                 key={sp.product_id}
                 onClick={() => setSelectedProduct(sp)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", width: 35 }}
               >
                 <td>{idx + 1}</td>
                 <td>{sp.sku}</td>
@@ -386,6 +477,7 @@ const AdminProductList = () => {
                     ? new Date(sp.createdAt).toLocaleDateString("vi-VN")
                     : ""}
                 </td>
+                <td>{sp.status === "INACTIVE" ? "Ngừng bán" : "Đang bán"}</td>
                 <td>
                   <button
                     className="admin-btn edit-btn"
@@ -423,13 +515,16 @@ const AdminProductList = () => {
           >
             <h3>Thông tin sản phẩm</h3>
             <p>
-              <b>Mã sản phẩm:</b> {selectedProduct.product_id}
+              <b>Mã sản phẩm:</b> {selectedProduct.sku}
             </p>
             <p>
               <b>Tên sản phẩm:</b> {selectedProduct.name}
             </p>
             <p>
               <b>Thương hiệu:</b> {selectedProduct.brand?.name || ""}
+            </p>
+            <p>
+              <b>Mô tả:</b> {selectedProduct.description || "Không có mô tả"}
             </p>
             <p>
               <b>Tổng tồn kho:</b> {selectedProduct.totalQuantity}
@@ -442,6 +537,10 @@ const AdminProductList = () => {
                   )
                 : ""}
             </p>
+            <p>
+              <b>Trang thái:</b>{" "}
+              {selectedProduct.status === "INACTIVE" ? "Ngừng bán" : "Đang bán"}
+            </p>{" "}
             <button
               className="admin-btn"
               onClick={() => setSelectedProduct(null)}
