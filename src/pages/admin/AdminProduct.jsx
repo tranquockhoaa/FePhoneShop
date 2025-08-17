@@ -170,7 +170,7 @@ const AdminProduct = () => {
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã sản phẩm</th>
+              <th>SKU</th>
               <th>Tên sản phẩm</th>
               <th>Màu</th>
               <th>RAM</th>
@@ -194,7 +194,7 @@ const AdminProduct = () => {
                 style={{ cursor: "pointer" }}
               >
                 <td>{idx + 1}</td>
-                <td>{sp.product_detail_id}</td>
+                <td>{sp.product.sku}</td>
                 <td>{sp.product?.name}</td>
                 <td>{sp.color?.name || ""}</td>
                 <td>{sp.memory?.ram_size || ""}</td>

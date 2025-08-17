@@ -10,9 +10,10 @@ const AdminProductList = () => {
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [newProduct, setNewProduct] = useState({
-    code: "",
+    sku: "",
     name: "",
     brandName: "",
+    description: "",
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
@@ -53,12 +54,13 @@ const AdminProductList = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     await adminAxios.post("/products", {
-      code: newProduct.code,
+      sku: newProduct.sku,
       name: newProduct.name,
       brandName: newProduct.brandName,
+      description: newProduct.description,
     });
     setShowCreate(false);
-    setNewProduct({ code: "", name: "", brandName: "" });
+    setNewProduct({ sku: "", name: "", brandName: "", description: "" });
     fetchProducts();
   };
 
@@ -184,9 +186,9 @@ const AdminProductList = () => {
             <input
               required
               placeholder="Mã sản phẩm"
-              value={newProduct.code}
+              value={newProduct.sku}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, code: e.target.value })
+                setNewProduct({ ...newProduct, sku: e.target.value })
               }
             />
             <input
@@ -205,6 +207,16 @@ const AdminProductList = () => {
                 setNewProduct({ ...newProduct, brandName: e.target.value })
               }
             />
+
+            <input
+              required
+              placeholder="Mô tả"
+              value={newProduct.description}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, description: e.target.value })
+              }
+            />
+
             <div style={{ marginTop: 8 }}>
               <button type="submit" className="admin-btn add-btn">
                 Tạo
@@ -228,7 +240,7 @@ const AdminProductList = () => {
             onClick={(e) => e.stopPropagation()}
             style={{ minWidth: 400 }}
           >
-            <h3>Sửa tên sản phẩm</h3>
+            <h3>Cập nhật sản phẩm</h3>
             <form onSubmit={handleUpdate}>
               <input
                 required
@@ -238,6 +250,32 @@ const AdminProductList = () => {
                   setEditProduct({ ...editProduct, name: e.target.value })
                 }
               />
+
+              <input
+                required
+                placeholder="Mã sản phẩm"
+                value={editProduct.sku}
+                onChange={(e) =>
+                  setEditProduct({ ...editProduct, name: e.target.value })
+                }
+              />
+              <input
+                required
+                placeholder="Mô tả"
+                value={editProduct.description}
+                onChange={(e) =>
+                  setEditProduct({ ...editProduct, name: e.target.value })
+                }
+              />
+              <input
+                required
+                placeholder="Tên sản phẩm"
+                value={editProduct.name}
+                onChange={(e) =>
+                  setEditProduct({ ...editProduct, name: e.target.value })
+                }
+              />
+
               <div style={{ marginTop: 8 }}>
                 <button type="submit" className="admin-btn add-btn">
                   Lưu
@@ -277,7 +315,7 @@ const AdminProductList = () => {
                   zIndex: 2,
                 }}
               >
-                Mã sản phẩm
+                SKU
               </th>
               <th
                 style={{
@@ -339,7 +377,7 @@ const AdminProductList = () => {
                 style={{ cursor: "pointer" }}
               >
                 <td>{idx + 1}</td>
-                <td>{sp.product_id}</td>
+                <td>{sp.sku}</td>
                 <td>{sp.name}</td>
                 <td>{sp.brand?.name || ""}</td>
                 <td>{sp.totalQuantity}</td>

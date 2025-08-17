@@ -1,29 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import adminAxios from '../adminAxios';
-import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
-// import "./AdminUsers.css";
+import React, { useState, useEffect } from "react";
+import adminAxios from "../adminAxios";
+import { FaPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { ImOpt } from "react-icons/im";
+import "./AdminUsers.css";
+import { useSelector, useDispatch } from "react-redux";
+import { getListUserApiRequest } from "../../../store/admin-list-user/admin-list-user.action";
 
 const AdminUsers = () => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getListUserApiRequest());
+  }, [dispatch]);
+  const listUsers = useSelector((state) => state.listUser);
+
+  const [selectedUser, setselectedUser] = useState(null);
   const [showBrandModal, setShowBrandModal] = useState(false);
-  const [brandTab, setBrandTab] = useState('info');
+  const [brandTab, setBrandTab] = useState("info");
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [newProduct, setNewProduct] = useState({
-    code: '',
-    name: '',
-    price: '',
-    stock: '',
-    brand: '',
-    status: 'Đang bán',
+    code: "",
+    name: "",
+    price: "",
+    stock: "",
+    brand: "",
+    status: "Đang bán",
     createdAt: new Date().toISOString().slice(0, 10),
   });
 
+  const formatDate = (isoString) => {
+    if (!isoString) return "";
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2); // Lấy 2 số cuối
+    return `${day}/${month}/${year}`;
+  };
+
   useEffect(() => {
     adminAxios
-      .get('http://localhost:3000/api/v1/admin/product-details')
+      .get("http://localhost:3000/api/v1/admin/product-details")
       .then((res) => {
         setAllProducts(res.data.productDetails || []);
         setProducts(res.data.productDetails || []);
@@ -53,20 +71,20 @@ const AdminUsers = () => {
         name: newProduct.name,
         brand: { name: newProduct.brand },
       },
-      color: { name: '' },
-      memory: { ram_size: '', storage_size: '' },
+      color: { name: "" },
+      memory: { ram_size: "", storage_size: "" },
       status: newProduct.status,
     };
     setAllProducts([...allProducts, newItem]);
     setProducts([...products, newItem]);
     setShowCreate(false);
     setNewProduct({
-      code: '',
-      name: '',
-      price: '',
-      stock: '',
-      brand: '',
-      status: 'Đang bán',
+      code: "",
+      name: "",
+      price: "",
+      stock: "",
+      brand: "",
+      status: "Đang bán",
       createdAt: new Date().toISOString().slice(0, 10),
     });
   };
@@ -88,21 +106,15 @@ const AdminUsers = () => {
           placeholder="Tìm kiếm theo mã sản phẩm..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          className="admin-btn search-btn"
-          onClick={handleSearch}
-        >
+        <button className="admin-btn search-btn" onClick={handleSearch}>
           <FaSearch />
         </button>
       </div>
       {showCreate && (
         <div className="admin-product-create-modal">
-          <form
-            className="admin-product-create-form"
-            onSubmit={handleCreate}
-          >
+          <form className="admin-product-create-form" onSubmit={handleCreate}>
             <h3>Thêm sản phẩm mới</h3>
             <input
               required
@@ -156,10 +168,7 @@ const AdminUsers = () => {
               <option>Ngừng bán</option>
             </select>
             <div style={{ marginTop: 8 }}>
-              <button
-                type="submit"
-                className="admin-btn add-btn"
-              >
+              <button type="submit" className="admin-btn add-btn">
                 Tạo
               </button>
               <button
@@ -178,40 +187,40 @@ const AdminUsers = () => {
         <table className="admin-product-table">
           <thead>
             <tr>
-              <th>STT</th>
-              <th>Mã sản phẩm</th>
-              <th>Tên sản phẩm</th>
-              <th>Màu</th>
-              <th>RAM</th>
-              <th>Bộ nhớ</th>
-              <th>Giá bán</th>
-              <th>Tồn kho</th>
-              <th>Thương hiệu</th>
+              <th style={{ width: 50 }}>STT</th>
+              <th>Tên người dùng</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
+              <th>Giới tính</th>
+              <th>Ngày sinh</th>
+              <th>Địa chỉ</th>
+              <th>Vai trò</th>
+              <th>Ngày tạo</th>
               <th>Trạng thái</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((sp, idx) => (
+            {listUsers.listUser?.map((listUser, idx) => (
               <tr
-                key={sp.product_detail_id || idx}
+                key={idx}
                 onClick={() => {
-                  setSelectedProduct(sp);
-                  setBrandTab('info');
+                  setselectedUser(listUser);
+                  setBrandTab("info");
                   setShowBrandModal(true);
                 }}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
-                <td>{idx + 1}</td>
-                <td>{sp.product_detail_id}</td>
-                <td>{sp.product?.name}</td>
-                <td>{sp.color?.name || ''}</td>
-                <td>{sp.memory?.ram_size || ''}</td>
-                <td>{sp.memory?.storage_size || ''}</td>
-                <td>{sp.price?.toLocaleString()} đ</td>
-                <td>{sp.quantity}</td>
-                <td>{sp.product?.brand?.name || ''}</td>
-                <td>{sp.quantity > 0 ? 'Đang bán' : 'Ngừng bán'}</td>
+                <td style={{ width: 50 }}>{idx + 1}</td>
+                <td>{listUser.full_name}</td>
+                <td>{listUser.email}</td>
+                <td>{listUser.phone_number}</td>
+                <td>{listUser?.gender || ""}</td>
+                <td>{listUser.birth_date || "Chưa cập nhật"}</td>
+                <td>{listUser.address || "Chưa cập nhật"}</td>
+                <td>{listUser.role}</td>
+                <td>{formatDate(listUser.createdAt)}</td>
+                <td>{listUser.createdAt}</td>
                 <td>
                   <button
                     className="admin-btn edit-btn"
@@ -238,10 +247,7 @@ const AdminUsers = () => {
               (_, i) => (
                 <tr key={`empty-${i}`}>
                   {Array.from({ length: 11 }).map((_, j) => (
-                    <td
-                      key={j}
-                      style={{ height: 52, background: '#fff' }}
-                    ></td>
+                    <td key={j} style={{ height: 52, background: "#fff" }}></td>
                   ))}
                 </tr>
               )
@@ -249,70 +255,68 @@ const AdminUsers = () => {
           </tbody>
         </table>
       </div>
-      {showBrandModal && selectedProduct && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowBrandModal(false)}
-        >
+      {showBrandModal && selectedUser && (
+        <div className="modal-overlay" onClick={() => setShowBrandModal(false)}>
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
-            style={{ display: 'flex', minWidth: 500 }}
+            style={{ display: "flex", minWidth: 500 }}
           >
             <div className="brand-modal-sidebar">
               <div
                 className={
-                  brandTab === 'info' ? 'brand-tab active' : 'brand-tab'
+                  brandTab === "info" ? "brand-tab active" : "brand-tab"
                 }
-                onClick={() => setBrandTab('info')}
+                onClick={() => setBrandTab("info")}
               >
                 Quản lý sản phẩm
               </div>
               <div
                 className={
-                  brandTab === 'brand' ? 'brand-tab active' : 'brand-tab'
+                  brandTab === "brand" ? "brand-tab active" : "brand-tab"
                 }
-                onClick={() => setBrandTab('brand')}
+                onClick={() => setBrandTab("brand")}
               >
                 Quản lý thương hiệu
               </div>
             </div>
             <div className="brand-modal-content">
-              {brandTab === 'info' && (
+              {brandTab === "info" && (
                 <>
-                  <h3>Thông tin sản phẩm</h3>
+                  <h3>Thông tin khách hàng</h3>
                   <p>
-                    <b>Mã sản phẩm:</b> {selectedProduct.product_detail_id}
+                    <b>Tên khách hàng:</b> {selectedUser.full_name}
                   </p>
                   <p>
-                    <b>Tên sản phẩm:</b> {selectedProduct.product?.name}
+                    <b>Email: </b> {selectedUser.email}
                   </p>
                   <p>
-                    <b>Thương hiệu:</b>{' '}
-                    {selectedProduct.product?.brand?.name || ''}
+                    <b>Số điện thoại: </b>
+
+                    {selectedUser.phone_number || "Chưa cập nhật"}
                   </p>
                   <p>
-                    <b>Màu:</b> {selectedProduct.color?.name || ''}
+                    <b>Giới tính: </b> {selectedUser.gender || "Chưa cập nhật"}
                   </p>
                   <p>
-                    <b>RAM:</b> {selectedProduct.memory?.ram_size || ''}
+                    <b>Ngày sinh:</b>{" "}
+                    {selectedUser.birth_date || "Chưa cập nhật"}
                   </p>
                   <p>
-                    <b>Bộ nhớ:</b> {selectedProduct.memory?.storage_size || ''}
+                    <b>Địa chỉ: </b> {selectedUser.address || "Chưa cập nhật"}
                   </p>
                   <p>
-                    <b>Giá bán:</b> {selectedProduct.price?.toLocaleString()} đ
+                    <b>Role:</b> {selectedUser.role} đ
                   </p>
                   <p>
-                    <b>Tồn kho:</b> {selectedProduct.quantity}
+                    <b>Trạng thái:</b> {selectedUser.role || "Chưa cập nhật"}
                   </p>
                   <p>
-                    <b>Trạng thái:</b>{' '}
-                    {selectedProduct.quantity > 0 ? 'Đang bán' : 'Ngừng bán'}
+                    <b>Ngày tạo</b> {formatDate(selectedUser.createdAt)}
                   </p>
                 </>
               )}
-              {brandTab === 'brand' && (
+              {brandTab === "brand" && (
                 <>
                   <h3>Quản lý thương hiệu</h3>
                   <p>Chức năng quản lý thương hiệu...</p>

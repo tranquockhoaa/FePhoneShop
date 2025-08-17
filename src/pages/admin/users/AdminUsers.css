@@ -4,6 +4,10 @@
   min-height: 100vh;
 }
 
+.admin-product-table-wrapper .admin-product-table tr td {
+  overflow: hidden;
+}
+
 .admin-product-header {
   display: flex;
   align-items: center;
@@ -102,7 +106,9 @@
   table-layout: fixed;
 }
 
-.admin-product-table th, .admin-product-table td {
+.admin-product-table th,
+.admin-product-table td {
+  overflow: hidden;
   padding: 12px 10px;
   text-align: left;
 }
@@ -127,7 +133,8 @@
 }
 
 @media (max-width: 900px) {
-  .admin-product-header, .admin-product-toolbar {
+  .admin-product-header,
+  .admin-product-toolbar {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
@@ -135,7 +142,9 @@
   .admin-product-header h2 {
     font-size: 1.3rem;
   }
-  .admin-product-table th, .admin-product-table td {
+  .admin-product-table th,
+  .admin-product-table td {
+    overflow: hidden !important;
     padding: 8px 6px;
     font-size: 0.95rem;
   }
@@ -150,8 +159,11 @@
 
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.3);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,7 +193,8 @@
   color: #1976d2;
   transition: background 0.2s;
 }
-.brand-tab.active, .brand-tab:hover {
+.brand-tab.active,
+.brand-tab:hover {
   background: #e3f2fd;
   color: #0d47a1;
   font-weight: 500;
@@ -213,7 +226,7 @@
   border-radius: 8px;
   padding: 32px 24px 24px 24px;
   min-width: 340px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
   position: relative;
 }
 
