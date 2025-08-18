@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./cart.css";
-import QRCode from "react-qr-code";
+import {
+  getCartDetailApi,
+  handleDecreaseApi,
+  handleIncreaseApi,
+  handleRemoveProductApi,
+} from "../../api/cart-user";
 
 const Cart = () => {
   const [cartDetails, setCartDetails] = useState([]);
+  const [cartStatus, setCartStatus] = useState("");
   const [total, setTotal] = useState(0);
-
-  // Thông tin khách hàng
+  console.log(cartDetails);
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
     phone: "",
@@ -16,236 +20,49 @@ const Cart = () => {
     address: "",
   });
 
-  // Thêm state cho phương thức thanh toán
-  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const loadCart = async () => {
+    try {
+      const res = await getCartDetailApi();
+      const data = res.data; // vì api trả về response.data rồi
+      setCartDetails(data.cartDetails || []);
+      setCartStatus(data.status || "");
 
-  // State cho QR
-  const [showQR, setShowQR] = useState(false);
-  const [qrValue, setQrValue] = useState("");
-  const [qrSessionId, setQrSessionId] = useState(""); // dùng cho luồng QR chuẩn
+      const sum = (data.cartDetails || []).reduce(
+        (acc, item) => acc + item.unit_price * item.quantity,
+        0
+      );
+      setTotal(sum);
+    } catch (error) {
+      console.error("Load cart error:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadCart();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCustomerInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Lấy token từ localStorage
-  const account = JSON.parse(localStorage.getItem("account") || "{}");
-  const token = account.token;
-
-  // Lấy giỏ hàng từ backend
-  const [cartStatus, setCartStatus] = useState("ACTIVE");
-  useEffect(() => {
-    if (!token) return;
-    axios
-      .get("http://localhost:3000/api/v1/cart/my-cart", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        const details = res.data.data.cartDetails || [];
-        setCartDetails(details);
-        setTotal(
-          details.reduce(
-            (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
-            0
-          )
-        );
-        setCartStatus(res.data.data.cart?.status || "ACTIVE");
-      });
-  }, [token]);
-
-  // Xử lý tăng/giảm số lượng
-  const handleQuantity = (cartDetailId, delta) => {
-    const item = cartDetails.find(
-      (i) =>
-        i.cartdetailid === cartDetailId ||
-        i.cart_detail_id === cartDetailId ||
-        i.cartDetailId === cartDetailId ||
-        i.id === cartDetailId
-    );
-    if (!item) return;
-    const newQty = item.quantity + delta;
-    if (newQty < 1) return;
-    axios
-      .patch(
-        `http://localhost:3000/api/v1/cart-detail/${cartDetailId}/quantity/${
-          delta > 0 ? "increase" : "decrease"
-        }`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then(() => {
-        // Reload cart
-        return axios.get("http://localhost:3000/api/v1/cart/my-cart", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      })
-      .then((res) => {
-        const details = res.data.data.cartDetails || [];
-        setCartDetails(details);
-        setTotal(
-          details.reduce(
-            (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
-            0
-          )
-        );
-      });
-  };
-
-  // Xóa sản phẩm khỏi cart
-  const handleDelete = (cartDetailId) => {
-    axios
-      .delete(`http://localhost:3000/api/v1/cart-detail/${cartDetailId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(() => {
-        // Reload cart
-        return axios.get("http://localhost:3000/api/v1/cart/my-cart", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      })
-      .then((res) => {
-        const details = res.data.data.cartDetails || [];
-        setCartDetails(details);
-        setTotal(
-          details.reduce(
-            (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
-            0
-          )
-        );
-      });
-  };
-
-  // Hàm build url ảnh sản phẩm giống homepage/productlist
-  const buildImageUrl = (item) => {
-    if (item.image) return encodeURI(item.image);
-    if (item.brand_name && item.code && item.color) {
-      return encodeURI(
-        `data/${item.brand_name}/${item.code}/image/${item.color}.jpg`
-      );
-    }
-    return "/image/common/no_image.png";
-  };
-
-  // Luồng chuẩn QR: Gửi yêu cầu tạo QR session (chưa tạo đơn hàng)
-  const handleCreateQR = async (e) => {
-    e.preventDefault();
-    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
-      alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
-      return;
-    }
+  const handleQuantity = async (product_detail_id, delta) => {
+    console.log(product_detail_id);
     try {
-      // Gửi thông tin tạm thời lên server để tạo QR (API này bạn cần backend hỗ trợ)
-      const res = await axios.post(
-        "http://localhost:3000/api/v1/payment/create-qr-session",
-        {
-          amount: total,
-          customer: customerInfo,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      // Server trả về qrValue (chuỗi để render QR) và qrSessionId (id để kiểm tra trạng thái)
-      setQrValue(res.data.qrValue);
-      setQrSessionId(res.data.qrSessionId);
-      setShowQR(true);
-    } catch (err) {
-      alert("Không tạo được mã QR!");
-    }
-  };
-
-  // Khi xác nhận đã thanh toán thành công (giả lập bằng nút)
-  const handleConfirmQRPayment = async () => {
-    try {
-      // Gọi API kiểm tra trạng thái thanh toán QR
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/payment/check-qr-session/${qrSessionId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      if (res.data.status === "success" && res.data.paid) {
-        // Đã thanh toán thành công, tạo đơn hàng và payment
-        const orderRes = await axios.post(
-          "http://localhost:3000/api/v1/order/checkout",
-          {
-            name: customerInfo.name,
-            phone: customerInfo.phone,
-            email: customerInfo.email,
-            note: customerInfo.note,
-            address: customerInfo.address,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        const orderId = orderRes.data?.data?.order_id;
-        // Tạo payment với trạng thái SUCCESS
-        await axios.post(
-          "http://localhost:3000/api/v1/payment",
-          {
-            order_id: orderId,
-            amount: total,
-            payment_method: "QR",
-            payment_status: "SUCCESS",
-            transaction_code: res.data.transaction_code, // nếu có
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        localStorage.removeItem("cart");
-        alert("Đặt hàng và thanh toán thành công!");
-        window.location.href = "/";
+      if (delta === 1) {
+        await handleIncreaseApi(product_detail_id);
       } else {
-        alert("Chưa nhận được thanh toán. Vui lòng thử lại sau!");
+        await handleDecreaseApi(product_detail_id);
       }
-    } catch (err) {
-      alert("Lỗi kiểm tra trạng thái thanh toán!");
+      await loadCart();
+    } catch (error) {
+      console.error("Update quantity error:", error);
     }
   };
 
-  // Đặt hàng và thanh toán COD
-  const handleOrder = async (e) => {
+  const handleSubmitOrder = (e) => {
     e.preventDefault();
-    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
-      alert("Vui lòng nhập đầy đủ thông tin bắt buộc!");
-      return;
-    }
-    try {
-      // Đặt hàng
-      const orderRes = await axios.post(
-        "http://localhost:3000/api/v1/order/checkout",
-        {
-          name: customerInfo.name,
-          phone: customerInfo.phone,
-          email: customerInfo.email,
-          note: customerInfo.note,
-          address: customerInfo.address,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      const orderData = orderRes.data?.data;
-      if (!orderData || !orderData.order_id) {
-        alert("Không lấy được mã đơn hàng từ server!");
-        return;
-      }
-      const orderId = orderData.order_id;
-
-      // Tạo payment
-      await axios.post(
-        "http://localhost:3000/api/v1/payment",
-        {
-          order_id: orderId,
-          amount: total,
-          payment_method: paymentMethod,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      localStorage.removeItem("cart");
-      alert("Đặt hàng và thanh toán thành công!");
-      window.location.href = "/";
-    } catch (err) {
-      console.error("Lỗi:", err);
-      alert(
-        "Đặt hàng/thanh toán thất bại!\n" +
-          (err?.response?.data?.message || err.message)
-      );
-    }
+    console.log("Order info:", customerInfo);
   };
 
   return (
@@ -261,6 +78,7 @@ const Cart = () => {
           </div>
           <div className="right">GIỎ HÀNG CỦA BẠN</div>
         </div>
+
         <div className="table-wrap">
           {cartDetails.length === 0 || cartStatus === "ORDERED" ? (
             <div className="empty-cart">
@@ -273,28 +91,30 @@ const Cart = () => {
             </div>
           ) : (
             cartDetails.map((item) => {
-              const cartDetailId =
-                item.cartdetailid ||
-                item.cart_detail_id ||
-                item.cartDetailId ||
-                item.id;
+              const cartDetailId = item.product_detail.product_detail_id;
+              const product = item.product_detail?.product || {};
+              const memory = item.product_detail?.memory || {};
+              const brand = product.brand || {};
+
               return (
                 <div className="cart-item" key={cartDetailId}>
                   <div className="cart-left">
-                    <img
-                      src={buildImageUrl(item)}
-                      alt={item.name}
-                      className="product-img"
-                    />
+                    <img src="" alt={product.name} className="product-img" />
                     <div className="cart-info">
-                      <h4>{item.name}</h4>
+                      <h4>{product.name}</h4>
                       <p>
-                        {item.ram_size || item.ram} /{" "}
-                        {item.storage_size || item.storage} / {item.color}
+                        {memory.ram_size} / {memory.storage_size} / Màu:{" "}
+                        {item.product_detail.color_id}
                       </p>
+                      <p>Thương hiệu: {brand.name}</p>
                       <div
                         className="del-item"
-                        onClick={() => handleDelete(cartDetailId)}
+                        onClick={async () => {
+                          handleRemoveProductApi(
+                            item.product_detail.product_detail_id
+                          );
+                          await loadCart();
+                        }}
                       >
                         Xóa
                       </div>
@@ -305,11 +125,25 @@ const Cart = () => {
                       {item.unit_price?.toLocaleString()}₫
                     </div>
                     <div className="quantity-control">
-                      <button onClick={() => handleQuantity(cartDetailId, -1)}>
+                      <button
+                        onClick={async () => {
+                          await handleDecreaseApi(
+                            item.product_detail.product_detail_id
+                          );
+                          await loadCart();
+                        }}
+                      >
                         -
                       </button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => handleQuantity(cartDetailId, 1)}>
+                      <button
+                        onClick={async () => {
+                          await handleIncreaseApi(
+                            item.product_detail.product_detail_id
+                          );
+                          await loadCart();
+                        }}
+                      >
                         +
                       </button>
                     </div>
@@ -319,18 +153,16 @@ const Cart = () => {
             })
           )}
         </div>
+
         {cartDetails.length > 0 && cartStatus !== "ORDERED" && (
           <div className="total-cart">
             <font>Thanh toán:</font>{" "}
             <span className="total-price">{total.toLocaleString()}₫</span>
           </div>
         )}
-        {/* Form đặt hàng */}
-        {cartDetails.length > 0 && !showQR && (
-          <form
-            className="checkout-form"
-            onSubmit={paymentMethod === "QR" ? handleCreateQR : handleOrder}
-          >
+
+        {cartDetails.length > 0 && (
+          <form className="checkout-form" onSubmit={handleSubmitOrder}>
             <div className="checkout-title">THÔNG TIN KHÁCH HÀNG</div>
             <div className="checkout-row">
               <input
@@ -364,7 +196,7 @@ const Cart = () => {
               <input
                 type="text"
                 name="note"
-                placeholder="Lưu ý hoặc yêu cầu trước khi giao hàng"
+                placeholder="Lưu ý khi giao hàng"
                 value={customerInfo.note}
                 onChange={handleInputChange}
               />
@@ -379,45 +211,22 @@ const Cart = () => {
                 rows={2}
               />
             </div>
-            {/* Chọn phương thức thanh toán */}
+
             <div className="checkout-row">
               <label>
-                <input
-                  type="radio"
-                  name="payment_method"
-                  value="COD"
-                  checked={paymentMethod === "COD"}
-                  onChange={() => setPaymentMethod("COD")}
-                />
+                <input type="radio" name="payment_method" value="COD" />
                 Thanh toán khi nhận hàng (COD)
               </label>
               <label style={{ marginLeft: 16 }}>
-                <input
-                  type="radio"
-                  name="payment_method"
-                  value="QR"
-                  checked={paymentMethod === "QR"}
-                  onChange={() => setPaymentMethod("QR")}
-                />
-                Thanh toán QR
+                <input type="radio" name="payment_method" value="QR" />
+                Thanh toán VNPAY
               </label>
             </div>
+
             <button type="submit" className="checkout-btn">
               ĐẶT HÀNG
             </button>
           </form>
-        )}
-        {/* Hiển thị QR nếu chọn QR */}
-        {showQR && (
-          <div className="qr-modal">
-            <h3>Quét mã QR để thanh toán</h3>
-            <QRCode value={qrValue} size={256} />
-            <div style={{ margin: "16px 0" }}>{qrValue}</div>
-            <button onClick={handleConfirmQRPayment}>
-              Tôi đã thanh toán xong
-            </button>
-            <button onClick={() => window.location.reload()}>Hủy</button>
-          </div>
         )}
       </div>
     </div>
