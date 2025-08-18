@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import adminAxios from "./adminAxios";
 import "./AdminProductDetail.css";
 import { FaPlus, FaSearch, FaTrash, FaEdit } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { getColorListApiRq } from "../../store/color-list/color-list.action";
 
 const AdminProductDetail = () => {
   const [details, setDetails] = useState([]);
@@ -18,7 +20,12 @@ const AdminProductDetail = () => {
   });
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [editDetail, setEditDetail] = useState(null);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getColorListApiRq());
+  }, [dispatch]);
 
+  const listColors = useSelector((state) => state.listColors.listColor);
   useEffect(() => {
     fetchDetails();
   }, []);
@@ -366,9 +373,9 @@ const AdminProductDetail = () => {
             onClick={(e) => e.stopPropagation()}
             style={{ minWidth: 400 }}
           >
-            <h3>Thông tin biến thể</h3>
+            <h3>Thông tin chi tiết sản phẩm</h3>
             <p>
-              <b>ID sản phẩm:</b> {selectedDetail.product_detail_id}
+              <b>Mã sản phẩm (sku):</b> {selectedDetail.sku || "Trống"}
             </p>
             <p>
               <b>Tên sản phẩm:</b> {selectedDetail.product?.name}
@@ -388,10 +395,20 @@ const AdminProductDetail = () => {
             <p>
               <b>Tồn kho:</b> {selectedDetail.quantity}
             </p>
+            <p>
+              <b>Trạng thái:</b>
+              {selectedDetail?.status}
+            </p>
             <button
               className="admin-btn"
               onClick={() => setSelectedDetail(null)}
-              style={{ marginTop: 16 }}
+              style={{
+                marginTop: 16,
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
               Đóng
             </button>

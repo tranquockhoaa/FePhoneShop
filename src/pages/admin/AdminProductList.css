@@ -1,7 +1,10 @@
 /* Modal overlay */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(30, 30, 30, 0.3);
   display: flex;
   align-items: center;
@@ -15,14 +18,20 @@
   border-radius: 8px;
   padding: 32px 24px 24px 24px;
   min-width: 340px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
   position: relative;
   animation: fadeInModal 0.2s;
 }
 
 @keyframes fadeInModal {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-content h3 {
@@ -72,10 +81,9 @@
 }
 
 .admin-btn.edit-btn {
-  background: #ff9800;
+  background: #1976d2;
 }
 
 .admin-btn:hover {
   opacity: 0.9;
 }
-

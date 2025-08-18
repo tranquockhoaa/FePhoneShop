@@ -1,79 +1,79 @@
 import React, { useEffect, useState } from "react";
+import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllAdminBrandApiRq } from "../../../../store/admin-list-brand/admin-list-brand.action";
 import adminAxios from "../../adminAxios";
 import "./index.css";
-import { FaPlus } from "react-icons/fa";
-
-// Hàm định dạng ngày dd/mm/yyyy tiếng Việt
-function formatVNDate(date) {
-  if (!date) return "";
-  const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
-}
 
 const AdminManageBrand = () => {
-  const [orders, setOrders] = useState([]);
-  const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
+
   const [search, setSearch] = useState("");
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [statusUpdating, setStatusUpdating] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
+  const [newBrand, setNewBrand] = useState({
+    name: "",
+    infomation: "",
+    icon: "",
+  });
+  const [editBrand, setEditBrand] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
 
-  // Thêm state cho lọc ngày
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-
-  // Lấy toàn bộ đơn hàng (không phân trang)
-  const fetchOrders = async () => {
-    setLoading(true);
-    let url = `/orders/search?`;
-    if (search) url += `searchTerm=${encodeURIComponent(search)}&`;
-    if (status) url += `status=${status}&`;
-    if (fromDate) url += `fromDate=${fromDate}&`;
-    if (toDate) url += `toDate=${toDate}&`;
-    const res = await adminAxios.get(url);
-    setOrders(res.data.data || []);
-    setLoading(false);
-  };
   useEffect(() => {
-    fetchOrders();
-    // eslint-disable-next-line
-  }, [status, fromDate, toDate]);
+    dispatch(getAllAdminBrandApiRq());
+  }, [dispatch]);
+  const listBrands = useSelector((state) => state.listBrands.listBrand);
 
-  // Tìm kiếm
   const handleSearch = () => {
-    fetchOrders();
+    const keyword = search.trim().toLowerCase();
+    if (!keyword) return;
+    return listBrands.filter(
+      (b) =>
+        b.name.toLowerCase().includes(keyword) ||
+        b.brand_id.toString().includes(keyword)
+    );
   };
 
-  // Xem chi tiết đơn hàng
-  const handleShowDetail = async (orderId) => {
-    setLoading(true);
-    const res = await adminAxios.get(`/orders/${orderId}`);
-    setSelectedOrder(res.data.data);
-    setLoading(false);
-  };
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    try {
+      await adminAxios.post("brand", newBrand);
+      setShowCreate(false);
+      setNewBrand({ name: "", infomation: "", icon: "" });
 
-  // Cập nhật trạng thái đơn hàng
-  const handleUpdateStatus = async (orderId, newStatus) => {
-    setStatusUpdating(true);
-    await adminAxios.put(`/orders/${orderId}/status`, {
-      status: newStatus,
-    });
-    setStatusUpdating(false);
-    setSelectedOrder(null); // Đóng modal sau khi cập nhật
-    fetchOrders(); // Cập nhật lại danh sách ngoài bảng
-  };
-
-  // Xóa đơn hàng
-  const handleDelete = async (orderId) => {
-    if (window.confirm("Bạn có chắc muốn xóa đơn hàng này?")) {
-      await adminAxios.delete(`/orders/${orderId}`);
-      fetchOrders();
-      setSelectedOrder(null);
+      dispatch(getAllAdminBrandApiRq());
+    } catch (error) {
+      console.error("Lỗi tạo brand:", error);
+      alert("Tạo brand thất bại!");
     }
   };
+
+  const handleEdit = (brand) => setEditBrand({ ...brand });
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await adminAxios.put(`brands/${editBrand.brand_id}`, editBrand);
+      setEditBrand(null);
+      dispatch(getAllAdminBrandApiRq());
+    } catch (error) {
+      console.error("Lỗi cập nhật brand:", error);
+      alert("Cập nhật thất bại!");
+    }
+  };
+
+  const handleDelete = async (brandId) => {
+    if (window.confirm("Bạn có chắc muốn xóa thương hiệu này?")) {
+      try {
+        await adminAxios.delete(`brands/${brandId}`);
+        dispatch(getAllAdminBrandApiRq());
+      } catch (error) {
+        console.error("Lỗi xóa brand:", error);
+        alert("Xóa thất bại!");
+      }
+    }
+  };
+
+  const filteredBrands = search ? handleSearch() : listBrands;
 
   return (
     <div
@@ -81,21 +81,219 @@ const AdminManageBrand = () => {
       style={{ display: "flex", flexDirection: "column", height: "100vh" }}
     >
       <h2>Quản lý thương hiệu</h2>
+
       <div className="admin-order-toolbar">
         <input
-          placeholder="Tìm kiếm theo mã, tên brand"
+          className="admin-product-search"
+          placeholder="Tìm kiếm theo mã hoặc tên thương hiệu"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button className="admin-btn" onClick={handleSearch}>
-          Tìm kiếm
+        <button className="admin-btn search-btn" onClick={handleSearch}>
+          <FaSearch />
         </button>
-        <button className="admin-btn add-btn">
+        <button
+          className="admin-btn add-btn"
+          onClick={() => setShowCreate(true)}
+          style={{ marginLeft: 8 }}
+        >
           <FaPlus /> Thêm brand mới
         </button>
       </div>
-      {loading && <div>Đang tải...</div>}
+
+      {showCreate && (
+        <div className="modal-overlay" onClick={() => setShowCreate(false)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{ minWidth: 400 }}
+          >
+            <h3>Thêm thương hiệu mới</h3>
+            <form
+              onSubmit={handleCreate}
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              <input
+                required
+                placeholder="Tên thương hiệu"
+                value={newBrand.name}
+                onChange={(e) =>
+                  setNewBrand({ ...newBrand, name: e.target.value })
+                }
+              />
+              <input
+                placeholder="Thông tin"
+                value={newBrand.infomation}
+                onChange={(e) =>
+                  setNewBrand({ ...newBrand, infomation: e.target.value })
+                }
+              />
+              <input
+                placeholder="Icon URL"
+                value={newBrand.icon}
+                onChange={(e) =>
+                  setNewBrand({ ...newBrand, icon: e.target.value })
+                }
+              />
+              <div style={{ marginTop: 8 }}>
+                <button type="submit" className="admin-btn add-btn">
+                  Tạo
+                </button>
+                <button
+                  type="button"
+                  className="admin-btn"
+                  onClick={() => setShowCreate(false)}
+                  style={{ marginLeft: 8 }}
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {editBrand && (
+        <div className="modal-overlay" onClick={() => setEditBrand(null)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{ minWidth: 400 }}
+          >
+            <h3>Sửa thương hiệu</h3>
+            <form
+              onSubmit={handleUpdate}
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              <label>
+                Tên thương hiệu:
+                <input
+                  required
+                  placeholder="Tên thương hiệu"
+                  value={editBrand.name}
+                  onChange={(e) =>
+                    setEditBrand({ ...editBrand, name: e.target.value })
+                  }
+                />
+              </label>
+
+              <label>
+                Thông tin:
+                <input
+                  placeholder="Thông tin"
+                  value={editBrand.infomation}
+                  onChange={(e) =>
+                    setEditBrand({ ...editBrand, infomation: e.target.value })
+                  }
+                />
+              </label>
+
+              <label>
+                Icon URL:
+                <input
+                  placeholder="Icon URL"
+                  value={editBrand.icon}
+                  onChange={(e) =>
+                    setEditBrand({ ...editBrand, icon: e.target.value })
+                  }
+                />
+              </label>
+
+              <label>
+                Trạng thái:
+                <select
+                  value={editBrand.status || "ACTIVE"}
+                  onChange={(e) =>
+                    setEditBrand({ ...editBrand, status: e.target.value })
+                  }
+                >
+                  <option value="ACTIVE">Đang bán</option>
+                  <option value="INACTIVE">Ngừng bán</option>
+                </select>
+              </label>
+
+              <div style={{ marginTop: 8 }}>
+                <button type="submit" className="admin-btn add-btn">
+                  Lưu
+                </button>
+                <button
+                  type="button"
+                  className="admin-btn"
+                  onClick={() => setEditBrand(null)}
+                  style={{ marginLeft: 8 }}
+                >
+                  d sadasHủy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {selectedBrand && (
+        <div className="modal-overlay" onClick={() => setSelectedBrand(null)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{ minWidth: 400 }}
+          >
+            <h3>Chi tiết thương hiệu</h3>
+            <p>
+              <b>Mã thương hiệu:</b> {selectedBrand.brand_id}
+            </p>
+            <p>
+              <b>Tên thương hiệu:</b> {selectedBrand.name}
+            </p>
+            <p>
+              <b>Thông tin:</b>{" "}
+              {selectedBrand.infomation || "Không có thông tin"}
+            </p>
+            <p>
+              <b>Icon:</b>{" "}
+              {selectedBrand.icon ? (
+                <img
+                  src={selectedBrand.icon}
+                  alt="icon"
+                  style={{ width: 30, height: 30 }}
+                />
+              ) : (
+                "Không có icon"
+              )}
+            </p>
+            <p>
+              <b>Trạng thái:</b>{" "}
+              {selectedBrand.status === "ACTIVE" ? "Đang bán" : "Ngừng bán"}
+            </p>
+            {selectedBrand.createdAt && (
+              <p>
+                <b>Ngày tạo:</b>{" "}
+                {new Date(selectedBrand.createdAt).toLocaleDateString("vi-VN")}
+              </p>
+            )}
+            {selectedBrand.updatedAt && (
+              <p>
+                <b>Ngày cập nhật:</b>{" "}
+                {new Date(selectedBrand.updatedAt).toLocaleDateString("vi-VN")}
+              </p>
+            )}
+            <button
+              className="admin-btn"
+              onClick={() => setSelectedBrand(null)}
+              style={{
+                marginTop: 16,
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
         <table className="admin-product-table">
           <thead>
@@ -103,160 +301,49 @@ const AdminManageBrand = () => {
               <th>STT</th>
               <th>Mã thương hiệu</th>
               <th>Tên</th>
-              <th>Tổng sản phẩm</th>
+              <th>Thông tin</th>
               <th>Trạng thái</th>
-              <th>Ngày bắt đầu</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {orders
-              .filter((order) => !status || order.status === status)
-              .map((order, idx) => (
-                <tr key={order.order_id}>
-                  <td>{idx + 1}</td>
-                  <td>{order.order_id}</td>
-                  <td>{order.full_name || order.name || "Không rõ"}</td>
-                  <td style={{ wordBreak: "break-all", maxWidth: 140 }}>
-                    {order.email || ""}
-                  </td>
-                  <td>{order.phone_number || ""}</td>
-                  <td>{order.total_amount?.toLocaleString() || ""}</td>
-                  <td>{order.status}</td>
-                  <td>
-                    {order.createdAt ? formatVNDate(order.createdAt) : ""}
-                  </td>
-                  <td>
-                    <button
-                      className="admin-btn"
-                      onClick={() => handleShowDetail(order.order_id)}
-                      style={{ marginRight: 8 }}
-                    >
-                      Xem chi tiết
-                    </button>
-                    <button
-                      className="admin-btn delete-btn"
-                      onClick={() => handleDelete(order.order_id)}
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              ))}
+            {filteredBrands?.map((brand, idx) => (
+              <tr
+                key={brand.brand_id}
+                style={{ cursor: "pointer" }}
+                onClick={() => setSelectedBrand(brand)}
+              >
+                <td>{idx + 1}</td>
+                <td>{brand.brand_id}</td>
+                <td>{brand.name}</td>
+                <td>{brand.infomation || ""}</td>
+                <td>{brand.status === "ACTIVE" ? "Đang bán" : "Ngừng bán"}</td>
+                <td>
+                  <button
+                    className="admin-btn edit-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(brand);
+                    }}
+                    style={{ marginRight: 8 }}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="admin-btn delete-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(brand.brand_id);
+                    }}
+                  >
+                    <FaTrash />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-      {/* Modal chi tiết đơn hàng */}
-      {selectedOrder && (
-        <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minWidth: 400 }}
-          >
-            <h3>Chi tiết đơn hàng</h3>
-            <p>
-              <b>Mã đơn:</b> {selectedOrder.order_id}
-            </p>
-            <p>
-              <b>Khách hàng:</b>{" "}
-              {selectedOrder.full_name || selectedOrder.name || "Không rõ"}
-            </p>
-            <p>
-              <b>SĐT:</b> {selectedOrder.phone_number || ""}
-            </p>
-            <p>
-              <b>Email:</b> {selectedOrder.email || ""}
-            </p>
-            <p>
-              <b>Địa chỉ:</b> {selectedOrder.address || ""}
-            </p>
-            <p>
-              <b>Phương thức thanh toán:</b>{" "}
-              {selectedOrder.payment_method || ""}
-            </p>
-            <p>
-              <b>Tổng tiền:</b>{" "}
-              {selectedOrder.total_amount?.toLocaleString() || ""} đ
-            </p>
-            <p>
-              <b>Trạng thái:</b> {selectedOrder.status}
-            </p>
-            <p>
-              <b>Ngày tạo:</b>{" "}
-              {selectedOrder.createdAt
-                ? formatVNDate(selectedOrder.createdAt)
-                : ""}
-            </p>
-            {/* Hiển thị sản phẩm trong đơn nếu có */}
-            {selectedOrder.order_items &&
-              Array.isArray(selectedOrder.order_items) && (
-                <>
-                  <b>Sản phẩm:</b>
-                  <ul>
-                    {selectedOrder.order_items.map((item, i) => (
-                      <li key={i}>
-                        <div>
-                          <b>
-                            {item.product_detail?.product?.name ||
-                              item.productName ||
-                              "Sản phẩm"}
-                          </b>
-                          {" - "}
-                          {item.product_detail?.product?.brand?.name || ""}
-                        </div>
-                        <div>
-                          <b>Mã sản phẩm chi tiết:</b>{" "}
-                          {item.product_detail?.product_detail_id ||
-                            item.product_detail_id ||
-                            "Không rõ"}
-                        </div>
-                        <div>
-                          Màu: {item.product_detail?.color?.name || ""}
-                          {" | "}RAM:{" "}
-                          {item.product_detail?.memory?.ram_size || item.ram}
-                          {" | "}Bộ nhớ:{" "}
-                          {item.product_detail?.memory?.storage_size ||
-                            item.storage}
-                        </div>
-                        <div>
-                          Số lượng: {item.quantity} | Đơn giá:{" "}
-                          {item.unit_price?.toLocaleString() ||
-                            item.price?.toLocaleString()}{" "}
-                          đ | Thành tiền: {item.total_price?.toLocaleString()} đ
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            {/* Cập nhật trạng thái */}
-            <div style={{ margin: "12px 0" }}>
-              <b>Cập nhật trạng thái: </b>
-              <select
-                value={selectedOrder.status}
-                onChange={(e) =>
-                  handleUpdateStatus(selectedOrder.order_id, e.target.value)
-                }
-                disabled={statusUpdating}
-                style={{ marginLeft: 8 }}
-              >
-                <option value="PENDING">Chờ xử lý</option>
-                <option value="CONFIRMED">Đã xác nhận</option>
-                <option value="SHIPPED">Đang giao</option>
-                <option value="DELIVERED">Đã giao</option>
-                <option value="CANCELLED">Đã hủy</option>
-              </select>
-            </div>
-            <button
-              className="admin-btn"
-              onClick={() => setSelectedOrder(null)}
-              style={{ marginTop: 16 }}
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

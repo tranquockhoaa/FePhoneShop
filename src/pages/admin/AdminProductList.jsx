@@ -49,18 +49,21 @@ const AdminProductList = () => {
       setProducts(allProducts);
       return;
     }
-    console.log("allProducts", keyword);
+
     setProducts(
-      allProducts.filter(
-        (sp) =>
-          sp.product_id.toString().includes(keyword) ||
-          sp.name?.toLowerCase().includes(keyword) ||
-          sp.sku?.toLowerCase().includes(keyword) ||
-          (sp.brand &&
-            sp.brand.name &&
-            sp.brand.name.toLowerCase().includes(keyword)) ||
-          (sp.brandName && sp.brandName.toLowerCase().includes(keyword))
-      )
+      allProducts.filter((sp) => {
+        const productId = sp.product_id?.toString() ?? "";
+        const name = sp.name ?? "";
+        const sku = sp.sku ?? "";
+        const brandName = sp.brand?.name ?? sp.brandName ?? "";
+
+        return (
+          productId.includes(keyword) ||
+          name.toLowerCase().includes(keyword) ||
+          sku.toLowerCase().includes(keyword) ||
+          brandName.toLowerCase().includes(keyword)
+        );
+      })
     );
   };
 
@@ -544,7 +547,13 @@ const AdminProductList = () => {
             <button
               className="admin-btn"
               onClick={() => setSelectedProduct(null)}
-              style={{ marginTop: 16 }}
+              style={{
+                marginTop: 16,
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
               Đóng
             </button>
