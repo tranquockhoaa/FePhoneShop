@@ -1,0 +1,8 @@
+export { default as Information } from "./Information";
+export { default as IphoneSearch } from "./IphoneSearch";
+export { default as IqooSearch } from "./IqooSearch";
+
+export { default as RealmeSearch } from "./RealmeSearch";
+export { default as RedmiSearch } from "./RedmiSearch";
+export { default as SamsungSearch } from "./SamsungSearch";
+export { default as XiaomiSearch } from "./XiaomiSearch";

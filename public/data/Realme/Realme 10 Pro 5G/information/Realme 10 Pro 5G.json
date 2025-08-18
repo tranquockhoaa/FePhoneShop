@@ -1,0 +1,29 @@
+{
+  "Thẻ_SIM": "2 SIM nano",
+  "Màn_hình": "6.72 inches, 109.0 cm2",
+  "Độ_phân_giải": "Full HD;1080 x 2400 pixels, 20:9 ratio",
+  "CPU": "Qualcomm SM6375 Snapdragon 695 5G (6 nm)",
+  "RAM": "6GB/8GB/12GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB/256GB",
+  "Camera_sau": [
+    "108 MP, f/1.8, 24mm (wide), 1/1.67\", 0.64µm, PDAF",
+    "2 MP, f/2.4, (depth)"
+  ],
+  "Camera_trước": "16 MP, f/2.5, 25mm (wide)",
+  "Jack_3.5mm_Loa": "Có , loa kép",
+  "Pin": "Li-Po 5000 mAh, non-removable, sạc nhanh 33W",
+  "Màu_sắc": ["Đen", "Vàng", "Xanh"],
+  "GPU": "Adreno 619",
+  "Ngày_ra_mắt": "2022, November 17",
+  "Hệ_điều_hành": "Android 13, Realme UI 4.0",
+  "Loại_sản_phẩm": "Mới nguyên SEAL",
+  "Mạng_Băng_tần": "GSM / CDMA / HSPA / CDMA2000 / LTE / 5G",
+  "Kích_thước": "163.7 x 74.2 x 8.1 mm or 8.3 mm",
+  "Trọng_lượng": "190 g / 192 g (6.70 oz)",
+  "Bluetooth": "5.1, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "UFS 2.2",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band",
+  "NFC": "Có",
+  "Cổng_kết_nối": "USB Type-C 2.0"
+}

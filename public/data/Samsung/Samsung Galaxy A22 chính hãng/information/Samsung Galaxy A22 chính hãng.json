@@ -1,0 +1,31 @@
+{
+  "Thẻ_SIM": "2 Nano SIM - 2 sóng online",
+  "Màn_hình": "6.4 inches, Super AMOLED, 90Hz, 600 nits",
+  "Độ_phân_giải": "720 x 1600 pixels, 20:9 ratio",
+  "CPU": "Mediatek MT6769V/CU Helio G80 (12 nm)",
+  "RAM": "6GB",
+  "Bộ_nhớ_Thẻ_nhớ": "128GB",
+  "Camera_sau": [
+    "48 MP, f/1.8, (wide), 1/2.0\", 0.8µm, PDAF, OIS",
+    "8 MP",
+    "2 MP",
+    "2 MP"
+  ],
+  "Camera_trước": "13 MP, f/2.2, (wide), 1/3.1\", 1.12µm",
+  "Jack_3.5mm_Loa": "Có / Loa đơn",
+  "Pin": "Li-Po 5000 mAh, Sạc nhanh 15W",
+  "Màu_sắc": ["Tím", "Xanh mint"],
+  "GPU": "Mali-G52 MC2",
+  "Ngày_ra_mắt": "03/06/2021",
+  "Hệ_điều_hành": "Android 11, One UI Core 3.1",
+  "Loại_sản_phẩm": "Đã kích hoạt, đủ phụ kiện",
+  "Mạng_Băng_tần": "GSM / HSPA / LTE",
+  "Kích_thước": "159.3 x 73.6 x 8.4 mm",
+  "Trọng_lượng": "186 g",
+  "Bluetooth": "5.0, A2DP, LE",
+  "Chuẩn_bộ_nhớ": "eMMC 5.1",
+  "Chuẩn_âm_thanh": "24-bit/192kHz audio",
+  "Wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band, Wi-Fi Direct, hotspot",
+  "NFC": "Có",
+  "Cổng_kết_nối": "USB Type-C"
+}

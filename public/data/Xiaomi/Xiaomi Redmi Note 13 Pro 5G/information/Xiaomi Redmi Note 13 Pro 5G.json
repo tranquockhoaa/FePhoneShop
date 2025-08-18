@@ -1,0 +1,38 @@
+{
+  "thong_tin_dien_thoai": {
+    "the_sim": "2 SIM, Nano SIM",
+    "man_hinh": {
+      "kich_thuoc": "6.67 inches",
+      "cong_nghe": "AMOLED",
+      "mau_sac": "68B colors",
+      "toc_do_quet": "120Hz",
+      "cong_nghe_anh": "Dolby Vision",
+      "do_sang": "1800 nits (peak)",
+      "do_phan_giai": "1220 x 2712 pixels"
+    },
+    "cpu": "Qualcomm SM7435-AB Snapdragon 7s Gen 2 (4 nm)",
+    "ram": ["8GB", "12GB"],
+    "bo_nho": ["128GB", "256GB", "512GB"],
+    "camera_sau": [
+      "200 MP, f/1.7 (wide), 1/1.4\", 0.56µm, multi-directional PDAF, OIS",
+      "8 MP, f/2.2, 120˚ (ultrawide), 1/4\", 1.12µm",
+      "2 MP, f/2.4 (macro)"
+    ],
+    "camera_truoc": "16 MP, f/2.5 (góc rộng), HDR",
+    "pin": {
+      "loai": "Li-Po",
+      "dung_luong": "5100 mAh",
+      "sac_nhanh": "67W"
+    },
+    "mau_sac": ["đen", "trắng", "xanh da trời", "tím"],
+    "gpu": "Adreno 710",
+    "he_dieu_hanh": "Android 13, MIUI 14",
+    "mang_bang_tan": "GSM / CDMA / HSPA / EVDO / LTE / 5G",
+    "kich_thuoc": "161.2 x 74.3 x 8 mm",
+    "trong_luong": "187 g",
+    "bluetooth": "5.2, A2DP, LE",
+    "wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band",
+    "nfc": true,
+    "cong_ket_noi": "USB Type-C 2.0"
+  }
+}

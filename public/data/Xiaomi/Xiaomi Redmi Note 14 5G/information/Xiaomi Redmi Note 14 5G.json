@@ -1,0 +1,41 @@
+{
+  "thong_tin_dien_thoai": {
+    "the_sim": "2 nano sim",
+    "kieu_thiet_ke": "Thanh cảm ứng",
+    "man_hinh": {
+      "kich_thuoc": "6.67 inches",
+      "cong_nghe": "OLED",
+      "toc_do_quet": "120Hz",
+      "hdr": "HDR10+",
+      "do_sang": "1200 nits (HBM), 2100nits (peak)",
+      "do_phan_giai": "1080 x 2400 pixels"
+    },
+    "cpu": "Mediatek Dimensity 7025 (6 nm)",
+    "ram": ["6GB", "8GB"],
+    "bo_nho": ["128GB", "256GB"],
+    "the_nho": "Không hỗ trợ",
+    "camera_sau": [
+      "50 MP, f/1.5 (góc rộng), 1/1.96\", 1.6μm, OIS+EIS",
+      "2 MP (độ sâu)"
+    ],
+    "camera_truoc": "16 MP (góc rộng)",
+    "jack_3_5mm": true,
+    "loa": "loa kép",
+    "pin": {
+      "dung_luong": "5010mAh",
+      "sac_nhanh": "45W"
+    },
+    "mau_sac": ["xanh", "trắng", "đen"],
+    "gpu": "IMG BXM-8-256",
+    "he_dieu_hanh": "Android 14, Hyper OS",
+    "loai_san_pham": "Mới nguyên seal",
+    "mang_bang_tan": "GSM / CDMA / HSPA / EVDO / LTE / 5G",
+    "kich_thuoc": "162.4 x 75.7 x 7.99 mm",
+    "trong_luong": "190 g",
+    "bluetooth": "5.3, A2DP, LE",
+    "chuan_am_thanh": "24-bit/192kHz audio",
+    "wifi": "Wi-Fi 802.11 a/b/g/n/ac, dual-band",
+    "nfc": false,
+    "cong_ket_noi": "USB Type-C 2.0"
+  }
+}

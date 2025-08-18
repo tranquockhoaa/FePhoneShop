@@ -1,0 +1,42 @@
+.email-cell {
+  word-break: break-all;
+  max-width: 140px;
+  white-space: pre-line;
+}
+
+.admin-order-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8f9fa;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  width: 98%;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.admin-order-toolbar input,
+.admin-order-toolbar select {
+  padding: 8px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.admin-order-toolbar input:focus,
+.admin-order-toolbar select:focus {
+  border: 1.5px solid #1677ff;
+}
+
+.admin-order-toolbar .admin-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  margin: 0;
+}

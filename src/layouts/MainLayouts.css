@@ -1,0 +1,17 @@
+/* Removed invalid import statement */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+.body-container {
+  min-width: 1200px;
+  margin: 0 auto;
+  margin-top: 100px;
+  position: relative;
+  padding-bottom: 50px;
+  min-height: calc(100vh - 200px);
+}

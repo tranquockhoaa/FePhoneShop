@@ -1,0 +1,25 @@
+{
+  "Kích thước màn hình": "6.7\"",
+  "Độ phân giải": "2412 x 1080",
+  "Công nghệ màn hình": "AMOLED",
+  "Tần số quét (Hz)": "120Hz",
+  "Độ sáng màn hình": "1100nits",
+  "Camera sau": {
+    "Camera chính": "64MP; f/1.7; FOV 81°; AF",
+    "Camera góc rộng": "8MP; f/2.2; FOV 112°",
+    "Camera macro": "2MP; f/2.4; FOV 89°"
+  },
+  "Camera trước": "32MP; f/2.4; FOV 90°",
+  "Vi xử lý": "MediaTek Dimensity 7050",
+  "Vi xử lý đồ họa (GPU)": "ARM Mali-G68 MC4",
+  "Hệ điều hành": "Android 14",
+  "RAM": "8GB",
+  "Bộ nhớ trong": "256GB",
+  "Thẻ nhớ ngoài": "Có hỗ trợ",
+  "Mạng di động": "5G",
+  "Số khe SIM": "2 nano SIM",
+  "Cổng kết nối/sạc": "Type-C",
+  "Dung lượng pin sản phẩm": "5000mAh",
+  "Hỗ trợ sạc tối đa": "67W",
+  "Loại pin": "Li-Po"
+}
