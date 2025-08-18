@@ -1,22 +1,31 @@
-import React, { useState, useEffect } from "react";
-import adminAxios from "./adminAxios";
-import { FaPlus, FaSearch, FaTrash, FaEdit } from "react-icons/fa";
-import "./AdminProduct.css";
-import "./AdminProductList.css";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllAdminBrandApiRq } from "../../store/admin-list-brand/admin-list-brand.action";
+import React, { useState, useEffect } from 'react';
+import adminAxios from './adminAxios';
+import { FaPlus, FaSearch, FaTrash, FaEdit } from 'react-icons/fa';
+import { Table, Button, Space, Tag } from 'antd';
+import './AdminProduct.css';
+import './AdminProductList.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllAdminBrandApiRq } from '../../store/admin-list-brand/admin-list-brand.action';
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [newProduct, setNewProduct] = useState({
-    name: "",
-    code: "code",
-    description: "",
-    brand_id: "",
-    sku: "",
+    name: '',
+    code: 'code',
+    description: '',
+    brand_id: '',
+    sku: '',
+  });
+
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+    total: 0,
+    loading: false,
   });
 
   console.log(allProducts);
@@ -29,33 +38,62 @@ const AdminProductList = () => {
   }, [dispatch]);
 
   const listBrands = useSelector((state) => state.listBrands.listBrand);
-  console.log("listBrands", listBrands);
+  console.log('listBrands', listBrands);
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
   }, []);
 
-  const fetchProducts = () => {
+  const fetchProducts = (
+    page = 1,
+    pageSize = 20,
+    sortBy = 'createdAt',
+    sortOrder = 'ASC'
+  ) => {
+    setPagination((prev) => ({ ...prev, loading: true }));
+
     adminAxios
-      .get("http://localhost:3000/api/v1/admin/products-with-total-quantity")
+      .get('http://localhost:3000/api/v1/admin/products-with-total-quantity', {
+        params: {
+          page,
+          size: pageSize,
+          sortBy,
+          sortOrder,
+        },
+      })
       .then((res) => {
-        setProducts(res.data.products || []);
-        setAllProducts(res.data.products || []);
+        const { products: productList, total, currentPage } = res.data;
+        setProducts(productList || []);
+        setAllProducts(productList || []);
+        setPagination((prev) => ({
+          ...prev,
+          current: currentPage || page,
+          total: total || 0,
+          loading: false,
+        }));
+      })
+      .catch((error) => {
+        console.error('Error fetching products:', error);
+        setPagination((prev) => ({ ...prev, loading: false }));
       });
   };
 
   const handleSearch = () => {
     const keyword = search.trim().toLowerCase();
     if (!keyword) {
-      setProducts(allProducts);
+      // Reset to first page when clearing search
+      setPagination((prev) => ({ ...prev, current: 1 }));
+      fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
       return;
     }
 
+    // For now, we'll do client-side search on the current page
+    // In a real implementation, you might want to send the search term to the API
     setProducts(
       allProducts.filter((sp) => {
-        const productId = sp.product_id?.toString() ?? "";
-        const name = sp.name ?? "";
-        const sku = sp.sku ?? "";
-        const brandName = sp.brand?.name ?? sp.brandName ?? "";
+        const productId = sp.product_id?.toString() ?? '';
+        const name = sp.name ?? '';
+        const sku = sp.sku ?? '';
+        const brandName = sp.brand?.name ?? sp.brandName ?? '';
 
         return (
           productId.includes(keyword) ||
@@ -69,7 +107,7 @@ const AdminProductList = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    await adminAxios.post("products/create", {
+    await adminAxios.post('products/create', {
       sku: newProduct.sku,
       name: newProduct.name,
       brand_id: newProduct.brand_id,
@@ -77,15 +115,19 @@ const AdminProductList = () => {
       code: newProduct.code,
     });
     setShowCreate(false);
-    setNewProduct({ sku: "", name: "", brandName: "", description: "" });
-    fetchProducts();
+    setNewProduct({ sku: '', name: '', brandName: '', description: '' });
+    // Reset to page 1 when creating new product and sort by creation date
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+    if (window.confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
       await adminAxios.delete(`products/${id}`);
-      fetchProducts();
-      alert("Xóa sản phẩm thành công!");
+      // Reset to page 1 when deleting product and sort by creation date
+      setPagination((prev) => ({ ...prev, current: 1 }));
+      fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
+      alert('Xóa sản phẩm thành công!');
     }
   };
 
@@ -95,9 +137,9 @@ const AdminProductList = () => {
       product_id: product.product_id,
       name: product.name,
       sku: product.sku,
-      description: product.description || "",
-      brand_id: product.brand.brand_id || "",
-      status: product.status || "ACTIVE",
+      description: product.description || '',
+      brand_id: product.brand.brand_id || '',
+      status: product.status || 'ACTIVE',
     });
   };
 
@@ -111,45 +153,145 @@ const AdminProductList = () => {
       status: editProduct.status,
     });
     setEditProduct(null);
-    fetchProducts();
+    // Reset to page 1 when updating product and sort by creation date
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
   };
 
   // Sắp xếp tồn kho tăng dần
   const sortByQuantityAsc = () => {
-    const sorted = [...products].sort(
-      (a, b) => a.totalQuantity - b.totalQuantity
-    );
-    setProducts(sorted);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'ASC');
   };
 
   // Sắp xếp tồn kho giảm dần
   const sortByQuantityDesc = () => {
-    const sorted = [...products].sort(
-      (a, b) => b.totalQuantity - a.totalQuantity
-    );
-    setProducts(sorted);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'DESC');
   };
 
   // Sắp xếp ngày nhập tăng dần
   const sortByDateAsc = () => {
-    const sorted = [...products].sort(
-      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-    );
-    setProducts(sorted);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
   };
 
   // Sắp xếp ngày nhập giảm dần
   const sortByDateDesc = () => {
-    const sorted = [...products].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-    setProducts(sorted);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'DESC');
   };
+
+  // Handle pagination change
+  const handleTableChange = (paginationInfo) => {
+    const { current, pageSize } = paginationInfo;
+    const newPageSize = pageSize;
+    const newCurrent = pagination.pageSize !== newPageSize ? 1 : current; // Reset to page 1 if page size changes
+
+    setPagination((prev) => ({
+      ...prev,
+      current: newCurrent,
+      pageSize: newPageSize,
+    }));
+    fetchProducts(newCurrent, newPageSize, 'createdAt', 'ASC');
+  };
+
+  // Định nghĩa cột cho Ant Design Table
+  const columns = [
+    {
+      title: 'STT',
+      dataIndex: 'stt',
+      key: 'stt',
+      width: 80,
+      render: (_, __, index) =>
+        (pagination.current - 1) * pagination.pageSize + index + 1,
+    },
+    {
+      title: 'ID Sản phẩm',
+      dataIndex: 'product_id',
+      key: 'product_id',
+      width: 100,
+    },
+    {
+      title: 'Mã sản phẩm (SKU)',
+      dataIndex: 'sku',
+      key: 'sku',
+      width: 150,
+    },
+    {
+      title: 'Tên sản phẩm',
+      dataIndex: 'name',
+      key: 'name',
+      width: 200,
+    },
+    {
+      title: 'Thương hiệu',
+      dataIndex: ['brand', 'name'],
+      key: 'brand',
+      width: 150,
+      render: (brandName) => brandName || '',
+    },
+    {
+      title: 'Tổng tồn kho',
+      dataIndex: 'totalQuantity',
+      key: 'totalQuantity',
+      width: 120,
+    },
+    {
+      title: 'Ngày nhập',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      width: 120,
+      render: (date) =>
+        date ? new Date(date).toLocaleDateString('vi-VN') : '',
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      width: 120,
+      render: (status) => (
+        <Tag color={status === 'ACTIVE' ? 'green' : 'red'}>
+          {status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Hành động',
+      key: 'actions',
+      width: 120,
+      render: (_, record) => (
+        <Space size="small">
+          <Button
+            type="primary"
+            size="small"
+            icon={<FaEdit />}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(record);
+            }}
+            title="Sửa"
+          />
+          <Button
+            type="primary"
+            danger
+            size="small"
+            icon={<FaTrash />}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(record.product_id);
+            }}
+            title="Xóa"
+          />
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div
       className="admin-product-page"
-      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
     >
       <div className="admin-product-header">
         <h2>Danh sách sản phẩm</h2>
@@ -166,9 +308,12 @@ const AdminProductList = () => {
           placeholder="Tìm kiếm theo mã sp (sku), tên sản phẩm hoặc thương hiệu"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <button className="admin-btn search-btn" onClick={handleSearch}>
+        <button
+          className="admin-btn search-btn"
+          onClick={handleSearch}
+        >
           <FaSearch />
         </button>
         <button
@@ -206,7 +351,10 @@ const AdminProductList = () => {
       </div>
       {showCreate && (
         <div className="admin-product-create-modal">
-          <form className="admin-product-create-form" onSubmit={handleCreate}>
+          <form
+            className="admin-product-create-form"
+            onSubmit={handleCreate}
+          >
             <h3>Thêm sản phẩm mới</h3>
             <input
               required
@@ -225,7 +373,7 @@ const AdminProductList = () => {
               }
             />
             <select
-              style={{ width: "100%", height: 35, marginBottom: 14 }}
+              style={{ width: '100%', height: 35, marginBottom: 14 }}
               required
               value={newProduct.brand_id}
               onChange={(e) =>
@@ -235,7 +383,10 @@ const AdminProductList = () => {
               <option value="">Chọn thương hiệu</option>
               {listBrands &&
                 listBrands.map((brand) => (
-                  <option key={brand.brand_id} value={brand.brand_id}>
+                  <option
+                    key={brand.brand_id}
+                    value={brand.brand_id}
+                  >
                     {brand.name}
                   </option>
                 ))}
@@ -250,7 +401,10 @@ const AdminProductList = () => {
               }
             />
             <div style={{ marginTop: 8 }}>
-              <button type="submit" className="admin-btn add-btn">
+              <button
+                type="submit"
+                className="admin-btn add-btn"
+              >
                 Tạo
               </button>
               <button
@@ -266,7 +420,10 @@ const AdminProductList = () => {
         </div>
       )}
       {editProduct && (
-        <div className="modal-overlay" onClick={() => setEditProduct(null)}>
+        <div
+          className="modal-overlay"
+          onClick={() => setEditProduct(null)}
+        >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -275,7 +432,7 @@ const AdminProductList = () => {
             <h3>Cập nhật sản phẩm</h3>
             <form
               onSubmit={handleUpdate}
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
             >
               <div>
                 <label>
@@ -310,7 +467,7 @@ const AdminProductList = () => {
                   <b>Thương hiệu</b>
                 </label>
                 <select
-                  style={{ width: "100%", height: 35, marginBottom: 14 }}
+                  style={{ width: '100%', height: 35, marginBottom: 14 }}
                   required
                   value={editProduct.brand_id}
                   onChange={(e) =>
@@ -320,7 +477,10 @@ const AdminProductList = () => {
                   <option value="">{editProduct.brand_id}</option>
                   {listBrands &&
                     listBrands.map((brand) => (
-                      <option key={brand.brand_id} value={brand.brand_id}>
+                      <option
+                        key={brand.brand_id}
+                        value={brand.brand_id}
+                      >
                         {brand.name}
                       </option>
                     ))}
@@ -347,7 +507,7 @@ const AdminProductList = () => {
                   <b>Trạng thái</b>
                 </label>
                 <select
-                  style={{ width: "100%", height: 35, marginBottom: 14 }}
+                  style={{ width: '100%', height: 35, marginBottom: 14 }}
                   required
                   value={editProduct.status}
                   onChange={(e) =>
@@ -360,7 +520,10 @@ const AdminProductList = () => {
               </div>
 
               <div style={{ marginTop: 8 }}>
-                <button type="submit" className="admin-btn add-btn">
+                <button
+                  type="submit"
+                  className="admin-btn add-btn"
+                >
                   Lưu
                 </button>
                 <button
@@ -377,140 +540,36 @@ const AdminProductList = () => {
         </div>
       )}
 
-      <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
-        <table className="admin-product-table">
-          <thead>
-            <tr>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                STT
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Mã sản phẩm (SKU)
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Tên sản phẩm
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Thương hiệu
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Tổng tồn kho
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Ngày nhập
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Trạng thái
-              </th>
-              <th
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                }}
-              >
-                Hành động
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((sp, idx) => (
-              <tr
-                key={sp.product_id}
-                onClick={() => setSelectedProduct(sp)}
-                style={{ cursor: "pointer", width: 35 }}
-              >
-                <td>{idx + 1}</td>
-                <td>{sp.sku}</td>
-                <td>{sp.name}</td>
-                <td>{sp.brand?.name || ""}</td>
-                <td>{sp.totalQuantity}</td>
-                <td>
-                  {sp.createdAt
-                    ? new Date(sp.createdAt).toLocaleDateString("vi-VN")
-                    : ""}
-                </td>
-                <td>{sp.status === "INACTIVE" ? "Ngừng bán" : "Đang bán"}</td>
-                <td>
-                  <button
-                    className="admin-btn edit-btn"
-                    title="Sửa"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(sp);
-                    }}
-                    style={{ marginRight: 8 }}
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="admin-btn delete-btn"
-                    title="Xóa"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(sp.product_id);
-                    }}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
+        <Table
+          columns={columns}
+          dataSource={products}
+          rowKey="product_id"
+          loading={pagination.loading}
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} của ${total} sản phẩm`,
+            pageSizeOptions: ['10', '20', '50', '100'],
+          }}
+          onChange={handleTableChange}
+          sticky={{ offsetHeader: 0 }}
+          onRow={(record) => ({
+            onClick: () => setSelectedProduct(record),
+            style: { cursor: 'pointer' },
+          })}
+          // size="middle"
+        />
       </div>
       {selectedProduct && (
-        <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedProduct(null)}
+        >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -518,41 +577,44 @@ const AdminProductList = () => {
           >
             <h3>Thông tin sản phẩm</h3>
             <p>
+              <b>ID phẩm:</b> {selectedProduct.product_id}
+            </p>
+            <p>
               <b>Mã sản phẩm:</b> {selectedProduct.sku}
             </p>
             <p>
               <b>Tên sản phẩm:</b> {selectedProduct.name}
             </p>
             <p>
-              <b>Thương hiệu:</b> {selectedProduct.brand?.name || ""}
+              <b>Thương hiệu:</b> {selectedProduct.brand?.name || ''}
             </p>
             <p>
-              <b>Mô tả:</b> {selectedProduct.description || "Không có mô tả"}
+              <b>Mô tả:</b> {selectedProduct.description || 'Không có mô tả'}
             </p>
             <p>
               <b>Tổng tồn kho:</b> {selectedProduct.totalQuantity}
             </p>
             <p>
-              <b>Ngày nhập:</b>{" "}
+              <b>Ngày nhập:</b>{' '}
               {selectedProduct.createdAt
                 ? new Date(selectedProduct.createdAt).toLocaleDateString(
-                    "vi-VN"
+                    'vi-VN'
                   )
-                : ""}
+                : ''}
             </p>
             <p>
-              <b>Trang thái:</b>{" "}
-              {selectedProduct.status === "INACTIVE" ? "Ngừng bán" : "Đang bán"}
-            </p>{" "}
+              <b>Trang thái:</b>{' '}
+              {selectedProduct.status === 'INACTIVE' ? 'Ngừng bán' : 'Đang bán'}
+            </p>{' '}
             <button
               className="admin-btn"
               onClick={() => setSelectedProduct(null)}
               style={{
                 marginTop: 16,
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               Đóng

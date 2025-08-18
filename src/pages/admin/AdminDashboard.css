@@ -71,7 +71,7 @@
   flex-direction: column;
   margin-left: 240px;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .admin-template-content {
@@ -255,7 +255,6 @@
 }
 
 .admin-product-page {
-  margin-top: 50px;
   padding: 24px 0;
 }
 
