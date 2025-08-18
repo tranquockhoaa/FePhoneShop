@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getAllAdminBrandApiRq } from "./admin-list-brand.action";
 
 const initialState = {
-  listBrand: null,
+  listBrand: [],
   loading: false,
   error: "",
 };
@@ -20,7 +20,7 @@ export const listBrandSlide = createSlice({
       .addCase(getAllAdminBrandApiRq.fulfilled, (state, action) => {
         state.loading = false;
         state.error = "";
-        state.listBrand = action.payload;
+        state.listBrand = action.payload.data;
       })
       .addCase(getAllAdminBrandApiRq.rejected, (state, action) => {
         state.error = action.payload;

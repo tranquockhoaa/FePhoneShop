@@ -33,6 +33,14 @@ export const AsyncAdminProductsPage = lazy(() =>
   import("./pages/admin/AdminProductList")
 );
 
+export const AsyncAdminProductsDetailsPage = lazy(() =>
+  import("./pages/admin/AdminProductDetail")
+);
+
+export const AsyncAdminManageBrand = lazy(() =>
+  import("./pages/admin/pages/manage-brand/index")
+);
+
 notification.config({
   placement: "topRight",
 });
@@ -82,6 +90,14 @@ const App = () => {
             <Route
               path="/admin/products"
               element={<AsyncAdminProductsPage />}
+            />
+            <Route
+              path="/admin/product-detail"
+              element={<AsyncAdminProductsDetailsPage />}
+            />
+            <Route
+              path="/admin/manage-brands"
+              element={<AsyncAdminManageBrand />}
             />
             <Route path="/admin" element={<AdminDashboard />} />
           </Route>
