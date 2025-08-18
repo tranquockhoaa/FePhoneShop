@@ -28,7 +28,7 @@ const AdminProductList = () => {
     dispatch(getAllAdminBrandApiRq());
   }, [dispatch]);
 
-  const listBrands = useSelector((state) => state.listBrands.listBrand?.data);
+  const listBrands = useSelector((state) => state.listBrands.listBrand);
   console.log("listBrands", listBrands);
   useEffect(() => {
     fetchProducts();
