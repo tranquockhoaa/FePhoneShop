@@ -1,8 +1,8 @@
-import React from 'react';
-import './Header.css';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import AccountSetting from '../../pages/auth/accountSetting';
+import React from "react";
+import "./Header.css";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import AccountSetting from "../../pages/auth/accountSetting";
 
 const Header = () => {
   const { profile } = useSelector((state) => state.profile);
@@ -11,24 +11,18 @@ const Header = () => {
     <div className="header-container">
       <div className="navbar">
         <div className="butto-home">
-          <a
-            href="http://localhost:5173/"
-            className="homepage-link"
-          >
+          <a href="http://localhost:5173/" className="homepage-link">
             <div className="header-logo">BUYNEWPHONE</div>
           </a>
         </div>
 
         <div className="navbar-search">
-          <form
-            action=""
-            className="search-form"
-          >
+          <form action="" className="search-form">
             <button type="submit">
               <i className="fa fa-search"></i>
             </button>
             <input
-              style={{ height: '100%' }}
+              style={{ height: "100%" }}
               type="text"
               name="searchWord"
               placeholder="Tìm kiếm sản phẩm"
@@ -47,30 +41,21 @@ const Header = () => {
         {/* <div className="wish-list">Wishlist</div> */}
 
         <div className="order-button">
-          <Link
-            to="/cart"
-            className="title"
-          >
+          <Link to="/cart" className="title">
             Giỏ hàng
           </Link>
         </div>
 
         {/* Thêm tra cứu đơn hàng */}
         <div className="order-lookup">
-          <Link
-            to="/order-lookup"
-            className="title"
-          >
-            Tra cứu <br /> đơn hàng{' '}
+          <Link to="/order-lookup" className="title">
+            Tra cứu <br /> đơn hàng{" "}
           </Link>
         </div>
 
         {!profile ? (
           <div className="header-login-button">
-            <Link
-              to="/login"
-              className="login-link login-status"
-            >
+            <Link to="/login" className="login-link login-status">
               Đăng nhập
             </Link>
           </div>

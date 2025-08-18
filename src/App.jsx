@@ -24,6 +24,7 @@ import WarrantyPolicy from "./pages/about/warranty-policy/warranty-policy";
 import ShippingPolicy from "./pages/about/shipping-policy/shipping-policy";
 import PrivacyPolicy from "./pages/about/privacy-policy/privacy-policy";
 import LayoutAdmin from "./layouts/admin";
+import SearchBranch from "./components/search/search";
 
 export const AsyncAdminUsersPage = lazy(() =>
   import("./pages/admin/users/Users")
@@ -108,6 +109,7 @@ const App = () => {
         </Routes>
       </BrowserRouter>
     </ConfigProvider>
+    // <SearchBranch />
   );
 };
 
