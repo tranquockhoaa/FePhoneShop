@@ -57,3 +57,12 @@ export const clearCart = async () => {
     throw new Error("Error api: " + error.message);
   }
 };
+
+export const createCart = async () => {
+  try {
+   const response = await authorizedRequest.post("/cart")
+    return response.data;
+  } catch (error) {
+    throw new Error("Error api: " + error.message);
+  }
+};

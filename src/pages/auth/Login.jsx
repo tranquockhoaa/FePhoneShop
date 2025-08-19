@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfileRequest } from '../../store/profile/profile.action';
 
 import { loginApi } from '../../api/profile.api';
+import { createCart } from '../../api/cart-user';
 
 function Login() {
   let navigate = useNavigate();
@@ -38,6 +39,7 @@ function Login() {
       setAccount({ ...account, status: 'true' });
       window.localStorage.setItem('token', dataLogin.token);
       dispatch(getUserProfileRequest());
+      createCart()
       // Handle successful login here if needed
       console.log('Login successful:', dataLogin);
     } catch (error) {
