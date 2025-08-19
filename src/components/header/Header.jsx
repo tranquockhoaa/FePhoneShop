@@ -24,7 +24,10 @@ const Header = () => {
       <div className="navbar">
         <div className="butto-home">
           <a href="http://localhost:5173/" className="homepage-link">
-            <div className="header-logo">BUYNEWPHONE</div>
+            <h2>
+              {" "}
+              <i>MOBILE STORE</i>
+            </h2>
           </a>
         </div>
 
