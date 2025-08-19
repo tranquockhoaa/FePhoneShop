@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import adminAxios from './adminAxios';
-import { useSelector, useDispatch } from 'react-redux';
-import { getColorListApiRq } from '../../store/color-list/color-list.action';
-import './AdminProductDetail.css';
-import { FaPlus, FaSearch, FaTrash, FaEdit } from 'react-icons/fa';
-import { Table, Button, Space, Tag, message } from 'antd';
-import ModalForm from '../../components/ModalForm';
+import React, { useEffect, useState, useMemo } from "react";
+import adminAxios from "./adminAxios";
+import { useSelector, useDispatch } from "react-redux";
+import { getColorListApiRq } from "../../store/color-list/color-list.action";
+import "./AdminProductDetail.css";
+import { FaPlus, FaSearch, FaTrash, FaEdit } from "react-icons/fa";
+import { Table, Button, Space, Tag, message } from "antd";
+import ModalForm from "../../components/ModalForm";
 
 const AdminProductDetail = () => {
   const dispatch = useDispatch();
   const { listColor } = useSelector((state) => state.listColors);
   const [details, setDetails] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,8 +26,8 @@ const AdminProductDetail = () => {
     loading: false,
   });
   const [currentSort, setCurrentSort] = useState({
-    sortBy: 'createdAt',
-    sortOrder: 'ASC',
+    sortBy: "createdAt",
+    sortOrder: "ASC",
   });
 
   const optionColors = useMemo(
@@ -42,82 +42,80 @@ const AdminProductDetail = () => {
   // Định nghĩa các trường form cho ModalForm
   const productDetailFields = [
     {
-      name: 'productId',
-      label: 'ID sản phẩm',
-      type: 'input',
+      name: "productId",
+      label: "ID sản phẩm",
+      type: "input",
       required: true,
       span: 12,
     },
     {
-      name: 'colorName',
-      label: 'Màu sắc',
-      type: 'select',
+      name: "colorName",
+      label: "Màu sắc",
+      type: "select",
       required: true,
       span: 12,
       options: optionColors,
     },
     {
-      name: 'ramSize',
-      label: 'RAM',
-      type: 'select',
-      required: true,
+      name: "ramSize",
+      label: "RAM",
+      type: "select",
       span: 12,
       options: [
-        { value: '2GB', label: '2GB' },
-        { value: '3GB', label: '3GB' },
-        { value: '4GB', label: '4GB' },
-        { value: '6GB', label: '6GB' },
-        { value: '8GB', label: '8GB' },
-        { value: '12GB', label: '12GB' },
-        { value: '16GB', label: '16GB' },
+        { value: "2GB", label: "2GB" },
+        { value: "3GB", label: "3GB" },
+        { value: "4GB", label: "4GB" },
+        { value: "6GB", label: "6GB" },
+        { value: "8GB", label: "8GB" },
+        { value: "12GB", label: "12GB" },
+        { value: "16GB", label: "16GB" },
       ],
     },
     {
-      name: 'storageSize',
-      label: 'Bộ nhớ',
-      type: 'select',
-      required: true,
+      name: "storageSize",
+      label: "Bộ nhớ",
+      type: "select",
       span: 12,
       options: [
-        { value: '32GB', label: '32GB' },
-        { value: '64GB', label: '64GB' },
-        { value: '128GB', label: '128GB' },
-        { value: '256GB', label: '256GB' },
-        { value: '512GB', label: '512GB' },
-        { value: '1TB', label: '1TB' },
+        { value: "32GB", label: "32GB" },
+        { value: "64GB", label: "64GB" },
+        { value: "128GB", label: "128GB" },
+        { value: "256GB", label: "256GB" },
+        { value: "512GB", label: "512GB" },
+        { value: "1TB", label: "1TB" },
       ],
     },
     {
-      name: 'price',
-      label: 'Giá bán (VNĐ)',
-      type: 'number',
+      name: "price",
+      label: "Giá bán (VNĐ)",
+      type: "number",
       required: true,
       span: 12,
       min: 0,
     },
     {
-      name: 'quantity',
-      label: 'Số lượng tồn kho',
-      type: 'number',
+      name: "quantity",
+      label: "Số lượng tồn kho",
+      type: "number",
       required: true,
       span: 12,
       min: 0,
     },
     {
-      name: 'status',
-      label: 'Trạng thái',
-      type: 'select',
+      name: "status",
+      label: "Trạng thái",
+      type: "select",
       required: false,
       span: 12,
       options: [
-        { value: 'ACTIVE', label: 'Đang bán' },
-        { value: 'INACTIVE', label: 'Ngừng bán' },
+        { value: "ACTIVE", label: "Đang bán" },
+        { value: "INACTIVE", label: "Ngừng bán" },
       ],
     },
     {
-      name: 'specifications',
-      label: 'Thông số kỹ thuật',
-      type: 'list',
+      name: "specifications",
+      label: "Thông số kỹ thuật",
+      type: "list",
       required: false,
     },
   ];
@@ -128,7 +126,7 @@ const AdminProductDetail = () => {
       pagination.pageSize,
       currentSort.sortBy,
       currentSort.sortOrder,
-      ''
+      ""
     );
 
     dispatch(getColorListApiRq());
@@ -138,13 +136,13 @@ const AdminProductDetail = () => {
   const fetchDetails = (
     page = 1,
     pageSize = 20,
-    sortBy = 'createdAt',
-    sortOrder = 'ASC',
-    keyword = ''
+    sortBy = "createdAt",
+    sortOrder = "ASC",
+    keyword = ""
   ) => {
     setPagination((prev) => ({ ...prev, loading: true }));
     adminAxios
-      .get('/product-detail', {
+      .get("/product-detail", {
         params: {
           page,
           size: pageSize,
@@ -170,7 +168,7 @@ const AdminProductDetail = () => {
       .catch(() => {
         // Fallback to non-paginated endpoint
         adminAxios
-          .get('/product-detail')
+          .get("/product-detail")
           .then((res2) => {
             const list = res2?.data?.data || [];
             setDetails(list);
@@ -201,15 +199,15 @@ const AdminProductDetail = () => {
   };
 
   const sortByQuantityAsc = () => {
-    setCurrentSort({ sortBy: 'quantity', sortOrder: 'ASC' });
+    setCurrentSort({ sortBy: "quantity", sortOrder: "ASC" });
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchDetails(1, pagination.pageSize, 'quantity', 'ASC', search.trim());
+    fetchDetails(1, pagination.pageSize, "quantity", "ASC", search.trim());
   };
 
   const sortByQuantityDesc = () => {
-    setCurrentSort({ sortBy: 'quantity', sortOrder: 'DESC' });
+    setCurrentSort({ sortBy: "quantity", sortOrder: "DESC" });
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchDetails(1, pagination.pageSize, 'quantity', 'DESC', search.trim());
+    fetchDetails(1, pagination.pageSize, "quantity", "DESC", search.trim());
   };
 
   const handleAdd = () => {
@@ -221,13 +219,13 @@ const AdminProductDetail = () => {
   const handleEdit = (record) => {
     setEditMode(true);
     setCurrentRecord({
-      productId: record.product_id || '',
+      productId: record.product_id || "",
       colorName: record.color_id.toString(),
-      ramSize: record.memory?.ram_size || '',
-      storageSize: record.memory?.storage_size || '',
+      ramSize: record.memory?.ram_size || "",
+      storageSize: record.memory?.storage_size || "",
       price: record.price || 0,
       quantity: record.quantity || 0,
-      status: record.status || 'ACTIVE',
+      status: record.status || "ACTIVE",
       specifications: record.specifications || [],
     });
     setModalVisible(true);
@@ -245,19 +243,19 @@ const AdminProductDetail = () => {
           price: Number(values.price),
           quantity: Number(values.quantity),
           status: values.status,
-          specifications: JSON.stringify(values?.specifications || ''),
+          specifications: JSON.stringify(values?.specifications || ""),
         });
-        message.success('Cập nhật biến thể sản phẩm thành công!');
+        message.success("Cập nhật biến thể sản phẩm thành công!");
       } else {
         // Thêm biến thể sản phẩm mới
-        await adminAxios.post('/product-detail/create', {
+        await adminAxios.post("/product-detail/create", {
           ...values,
           color_id: Number(values.colorName),
           price: Number(values.price),
           quantity: Number(values.quantity),
           specifications: JSON.stringify(values.specifications || []),
         });
-        message.success('Thêm biến thể sản phẩm thành công!');
+        message.success("Thêm biến thể sản phẩm thành công!");
       }
 
       setModalVisible(false);
@@ -273,8 +271,8 @@ const AdminProductDetail = () => {
         search.trim()
       );
     } catch (error) {
-      console.error('Error:', error);
-      message.error('Có lỗi xảy ra! Vui lòng thử lại.');
+      console.error("Error:", error);
+      message.error("Có lỗi xảy ra! Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -288,7 +286,7 @@ const AdminProductDetail = () => {
   const handleDelete = async (id) => {
     try {
       await adminAxios.delete(`product-details/${id}`);
-      message.success('Xóa biến thể thành công!');
+      message.success("Xóa biến thể thành công!");
 
       setPagination((prev) => ({ ...prev, current: 1 }));
       fetchDetails(
@@ -299,84 +297,84 @@ const AdminProductDetail = () => {
         search.trim()
       );
     } catch {
-      message.error('Có lỗi xảy ra khi xóa!');
+      message.error("Có lỗi xảy ra khi xóa!");
     }
   };
 
   // Ant Design Table columns
   const columns = [
     {
-      title: 'STT',
-      dataIndex: 'stt',
-      key: 'stt',
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
       width: 80,
       render: (_, _record, index) =>
         (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: 'ID biến thể',
-      dataIndex: 'product_detail_id',
-      key: 'product_detail_id',
+      title: "ID biến thể",
+      dataIndex: "product_detail_id",
+      key: "product_detail_id",
       width: 120,
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: ['product', 'name'],
-      key: 'product_name',
+      title: "Tên sản phẩm",
+      dataIndex: ["product", "name"],
+      key: "product_name",
       width: 220,
-      render: (name) => name || '',
+      render: (name) => name || "",
     },
     {
-      title: 'Màu',
-      dataIndex: ['color', 'name'],
-      key: 'color',
+      title: "Màu",
+      dataIndex: ["color", "name"],
+      key: "color",
       width: 120,
-      render: (val) => val || '',
+      render: (val) => val || "",
     },
     {
-      title: 'RAM',
-      dataIndex: ['memory', 'ram_size'],
-      key: 'ram_size',
+      title: "RAM",
+      dataIndex: ["memory", "ram_size"],
+      key: "ram_size",
       width: 100,
-      render: (val) => val || '',
+      render: (val) => val || "",
     },
     {
-      title: 'Bộ nhớ',
-      dataIndex: ['memory', 'storage_size'],
-      key: 'storage_size',
+      title: "Bộ nhớ",
+      dataIndex: ["memory", "storage_size"],
+      key: "storage_size",
       width: 120,
-      render: (val) => val || '',
+      render: (val) => val || "",
     },
     {
-      title: 'Giá bán',
-      dataIndex: 'price',
-      key: 'price',
+      title: "Giá bán",
+      dataIndex: "price",
+      key: "price",
       width: 140,
       render: (price) =>
-        price != null ? `${Number(price).toLocaleString()} đ` : '',
+        price != null ? `${Number(price).toLocaleString()} đ` : "",
     },
     {
-      title: 'Tồn kho',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      title: "Tồn kho",
+      dataIndex: "quantity",
+      key: "quantity",
       width: 100,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
       width: 120,
       render: (status, record) => (
-        <Tag color={status || record.quantity > 0 ? 'green' : 'red'}>
-          {(status && status !== 'INACTIVE') || record.quantity > 0
-            ? 'Đang bán'
-            : 'Ngừng bán'}
+        <Tag color={status || record.quantity > 0 ? "green" : "red"}>
+          {(status && status !== "INACTIVE") || record.quantity > 0
+            ? "Đang bán"
+            : "Ngừng bán"}
         </Tag>
       ),
     },
     {
-      title: 'Hành động',
-      key: 'actions',
+      title: "Hành động",
+      key: "actions",
       width: 120,
       render: (_, record) => (
         <Space size="small">
@@ -427,7 +425,7 @@ const AdminProductDetail = () => {
   return (
     <div
       className="admin-product-page"
-      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
     >
       <div className="admin-product-header">
         <h2>Chi tiết sản phẩm</h2>
@@ -447,7 +445,7 @@ const AdminProductDetail = () => {
           placeholder="Tìm kiếm theo ID biến thể hoặc tên sản phẩm..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <Button
           type="primary"
@@ -473,7 +471,7 @@ const AdminProductDetail = () => {
         </Button>
       </div>
 
-      <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
+      <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
         <Table
           columns={columns}
           dataSource={details}
@@ -487,23 +485,20 @@ const AdminProductDetail = () => {
             showQuickJumper: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} của ${total} biến thể`,
-            pageSizeOptions: ['10', '20', '50', '100'],
+            pageSizeOptions: ["10", "20", "50", "100"],
           }}
           onChange={handleTableChange}
           sticky={{ offsetHeader: 0 }}
           onRow={(record) => ({
             onClick: () => setSelectedDetail(record),
-            style: { cursor: 'pointer' },
+            style: { cursor: "pointer" },
           })}
         />
       </div>
 
       {/* Modal xem chi tiết */}
       {selectedDetail && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedDetail(null)}
-        >
+        <div className="modal-overlay" onClick={() => setSelectedDetail(null)}>
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -511,7 +506,7 @@ const AdminProductDetail = () => {
           >
             <h3>Thông tin chi tiết sản phẩm</h3>
             <p>
-              <b>Mã sản phẩm (sku):</b> {selectedDetail.sku || 'Trống'}
+              <b>Mã sản phẩm (sku):</b> {selectedDetail.sku || "Trống"}
             </p>
             <p>
               <b>Tên sản phẩm:</b> {selectedDetail.product?.name}
@@ -540,7 +535,7 @@ const AdminProductDetail = () => {
               onClick={() => setSelectedDetail(null)}
               style={{
                 marginTop: 16,
-                width: '100%',
+                width: "100%",
               }}
             >
               Đóng
@@ -554,7 +549,7 @@ const AdminProductDetail = () => {
         visible={modalVisible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
-        title={editMode ? 'Sửa biến thể sản phẩm' : 'Thêm biến thể sản phẩm'}
+        title={editMode ? "Sửa biến thể sản phẩm" : "Thêm biến thể sản phẩm"}
         initialValues={currentRecord}
         loading={loading}
         fields={productDetailFields}

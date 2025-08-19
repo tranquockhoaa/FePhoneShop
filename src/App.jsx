@@ -19,13 +19,13 @@ import { useParams } from "react-router-dom";
 import AdminDashboard from "./pages/admin/AdminDashBoard";
 import { getUserProfileRequest } from "./store/profile/profile.action";
 import OrderHistory from "./pages/order/OrderHistory";
-import OrderDetail from "./pages/order/OrderDetail";
 import WarrantyPolicy from "./pages/about/warranty-policy/warranty-policy";
 import ShippingPolicy from "./pages/about/shipping-policy/shipping-policy";
 import PrivacyPolicy from "./pages/about/privacy-policy/privacy-policy";
 import LayoutAdmin from "./layouts/admin";
 import PaymentResult from "./pages/cart/payment/payment-success";
 import AdminOrderList from "./pages/admin/AdminOrderList";
+import OrderDetail from "./pages/order/OrderDetail";
 
 export const AsyncAdminUsersPage = lazy(() =>
   import("./pages/admin/users/Users")
@@ -80,7 +80,10 @@ const App = () => {
               element={<ProductListWrapper />}
             />
             <Route path="/order-lookup" element={<OrderHistory />} />
-            <Route path="/order-detail/:orderId" element={<OrderDetail />} />
+            <Route
+              path="/order-detail/:orderId"
+              element={<OrderDetail />}
+            />{" "}
             <Route path="/chinh-sach-bao-hanh" element={<WarrantyPolicy />} />
             <Route path="/chinh-sach-van-chuyen" element={<ShippingPolicy />} />
             <Route path="/chinh-sach-bao-mat" element={<PrivacyPolicy />} />

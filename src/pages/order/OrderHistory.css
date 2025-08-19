@@ -69,3 +69,110 @@
 .order-history-item a:hover {
   color: #e53935;
 }
+
+.order-history-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.order-history-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.order-history-tabs button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.order-history-tabs button.active {
+  background: #1890ff;
+  color: white;
+  border-color: #1890ff;
+}
+
+.order-history-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.order-history-filter input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.order-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-history-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.order-header {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-header div {
+  margin-bottom: 8px;
+}
+
+.first-product {
+  margin-bottom: 16px;
+}
+
+.remaining-products {
+  text-align: center;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.order-footer {
+  text-align: right;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.view-detail-link {
+  color: #1890ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.view-detail-link:hover {
+  text-decoration: underline;
+}
+
+.order-history-empty {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.order-history-empty a {
+  color: #1890ff;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.order-history-empty a:hover {
+  text-decoration: underline;
+}
