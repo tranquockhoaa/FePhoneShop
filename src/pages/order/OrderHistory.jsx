@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./OrderHistory.css";
 import { Link } from "react-router-dom";
+import { getAllOrderUserApi } from "../../api/order-user";
+import OrderItem from "./OrderItem";
 
 const STATUS_TABS = [
   { label: "Tất cả", value: "" },
@@ -30,6 +31,7 @@ function getStatusText(status) {
   }
 }
 
+// Format ngày
 function formatVNDate(date) {
   if (!date) return "";
   const d = new Date(date);
@@ -46,24 +48,21 @@ const OrderHistory = () => {
   const [toDate, setToDate] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const account = JSON.parse(localStorage.getItem("account") || "{}");
-  const token = account.token;
-
   const fetchOrders = async () => {
     setLoading(true);
-    const params = {};
-    if (status) params.status = status;
-    if (fromDate) params.fromDate = fromDate;
-    if (toDate) params.toDate = toDate;
-    params.page = 1;
-    params.limit = 20;
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/order", {
-        params,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setOrders(res.data.data || []);
+      const params = {
+        page: 1,
+        limit: 20,
+        ...(status && { status }),
+        ...(fromDate && { fromDate }),
+        ...(toDate && { toDate }),
+      };
+
+      const res = await getAllOrderUserApi(params);
+      setOrders(res.data || []);
     } catch (err) {
+      console.error("fetchOrders error:", err);
       setOrders([]);
     }
     setLoading(false);
@@ -87,6 +86,7 @@ const OrderHistory = () => {
           </button>
         ))}
       </div>
+
       <div className="order-history-filter">
         <span>Lịch sử mua hàng</span>
         <input
@@ -101,6 +101,7 @@ const OrderHistory = () => {
           onChange={(e) => setToDate(e.target.value)}
         />
       </div>
+
       {loading ? (
         <div style={{ margin: 32 }}>Đang tải...</div>
       ) : orders.length === 0 ? (
@@ -114,35 +115,54 @@ const OrderHistory = () => {
         <div className="order-history-list">
           {orders.map((order) => (
             <div className="order-history-item" key={order.order_id}>
-              <div>
-                <b>Mã đơn hàng:</b> {order.order_id}
-                {" | "}
-                <b>Ngày đặt hàng:</b> {formatVNDate(order.createdAt)}
-                {" | "}
-                <b>Trạng thái đơn hàng:</b> {getStatusText(order.status)}
+              <div className="order-header">
+                <div>
+                  <b>Mã đơn hàng:</b> {order.order_id} {" | "}
+                  <b>Ngày đặt hàng:</b> {formatVNDate(order.createdAt)} {" | "}
+                  <b>Trạng thái:</b> {getStatusText(order.status)}
+                </div>
+
+                <div>
+                  <b>Người nhận:</b> {order.full_name} {" | "}
+                  <b>SĐT:</b> {order.phone_number} {" | "}
+                  <b>Email:</b> {order.email}
+                </div>
+
+                <div>
+                  <b>Địa chỉ:</b> {order.address}
+                </div>
+
+                <div>
+                  <b>Phương thức thanh toán:</b> {order.payment_method}
+                </div>
+
+                <div>
+                  <b>Tổng tiền:</b> {order.total_amount?.toLocaleString()} đ
+                </div>
               </div>
-              <div>
-                <b>Tổng tiền:</b> {order.total_amount?.toLocaleString()} đ
+
+              {/* Hiển thị sản phẩm đầu tiên */}
+              {order.order_items && order.order_items.length > 0 && (
+                <div className="first-product">
+                  <OrderItem item={order.order_items[0]} />
+                </div>
+              )}
+
+              {/* Hiển thị số lượng sản phẩm còn lại nếu có */}
+              {order.order_items && order.order_items.length > 1 && (
+                <div className="remaining-products">
+                  <p>Và {order.order_items.length - 1} sản phẩm khác</p>
+                </div>
+              )}
+
+              <div className="order-footer">
+                <Link
+                  to={`/order-detail/${order.order_id}`}
+                  className="view-detail-link"
+                >
+                  Xem chi tiết đơn hàng
+                </Link>
               </div>
-              {/* Hiển thị danh sách sản phẩm trong đơn */}
-              <div style={{ marginTop: 8 }}>
-                <b>Sản phẩm:</b>
-                <ul style={{ margin: 0, paddingLeft: 18 }}>
-                  {order.order_items?.map((item) => (
-                    <li key={item.order_item_id}>
-                      <span>
-                        <b>Tên sản phẩm :</b>{" "}
-                        {item.productDetail?.product?.name || "Không rõ"}
-                        {" | "}
-                        <b>SL:</b> {item.quantity}
-                        {" | "}
-                        <b>Đơn giá:</b> {item.unit_price?.toLocaleString()} đ
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link to={`/order-detail/${order.order_id}`}>Xem chi tiết</Link>
             </div>
           ))}
         </div>
