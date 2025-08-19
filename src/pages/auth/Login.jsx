@@ -12,7 +12,6 @@ function Login() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.profile);
-  console.log(profile);
   const [account, setAccount] = useState({
     email: '',
     password: '',

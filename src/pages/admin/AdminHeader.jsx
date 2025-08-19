@@ -1,5 +1,5 @@
 import React from "react";
-import "./AdminDashBoard.css";
+import "./AdminDashboard.css";
 
 const AdminHeader = ({ adminName }) => (
   <div className="admin-header">Xin chào, {adminName || "Admin"}</div>

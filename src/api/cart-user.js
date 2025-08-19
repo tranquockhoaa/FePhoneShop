@@ -1,4 +1,3 @@
-import { data } from "react-router-dom";
 import authorizedRequest from "../config/axios";
 
 export const getCartDetailApi = async () => {
@@ -38,13 +37,21 @@ export const handleDecreaseApi = async (product_detail_id) => {
 };
 
 export const handleRemoveProductApi = async (product_detail_id) => {
-  console.log("product_detail_id", product_detail_id);
-
   try {
     const response = await authorizedRequest.delete(
       "/cart-detail/remove-product",
       { data: { product_detail_id } }
     );
+    return response.data;
+  } catch (error) {
+    throw new Error("Error api: " + error.message);
+  }
+};
+
+
+export const clearCart = async () => {
+  try {
+   const response = await authorizedRequest.delete("/cart-detail/clear-cart")
     return response.data;
   } catch (error) {
     throw new Error("Error api: " + error.message);
