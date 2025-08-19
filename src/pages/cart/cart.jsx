@@ -78,7 +78,6 @@ const Cart = () => {
           </div>
           <div className="right">GIỎ HÀNG CỦA BẠN</div>
         </div>
-
         <div className="table-wrap">
           {cartDetails.length === 0 || cartStatus === "ORDERED" ? (
             <div className="empty-cart">
@@ -153,7 +152,6 @@ const Cart = () => {
             })
           )}
         </div>
-
         {cartDetails.length > 0 && cartStatus !== "ORDERED" && (
           <div className="total-cart">
             <font>Thanh toán:</font>{" "}

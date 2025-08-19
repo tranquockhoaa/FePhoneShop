@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.css";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import AccountSetting from "../../pages/auth/accountSetting";
+import SearchBranch from "../search/search.jsx";
 
 const Header = () => {
   const { profile } = useSelector((state) => state.profile);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setShowSearchResults(true);
+  };
+
+  const handleCloseSearch = () => {
+    setShowSearchResults(false);
+  };
 
   return (
     <div className="header-container">
@@ -25,13 +37,19 @@ const Header = () => {
               <i className="fa fa-search"></i>
             </button>
             <input
-              style={{ height: 40 }}
+              style={{ height: "100%" }}
               type="text"
               name="searchWord"
               placeholder="Tìm kiếm sản phẩm"
               className="search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onFocus={() => setShowSearchResults(true)}
             />
           </form>
+          {showSearchResults && searchTerm && (
+            <SearchBranch searchTerm={searchTerm} onClose={handleCloseSearch} />
+          )}
         </div>
 
         <div className="contact">
@@ -41,15 +59,12 @@ const Header = () => {
           </div>
         </div>
 
-        {/* <div className="wish-list">Wishlist</div> */}
-
         <div className="order-button">
           <Link to="/cart" className="title">
             Giỏ hàng
           </Link>
         </div>
 
-        {/* Thêm tra cứu đơn hàng */}
         <div className="order-lookup">
           <Link to="/order-lookup" className="title">
             Tra cứu <br /> đơn hàng{" "}
