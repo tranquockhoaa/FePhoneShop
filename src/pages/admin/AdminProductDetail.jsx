@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import adminAxios from './adminAxios';
+import { useSelector, useDispatch } from 'react-redux';
+import { getColorListApiRq } from '../../store/color-list/color-list.action';
 import './AdminProductDetail.css';
 import { FaPlus, FaSearch, FaTrash, FaEdit } from 'react-icons/fa';
-import { Table, Button, Space, Tag } from 'antd';
+import { Table, Button, Space, Tag, message } from 'antd';
+import ModalForm from '../../components/ModalForm';
 
 const AdminProductDetail = () => {
+  const dispatch = useDispatch();
+  const { listColor } = useSelector((state) => state.listColors);
   const [details, setDetails] = useState([]);
   const [search, setSearch] = useState('');
-  const [showCreate, setShowCreate] = useState(false);
-  const [newDetail, setNewDetail] = useState({
-    productId: '',
-    colorName: '',
-    ramSize: '',
-    storageSize: '',
-    price: '',
-    quantity: '',
-  });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState({});
   const [selectedDetail, setSelectedDetail] = useState(null);
-  const [editDetail, setEditDetail] = useState(null);
+
   // Pagination + sorting state
   const [pagination, setPagination] = useState({
     current: 1,
@@ -30,6 +30,98 @@ const AdminProductDetail = () => {
     sortOrder: 'ASC',
   });
 
+  const optionColors = useMemo(
+    () =>
+      listColor?.map((item) => ({
+        value: item.color_id.toString(),
+        label: item.name,
+      })) || [],
+    [listColor]
+  );
+
+  // Định nghĩa các trường form cho ModalForm
+  const productDetailFields = [
+    {
+      name: 'productId',
+      label: 'ID sản phẩm',
+      type: 'input',
+      required: true,
+      span: 12,
+    },
+    {
+      name: 'colorName',
+      label: 'Màu sắc',
+      type: 'select',
+      required: true,
+      span: 12,
+      options: optionColors,
+    },
+    {
+      name: 'ramSize',
+      label: 'RAM',
+      type: 'select',
+      required: true,
+      span: 12,
+      options: [
+        { value: '2GB', label: '2GB' },
+        { value: '3GB', label: '3GB' },
+        { value: '4GB', label: '4GB' },
+        { value: '6GB', label: '6GB' },
+        { value: '8GB', label: '8GB' },
+        { value: '12GB', label: '12GB' },
+        { value: '16GB', label: '16GB' },
+      ],
+    },
+    {
+      name: 'storageSize',
+      label: 'Bộ nhớ',
+      type: 'select',
+      required: true,
+      span: 12,
+      options: [
+        { value: '32GB', label: '32GB' },
+        { value: '64GB', label: '64GB' },
+        { value: '128GB', label: '128GB' },
+        { value: '256GB', label: '256GB' },
+        { value: '512GB', label: '512GB' },
+        { value: '1TB', label: '1TB' },
+      ],
+    },
+    {
+      name: 'price',
+      label: 'Giá bán (VNĐ)',
+      type: 'number',
+      required: true,
+      span: 12,
+      min: 0,
+    },
+    {
+      name: 'quantity',
+      label: 'Số lượng tồn kho',
+      type: 'number',
+      required: true,
+      span: 12,
+      min: 0,
+    },
+    {
+      name: 'status',
+      label: 'Trạng thái',
+      type: 'select',
+      required: false,
+      span: 12,
+      options: [
+        { value: 'ACTIVE', label: 'Đang bán' },
+        { value: 'INACTIVE', label: 'Ngừng bán' },
+      ],
+    },
+    {
+      name: 'specifications',
+      label: 'Thông số kỹ thuật',
+      type: 'list',
+      required: false,
+    },
+  ];
+
   useEffect(() => {
     fetchDetails(
       1,
@@ -38,6 +130,8 @@ const AdminProductDetail = () => {
       currentSort.sortOrder,
       ''
     );
+
+    dispatch(getColorListApiRq());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -118,36 +212,58 @@ const AdminProductDetail = () => {
     fetchDetails(1, pagination.pageSize, 'quantity', 'DESC', search.trim());
   };
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    await adminAxios.post('/api/v1/productDetails', {
-      ...newDetail,
-      price: Number(newDetail.price),
-      quantity: Number(newDetail.quantity),
-      productId: newDetail.productId,
-    });
-    setShowCreate(false);
-    setNewDetail({
-      productId: '',
-      colorName: '',
-      ramSize: '',
-      storageSize: '',
-      price: '',
-      quantity: '',
-    });
-    setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchDetails(
-      1,
-      pagination.pageSize,
-      currentSort.sortBy,
-      currentSort.sortOrder,
-      search.trim()
-    );
+  const handleAdd = () => {
+    setEditMode(false);
+    setCurrentRecord({});
+    setModalVisible(true);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Bạn có chắc muốn xóa biến thể này?')) {
-      await adminAxios.delete(`product-details/${id}`);
+  const handleEdit = (record) => {
+    setEditMode(true);
+    setCurrentRecord({
+      productId: record.product_id || '',
+      colorName: record.color_id.toString(),
+      ramSize: record.memory?.ram_size || '',
+      storageSize: record.memory?.storage_size || '',
+      price: record.price || 0,
+      quantity: record.quantity || 0,
+      status: record.status || 'ACTIVE',
+      specifications: record.specifications || [],
+    });
+    setModalVisible(true);
+  };
+
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      if (editMode) {
+        // Cập nhật biến thể sản phẩm
+        await adminAxios.put(`/product-detail/${currentRecord.productId}`, {
+          color_id: Number(values.colorName),
+          ramSize: values.ramSize,
+          storageSize: values.storageSize,
+          price: Number(values.price),
+          quantity: Number(values.quantity),
+          status: values.status,
+          specifications: JSON.stringify(values?.specifications || ''),
+        });
+        message.success('Cập nhật biến thể sản phẩm thành công!');
+      } else {
+        // Thêm biến thể sản phẩm mới
+        await adminAxios.post('/product-detail/create', {
+          ...values,
+          color_id: Number(values.colorName),
+          price: Number(values.price),
+          quantity: Number(values.quantity),
+          specifications: JSON.stringify(values.specifications || []),
+        });
+        message.success('Thêm biến thể sản phẩm thành công!');
+      }
+
+      setModalVisible(false);
+      setCurrentRecord({});
+
+      // Refresh data
       setPagination((prev) => ({ ...prev, current: 1 }));
       fetchDetails(
         1,
@@ -156,40 +272,35 @@ const AdminProductDetail = () => {
         currentSort.sortOrder,
         search.trim()
       );
-      alert('Xóa thành công!');
+    } catch (error) {
+      console.error('Error:', error);
+      message.error('Có lỗi xảy ra! Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    await adminAxios.put(`/product-details/${editDetail.product_detail_id}`, {
-      colorName: editDetail.colorName,
-      ramSize: editDetail.ramSize,
-      storageSize: editDetail.storageSize,
-      price: Number(editDetail.price),
-      quantity: Number(editDetail.quantity),
-    });
-    setEditDetail(null);
-    setSelectedDetail(null);
-    setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchDetails(
-      1,
-      pagination.pageSize,
-      currentSort.sortBy,
-      currentSort.sortOrder,
-      search.trim()
-    );
+  const handleCancel = () => {
+    setModalVisible(false);
+    setCurrentRecord({});
   };
 
-  const handleEditClick = (item) => {
-    setEditDetail({
-      ...item,
-      colorName: item.color?.name || '',
-      ramSize: item.memory?.ram_size || '',
-      storageSize: item.memory?.storage_size || '',
-      price: item.price,
-      quantity: item.quantity,
-    });
+  const handleDelete = async (id) => {
+    try {
+      await adminAxios.delete(`product-details/${id}`);
+      message.success('Xóa biến thể thành công!');
+
+      setPagination((prev) => ({ ...prev, current: 1 }));
+      fetchDetails(
+        1,
+        pagination.pageSize,
+        currentSort.sortBy,
+        currentSort.sortOrder,
+        search.trim()
+      );
+    } catch {
+      message.error('Có lỗi xảy ra khi xóa!');
+    }
   };
 
   // Ant Design Table columns
@@ -267,7 +378,7 @@ const AdminProductDetail = () => {
       title: 'Hành động',
       key: 'actions',
       width: 120,
-      render: (_, _record) => (
+      render: (_, record) => (
         <Space size="small">
           <Button
             type="primary"
@@ -275,7 +386,7 @@ const AdminProductDetail = () => {
             icon={<FaEdit />}
             onClick={(e) => {
               e.stopPropagation();
-              handleEditClick(_record);
+              handleEdit(record);
             }}
             title="Sửa"
           />
@@ -286,7 +397,7 @@ const AdminProductDetail = () => {
             icon={<FaTrash />}
             onClick={(e) => {
               e.stopPropagation();
-              handleDelete(_record.product_detail_id);
+              handleDelete(record.product_detail_id);
             }}
             title="Xóa"
           />
@@ -320,13 +431,16 @@ const AdminProductDetail = () => {
     >
       <div className="admin-product-header">
         <h2>Chi tiết sản phẩm</h2>
-        <button
+        <Button
+          type="primary"
+          icon={<FaPlus />}
+          onClick={handleAdd}
           className="admin-btn add-btn"
-          onClick={() => setShowCreate(true)}
         >
-          <FaPlus /> Thêm biến thể
-        </button>
+          Thêm biến thể
+        </Button>
       </div>
+
       <div className="admin-product-toolbar">
         <input
           className="admin-product-search"
@@ -335,105 +449,30 @@ const AdminProductDetail = () => {
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <button
-          className="admin-btn search-btn"
+        <Button
+          type="primary"
+          icon={<FaSearch />}
           onClick={handleSearch}
-        >
-          <FaSearch />
-        </button>
-        <button
+          className="admin-btn search-btn"
+        />
+        <Button
           className="admin-btn"
           style={{ marginLeft: 8 }}
           onClick={sortByQuantityAsc}
           title="Tồn kho ít đến nhiều"
         >
           Tồn kho ↑
-        </button>
-        <button
+        </Button>
+        <Button
           className="admin-btn"
           style={{ marginLeft: 4 }}
           onClick={sortByQuantityDesc}
           title="Tồn kho nhiều đến ít"
         >
           Tồn kho ↓
-        </button>
+        </Button>
       </div>
-      {showCreate && (
-        <div className="admin-product-create-modal">
-          <form
-            className="admin-product-create-form"
-            onSubmit={handleCreate}
-          >
-            <h3>Thêm biến thể sản phẩm</h3>
-            <input
-              required
-              placeholder="ID sản phẩm"
-              value={newDetail.productId}
-              onChange={(e) =>
-                setNewDetail({ ...newDetail, productId: e.target.value })
-              }
-            />
-            <input
-              required
-              placeholder="Màu"
-              value={newDetail.colorName}
-              onChange={(e) =>
-                setNewDetail({ ...newDetail, colorName: e.target.value })
-              }
-            />
-            <input
-              required
-              placeholder="RAM"
-              value={newDetail.ramSize}
-              onChange={(e) =>
-                setNewDetail({ ...newDetail, ramSize: e.target.value })
-              }
-            />
-            <input
-              required
-              placeholder="Bộ nhớ"
-              value={newDetail.storageSize}
-              onChange={(e) =>
-                setNewDetail({ ...newDetail, storageSize: e.target.value })
-              }
-            />
-            <input
-              required
-              type="number"
-              placeholder="Giá bán"
-              value={newDetail.price}
-              onChange={(e) =>
-                setNewDetail({ ...newDetail, price: e.target.value })
-              }
-            />
-            <input
-              required
-              type="number"
-              placeholder="Tồn kho"
-              value={newDetail.quantity}
-              onChange={(e) =>
-                setNewDetail({ ...newDetail, quantity: e.target.value })
-              }
-            />
-            <div style={{ marginTop: 8 }}>
-              <button
-                type="submit"
-                className="admin-btn add-btn"
-              >
-                Tạo
-              </button>
-              <button
-                type="button"
-                className="admin-btn"
-                onClick={() => setShowCreate(false)}
-                style={{ marginLeft: 8 }}
-              >
-                Hủy
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+
       <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
         <Table
           columns={columns}
@@ -458,8 +497,9 @@ const AdminProductDetail = () => {
           })}
         />
       </div>
+
       {/* Modal xem chi tiết */}
-      {selectedDetail && !editDetail && (
+      {selectedDetail && (
         <div
           className="modal-overlay"
           onClick={() => setSelectedDetail(null)}
@@ -495,104 +535,31 @@ const AdminProductDetail = () => {
               <b>Trạng thái:</b>
               {selectedDetail?.status}
             </p>
-            <button
-              className="admin-btn"
+            <Button
+              type="primary"
               onClick={() => setSelectedDetail(null)}
               style={{
                 marginTop: 16,
                 width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
               }}
             >
               Đóng
-            </button>
+            </Button>
           </div>
         </div>
       )}
-      {/* Modal sửa */}
-      {editDetail && (
-        <div
-          className="modal-overlay"
-          onClick={() => setEditDetail(null)}
-        >
-          <form
-            className="modal-content"
-            style={{ minWidth: 400 }}
-            onClick={(e) => e.stopPropagation()}
-            onSubmit={handleUpdate}
-          >
-            <h3>Sửa thông tin biến thể</h3>
-            <p>
-              <b>ID sản phẩm:</b> {editDetail.product_detail_id}
-            </p>
-            <p>
-              <b>Tên sản phẩm:</b> {editDetail.product?.name}
-            </p>
-            <input
-              value={editDetail.colorName}
-              onChange={(e) =>
-                setEditDetail({ ...editDetail, colorName: e.target.value })
-              }
-              placeholder="Màu"
-              required
-            />
-            <input
-              value={editDetail.ramSize}
-              onChange={(e) =>
-                setEditDetail({ ...editDetail, ramSize: e.target.value })
-              }
-              placeholder="RAM"
-              required
-            />
-            <input
-              value={editDetail.storageSize}
-              onChange={(e) =>
-                setEditDetail({ ...editDetail, storageSize: e.target.value })
-              }
-              placeholder="Bộ nhớ"
-              required
-            />
-            <input
-              value={editDetail.price}
-              type="number"
-              min={0}
-              onChange={(e) =>
-                setEditDetail({ ...editDetail, price: e.target.value })
-              }
-              placeholder="Giá bán"
-              required
-            />
-            <input
-              value={editDetail.quantity}
-              type="number"
-              min={0}
-              onChange={(e) =>
-                setEditDetail({ ...editDetail, quantity: e.target.value })
-              }
-              placeholder="Tồn kho"
-              required
-            />
-            <div style={{ marginTop: 8 }}>
-              <button
-                type="submit"
-                className="admin-btn add-btn"
-              >
-                Lưu
-              </button>
-              <button
-                type="button"
-                className="admin-btn"
-                onClick={() => setEditDetail(null)}
-                style={{ marginLeft: 8 }}
-              >
-                Hủy
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+
+      {/* ModalForm cho thêm/sửa */}
+      <ModalForm
+        visible={modalVisible}
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+        title={editMode ? 'Sửa biến thể sản phẩm' : 'Thêm biến thể sản phẩm'}
+        initialValues={currentRecord}
+        loading={loading}
+        fields={productDetailFields}
+        isEdit={editMode}
+      />
     </div>
   );
 };
