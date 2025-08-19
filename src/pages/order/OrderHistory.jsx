@@ -58,10 +58,10 @@ const OrderHistory = () => {
     params.page = 1;
     params.limit = 20;
     try {
-      const res = await axios.get(
-        "http://localhost:3000/api/v1/order/my-orders",
-        { params, headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await axios.get("http://localhost:3000/api/v1/order", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setOrders(res.data.data || []);
     } catch (err) {
       setOrders([]);
