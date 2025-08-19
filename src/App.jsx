@@ -24,6 +24,7 @@ import WarrantyPolicy from "./pages/about/warranty-policy/warranty-policy";
 import ShippingPolicy from "./pages/about/shipping-policy/shipping-policy";
 import PrivacyPolicy from "./pages/about/privacy-policy/privacy-policy";
 import LayoutAdmin from "./layouts/admin";
+import PaymentResult from "./pages/cart/payment/payment-success";
 import AdminOrderList from "./pages/admin/AdminOrderList";
 
 export const AsyncAdminUsersPage = lazy(() =>
@@ -83,6 +84,7 @@ const App = () => {
             <Route path="/chinh-sach-bao-hanh" element={<WarrantyPolicy />} />
             <Route path="/chinh-sach-van-chuyen" element={<ShippingPolicy />} />
             <Route path="/chinh-sach-bao-mat" element={<PrivacyPolicy />} />
+            <Route path="/payment/success" element={<PaymentResult />} />
           </Route>
 
           <Route element={<LayoutAdmin />}>
