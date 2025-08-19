@@ -98,7 +98,7 @@ const Sidebar = ({ active, onSelect }) => {
       </div>
       <div
         className={`sidebar-item${active === "orders" ? " active" : ""}`}
-        onClick={() => onSelect("orders")}
+        onClick={() => navigate("/admin/orders")}
       >
         <FaClipboardList /> Đơn hàng
       </div>

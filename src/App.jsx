@@ -25,6 +25,7 @@ import ShippingPolicy from "./pages/about/shipping-policy/shipping-policy";
 import PrivacyPolicy from "./pages/about/privacy-policy/privacy-policy";
 import LayoutAdmin from "./layouts/admin";
 import PaymentResult from "./pages/cart/payment/payment-success";
+import AdminOrderList from "./pages/admin/AdminOrderList";
 
 export const AsyncAdminUsersPage = lazy(() =>
   import("./pages/admin/users/Users")
@@ -102,6 +103,7 @@ const App = () => {
               element={<AsyncAdminManageBrand />}
             />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/orders" element={<AdminOrderList />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/login/forgotPassword" element={<ForgotPassword />} />

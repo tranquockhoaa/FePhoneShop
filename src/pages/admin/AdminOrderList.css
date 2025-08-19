@@ -1,42 +1,124 @@
-.email-cell {
-  word-break: break-all;
-  max-width: 140px;
-  white-space: pre-line;
+/* Base styles */
+.admin-order-page {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-order-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+/* Thanh công cụ */
 .admin-order-toolbar {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
-  background: #f8f9fa;
-  padding: 16px 20px;
+  margin-bottom: 20px;
+  align-items: center;
+  background: #fff;
+  padding: 16px;
   border-radius: 8px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-  width: 98%;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.admin-order-toolbar input,
-.admin-order-toolbar select {
+.admin-order-search {
+  flex: 1;
+  min-width: 250px;
   padding: 8px 12px;
-  border: 1px solid #d0d7de;
-  border-radius: 6px;
-  font-size: 15px;
-  outline: none;
-  transition: border 0.2s;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-.admin-order-toolbar input:focus,
-.admin-order-toolbar select:focus {
-  border: 1.5px solid #1677ff;
+.admin-order-filter {
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 180px;
 }
 
-.admin-order-toolbar .admin-btn {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 15px;
-  margin: 0;
+.date-filter-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.date-filter-input {
+  padding: 6px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+/* Bảng danh sách */
+.order-table-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Modal chi tiết */
+.order-detail-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.order-detail-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-detail-section h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #1890ff;
+}
+
+.order-items-table {
+  margin-top: 12px;
+}
+
+.order-items-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-items-table th,
+.order-items-table td {
+  padding: 8px 12px;
+  border: 1px solid #f0f0f0;
+  text-align: left;
+}
+
+.order-items-table th {
+  background-color: #fafafa;
+  font-weight: 500;
+}
+
+.status-select {
+  padding: 4px 8px;
+  margin-left: 8px;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+
+.updating-text {
+  margin-left: 8px;
+  color: #1890ff;
+  font-size: 14px;
 }
