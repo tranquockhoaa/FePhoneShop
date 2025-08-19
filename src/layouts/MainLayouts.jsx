@@ -12,7 +12,7 @@ const MainLayouts = () => {
       </div>
       <div className="body-container">
         <main>
-          <SearchBranch />
+          {/* <SearchBranch /> */}
           <Outlet />
         </main>
       </div>
