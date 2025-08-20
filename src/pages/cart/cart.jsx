@@ -37,10 +37,10 @@ const Cart = () => {
     try {
       const res = await getCartDetailApi();
       const data = res.data;
-      setCartDetails(data.cartDetails || []);
+      setCartDetails(data.updatedCartDetails || []);
       setCartStatus(data.status || "");
 
-      const sum = (data.cartDetails || []).reduce(
+      const sum = (data.updatedCartDetails || []).reduce(
         (acc, item) => acc + item.unit_price * item.quantity,
         0
       );

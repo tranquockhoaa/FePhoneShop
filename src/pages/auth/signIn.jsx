@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import userAxios from "./userAxios";
+import { createCart } from "../../api/cart-user";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function SignIn() {
         if (res.data.status === "success") {
           console.log("SignUp successful");
           setAccount({ ...account, status: "true" });
+          createCart(res.data.userId);
         }
       })
       .catch((err) => {
