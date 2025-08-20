@@ -1,28 +1,27 @@
-import React from "react";
-import "../../index.css";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserProfileRequest } from "../../store/profile/profile.action";
-
-import { loginApi } from "../../api/profile.api";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfileRequest } from '../../store/profile/profile.action';
+import { createCart } from '../../api/cart-user';
+import { loginApi } from '../../api/profile.api';
 
 function Login() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.profile);
   const [account, setAccount] = useState({
-    email: "",
-    password: "",
-    status: "",
+    email: '',
+    password: '',
+    status: '',
   });
 
   useEffect(() => {
     // Lấy role từ localStorage sau khi đăng nhập
 
-    if (profile?.role === "admin") navigate("/admin");
-    else if (profile?.role === "user") navigate("/");
+    if (profile?.role === 'admin') navigate('/admin');
+    else if (profile?.role === 'user') navigate('/');
     // Nếu có role khác, có thể bổ sung điều hướng tại đây
   }, [profile]);
 
@@ -35,21 +34,25 @@ function Login() {
 
     try {
       const dataLogin = await loginApi(account);
-      setAccount({ ...account, status: "true" });
-      window.localStorage.setItem("token", dataLogin.token);
+      setAccount({ ...account, status: 'true' });
+      window.localStorage.setItem('token', dataLogin.token);
       dispatch(getUserProfileRequest());
+      createCart();
       // Handle successful login here if needed
-      console.log("Login successful:", dataLogin);
+      console.log('Login successful:', dataLogin);
     } catch (error) {
       // todo
-      console.error("Login error:", error);
+      console.error('Login error:', error);
     }
   };
 
   return (
     <div className="login-container">
       <h2 className="login-title">Đăng nhập</h2>
-      <form className="login-form" onSubmit={handleOnSubmit}>
+      <form
+        className="login-form"
+        onSubmit={handleOnSubmit}
+      >
         <div className="input-wrapper">
           <input
             type="email"
@@ -74,21 +77,27 @@ function Login() {
 
         <div className="forgot-pass-link">
           <span>
-            <Link to="/login/forgotPassword" className="forgot-pass-link">
+            <Link
+              to="/login/forgotPassword"
+              className="forgot-pass-link"
+            >
               Quên mật khẩu
             </Link>
           </span>
         </div>
 
         <div>
-          <button type="submit" className="login-button">
+          <button
+            type="submit"
+            className="login-button"
+          >
             Đăng nhập
           </button>
         </div>
       </form>
 
       <div className="sign-in">
-        Bạn chưa có tài khoản?{" "}
+        Bạn chưa có tài khoản?{' '}
         <span>
           <Link to="/signIn">Đăng kí ngay</Link>
         </span>

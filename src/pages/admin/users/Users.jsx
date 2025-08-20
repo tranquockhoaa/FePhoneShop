@@ -9,6 +9,9 @@ import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 import { getUsersRequest } from '../../../store/uses/users.action';
 import { createUserApi, updateUserApi } from '../../../api/users.api';
 
+import './AdminUsers.css';
+import AdminPageHeader from '../../../components/admin/PageHeader';
+
 const AdminUsers = () => {
   const dispatch = useDispatch();
   const { listUsers } = useSelector((state) => state.users);
@@ -74,7 +77,7 @@ const AdminUsers = () => {
       title: 'Tên',
       dataIndex: 'full_name',
       key: 'full_name',
-      render: (text) => <a>{text}</a>,
+      // render: (text) => <a>{text}</a>,
     },
     {
       title: 'Email',
@@ -107,7 +110,7 @@ const AdminUsers = () => {
           >
             <FaEdit />
           </button>
-          <button
+          {/* <button
             className="admin-btn delete-btn"
             title="Xóa"
             onClick={() => {
@@ -116,7 +119,7 @@ const AdminUsers = () => {
             }}
           >
             <FaTrash />
-          </button>
+          </button> */}
         </>
       ),
     },
@@ -124,18 +127,20 @@ const AdminUsers = () => {
 
   return (
     <div className="admin-product-page">
-      <div className="admin-product-header">
-        <h2>Quản lý sản phẩm</h2>
-        <button
-          className="admin-btn add-btn"
-          onClick={() => {
-            setShowModal(true);
-            setUserDetail(null);
-          }}
-        >
-          <FaPlus /> Thêm sản phẩm
-        </button>
-      </div>
+      <AdminPageHeader
+        title="Quản lý người dùng"
+        rightContent={
+          <button
+            className="admin-btn add-btn"
+            onClick={() => {
+              setShowModal(true);
+              setUserDetail(null);
+            }}
+          >
+            <FaPlus /> Thêm người dùng
+          </button>
+        }
+      />
       <div className="admin-product-toolbar">
         <input
           className="admin-product-search"
