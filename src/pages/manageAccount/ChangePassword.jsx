@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Form, Input, Button, message, notification } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { changePassword, logoutApi } from "../../api/profile.api";
+import { LockOutlined } from "@ant-design/icons";
+import { Button, Form, Input, message, notification } from "antd";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { changePassword, logoutApi } from "../../api/profile.api";
+import { profileAction } from "../../store/profile/profile.store";
 
 const ChangePassword = () => {
   const [loading, setLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleSubmit = async (values) => {
     if (values.newPassword !== values.confirmPassword) {
       message.error("Mật khẩu mới và mật khẩu xác nhận phải khớp!");
@@ -20,13 +24,17 @@ const ChangePassword = () => {
       await changePassword(values.oldPassword, values.newPassword);
 
       await logoutApi();
+      dispatch(profileAction.resetProfile());
+
+      localStorage.removeItem("token");
+      window.dispatchEvent(new Event("storage"));
 
       api.success({
         message: "Thành công",
         description: "Đổi mật khẩu thành công",
       });
 
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       api.error({
         message: "Lỗi",
