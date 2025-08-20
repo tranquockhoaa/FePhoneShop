@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import Header from "../../components/header/Header";
-import TableInfor from "./TableInfor";
-import "./ProductDetail.css";
-import js from "@eslint/js";
-
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import Header from '../../components/header/Header';
+import TableInfor from './TableInfor';
+import './ProductDetail.css';
+import js from '@eslint/js';
 
 const ProductDetail = () => {
   const { code } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [productDetail, setProductDetail] = useState([]);
-  const [selectedImage, setSelectedImage] = useState("");
+  const [product, setProduct] = useState();
+  const [selectedImage, setSelectedImage] = useState('');
   const [showInfo, setShowInfo] = useState(false);
 
   const [selectedVersionIndex, setSelectedVersionIndex] = useState(0);
@@ -19,10 +19,10 @@ const ProductDetail = () => {
   const [infoProductDetail, setInfoProductDetail] = useState({});
 
   const selectedVariant = productDetail[selectedVersionIndex];
-  const selectedOption = selectedVariant?.options[selectedColorIndex];
+  const selectedOption = selectedVariant?.options?.[selectedColorIndex];
 
   const imagePaths =
-    selectedVariant?.options.map((option) =>
+    selectedVariant?.options?.map((option) =>
       encodeURI(
         `/data/${option.brandName}/${option.code}/image/${option.color}.jpg`
       )
@@ -41,11 +41,11 @@ const ProductDetail = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:3000/api/v1/products/getInfoDetail?codeProduct=${encodeURIComponent(
-            code
-          )}`
+          `http://localhost:3000/api/v1/products/${encodeURIComponent(code)}`
         );
-        setProductDetail(response.data.data.data || []);
+
+        setProductDetail(response.data?.data?.productDetails || []);
+        setProduct(response.data?.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -67,12 +67,12 @@ const ProductDetail = () => {
       console.log(jsonPath);
       try {
         const response = await fetch(jsonPath);
-        if (!response.ok) throw new Error("File not found");
+        if (!response.ok) throw new Error('File not found');
 
         const jsonData = await response.json();
         setInfoProductDetail(jsonData);
       } catch (err) {
-        console.error("Failed to load JSON", err);
+        console.error('Failed to load JSON', err);
       }
     };
 
@@ -83,25 +83,25 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     try {
-      const account = JSON.parse(localStorage.getItem("account") || "{}");
+      const account = JSON.parse(localStorage.getItem('account') || '{}');
       const token = account.token;
       if (!token) {
-        alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+        alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
         return;
       }
       const productDetailId = selectedOption?.productDetailId;
       if (!productDetailId) {
-        alert("Vui lòng chọn phiên bản/màu sắc!");
+        alert('Vui lòng chọn phiên bản/màu sắc!');
         return;
       }
       await axios.post(
-        "http://localhost:3000/api/v1/cart/add",
+        'http://localhost:3000/api/v1/cart/add',
         { productDetailId, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      window.location.href = "/cart";
+      window.location.href = '/cart';
     } catch (err) {
-      alert("Thêm vào giỏ hàng thất bại!");
+      alert('Thêm vào giỏ hàng thất bại!');
     }
   };
   return (
@@ -116,7 +116,7 @@ const ProductDetail = () => {
         </div>
 
         <p className="product-name">
-          {productDetail[0]?.options[0]?.name || code}{" "}
+          {product?.name || code}{' '}
           <span className="name-small">
             Tặng gói BHV bảo hành cả nguồn, màn hình, vân tay
           </span>
@@ -127,7 +127,10 @@ const ProductDetail = () => {
             <div className="left-frame">
               <div className="frame-img">
                 <div className="frame-img-inner">
-                  <img src={selectedImage} alt="img-review" />
+                  <img
+                    src={selectedImage}
+                    alt="img-review"
+                  />
                 </div>
               </div>
 
@@ -137,7 +140,7 @@ const ProductDetail = () => {
                     <div
                       key={index}
                       className={`small-frame ${
-                        selectedImage === imagePath ? "active" : ""
+                        selectedImage === imagePath ? 'active' : ''
                       }`}
                       onClick={() => setSelectedImage(imagePath)}
                     >
@@ -165,15 +168,18 @@ const ProductDetail = () => {
             <div className="frame-center">
               <div className="product-base">
                 <form className="buy-simple-form">
-                  <div className="price" name="price">
-                    {selectedOption?.price.toLocaleString("vi-VN")}₫
+                  <div
+                    className="price"
+                    name="price"
+                  >
+                    {selectedOption?.price.toLocaleString('vi-VN')}₫
                   </div>
 
                   <strong className="label">Lựa chọn phiên bản</strong>
                   <p className="pr-available">
-                    {" "}
-                    Tình trạng:{" "}
-                    {selectedOption?.quantity > 0 ? "Còn hàng " : "Hết hàng"}
+                    {' '}
+                    Tình trạng:{' '}
+                    {selectedOption?.quantity > 0 ? 'Còn hàng ' : 'Hết hàng'}
                   </p>
 
                   <div className="storage-grid">
@@ -181,17 +187,17 @@ const ProductDetail = () => {
                       <div
                         key={index}
                         className={`grid-item ${
-                          selectedVersionIndex === index ? "selected" : ""
+                          selectedVersionIndex === index ? 'selected' : ''
                         }`}
                         onClick={() => {
                           setSelectedVersionIndex(index);
                           setSelectedColorIndex(0);
                         }}
                       >
-                        {variant.ram ? `${variant.ram}/` : ""}
+                        {variant.ram ? `${variant.ram}/` : ''}
                         {variant.storage}
                         <div className="price">
-                          {variant.options[0]?.price.toLocaleString("vi-VN")}₫
+                          {variant.options?.[0]?.price?.toLocaleString('vi-VN')}₫
                         </div>
                       </div>
                     ))}
@@ -199,18 +205,18 @@ const ProductDetail = () => {
 
                   <strong className="label">Lựa chọn màu</strong>
                   <div className="color-grid">
-                    {selectedVariant?.options.map((option, index) => (
+                    {selectedVariant?.options?.map((option, index) => (
                       <div
                         key={index}
                         className={`grid-item ${
-                          selectedColorIndex === index ? "selected" : ""
+                          selectedColorIndex === index ? 'selected' : ''
                         }`}
                         onClick={() => setSelectedColorIndex(index)}
                       >
                         <div className="extend-name">
                           {option.color} <br />
                           <span className="price">
-                            {option.price.toLocaleString("vi-VN")}₫
+                            {option.price.toLocaleString('vi-VN')}₫
                           </span>
                         </div>
                       </div>
@@ -229,7 +235,10 @@ const ProductDetail = () => {
                       />
                     </div>
 
-                    <div className="order-button" onClick={handleAddToCart}>
+                    <div
+                      className="order-button"
+                      onClick={handleAddToCart}
+                    >
                       <strong>MUA NGAY </strong>
                       <span>Giao hàng tận nơi hoặc mua tại cửa hàng</span>
                     </div>
@@ -238,7 +247,7 @@ const ProductDetail = () => {
               </div>
 
               <div className="hotline-call">
-                Gọi <span className="phone-number">01234567890</span> hoặc{" "}
+                Gọi <span className="phone-number">01234567890</span> hoặc{' '}
                 <span className="phone-number">01234567890</span> để được tư vấn
               </div>
 
@@ -257,7 +266,10 @@ const ProductDetail = () => {
                 <TableInfor data={infoProductDetail} />
               </div>
               <div className="show-full-info">
-                <button className="button-show-info" onClick={toggleInfo}>
+                <button
+                  className="button-show-info"
+                  onClick={toggleInfo}
+                >
                   Xem thêm thông tin
                 </button>
               </div>
@@ -269,8 +281,14 @@ const ProductDetail = () => {
           <div className="overlay">
             <div className="content">
               <div className="table-info-title">Thông số chi tiết</div>
-              <button onClick={toggleInfo} className="button-close">
-                <img src="/image/common/icon-close.png" alt="close" />
+              <button
+                onClick={toggleInfo}
+                className="button-close"
+              >
+                <img
+                  src="/image/common/icon-close.png"
+                  alt="close"
+                />
               </button>
               <div className="show-table-info-detail">
                 <TableInfor data={infoProductDetail} />

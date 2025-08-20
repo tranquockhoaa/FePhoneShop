@@ -1,10 +1,25 @@
-import React from "react";
-import Header from "../components/header/Header.jsx";
-import { Outlet } from "react-router-dom";
-import "./MainLayouts.css";
-import Footer from "../components/footer/footer.jsx";
+import React, { useEffect } from 'react';
+import Header from '../components/header/Header.jsx';
+import { Outlet, useLocation } from 'react-router-dom';
+import './MainLayouts.css';
+import Footer from '../components/footer/footer.jsx';
+import { useDispatch } from 'react-redux';
+
+import { getBrandsApiRq } from '../store/brands/brands.action.js';
 
 const MainLayouts = () => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (
+      location.pathname === '/' ||
+      location.pathname?.startsWith('/product-detail/')
+    ) {
+      dispatch(getBrandsApiRq());
+    }
+  }, []);
+
   return (
     <div>
       <div>

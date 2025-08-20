@@ -1,120 +1,141 @@
-import React, { useEffect, useState } from "react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import ProductItem from "../../components/product-item/product-item";
-import "./HomePage.css";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import xiaomiLogo from "../../assets/iconBrand/milogo_1592402136_1592534441.png";
-import logoRealme from "../../assets/iconBrand/apple_watch_menu-512_1592535236_1598409765.png";
-import logoIqoo from "../../assets/iconBrand/logo_iqoo.png";
-import logoIphone from "../../assets/iconBrand/logo_iphone.png";
-import logoInfo from "../../assets/iconBrand/icon_info.png";
-import { getProductLatestProductByBrand } from "../../api/homepage";
+import React, { useEffect, useState } from 'react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import ProductItem from '../../components/product-item/product-item';
+import './HomePage.css';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import xiaomiLogo from '../../assets/iconBrand/xiaomi.png';
+import logoRealme from '../../assets/iconBrand/realme.png';
+import logoIqoo from '../../assets/iconBrand/iqoo.png';
+import logoIphone from '../../assets/iconBrand/iphone.png';
+import logoInfo from '../../assets/iconBrand/icon_info.png';
+import { searchProductByApi } from '../../api/productlist';
 
 const data_banner = [
   {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/redmi-turbo-4-pro_1751163164.jpg",
+    url: 'https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/redmi-turbo-4-pro_1751163164.jpg',
   },
 
   {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
+    url: 'https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg',
   },
   {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
+    url: 'https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg',
   },
   {
-    url: "https://dienthoaihay.vn/images/banners/original/q5-pro_1736649129.jpg",
+    url: 'https://dienthoaihay.vn/images/banners/original/q5-pro_1736649129.jpg',
   },
 ];
 
 const brands = [
   {
-    name: "Realme",
+    name: 'Realme',
     logo: logoRealme,
-    title: "REALME",
+    title: 'REALME',
   },
   {
-    name: "Xiaomi",
+    name: 'Xiaomi',
     logo: xiaomiLogo,
-    title: "XIAOMI NỔI BẬT",
+    title: 'XIAOMI NỔI BẬT',
   },
   {
-    name: "Samsung",
+    name: 'Samsung',
     logo: logoIphone,
-    title: "SAMSUNG",
+    title: 'SAMSUNG',
   },
-  { name: "iQOO", logo: logoIqoo, title: "IQOO" },
+  { name: 'iQOO', logo: logoIqoo, title: 'IQOO' },
   {
-    name: "iPhone",
+    name: 'iPhone',
     logo: logoIphone,
-    title: "IPHONE",
+    title: 'IPHONE',
   },
 
-  { name: "Dịch vụ", logo: logoInfo },
+  { name: 'Dịch vụ', logo: logoInfo },
 ];
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchCompleted, setFetchCompleted] = useState(false);
   const [updatedBrands, setUpdatedBrands] = useState(brands);
-  useEffect(() => {
-    const fetchProductsForBrands = async () => {
-      try {
-        setIsLoading(true);
-        const brandsWithProducts = [...brands];
-        for (let i = 0; i < brandsWithProducts.length; i++) {
-          const brand = brandsWithProducts[i];
-          if (brand.name === "Dịch vụ") continue;
-          try {
-            const response = await getProductLatestProductByBrand(brand.name);
-            brandsWithProducts[i] = {
-              ...brand,
-              data: response.data["data"],
-            };
-          } catch (error) {
-            console.error(`Error fetching products for ${brand.name}:`, error);
-            brandsWithProducts[i] = {
-              ...brand,
-              data: [],
-              error: true,
-            };
-          }
+  const { listBrandActive } = useSelector((state) => state.listBrands);
+
+  const fetchProductsForBrands = async () => {
+    try {
+      setIsLoading(true);
+      const brandsWithProducts = listBrandActive.map((item) => {
+        const brand = brands.find(
+          (brandItem) =>
+            brandItem.name.toLowerCase() === item.name.toLowerCase()
+        );
+
+        return { ...brand, ...item, logo: brand?.logo || logoIphone };
+      });
+
+      for (let i = 0; i < brandsWithProducts.length; i++) {
+        const brand = brandsWithProducts[i];
+        if (brand.name === 'Dịch vụ') continue;
+        try {
+          const response = await searchProductByApi({
+            brand_id: brand.brand_id,
+
+          });
+          // debugger
+
+          // debugger;
+          brandsWithProducts[i] = {
+            ...brand,
+            data: response.data.data,
+          };
+        } catch (error) {
+          console.error(`Error fetching products for ${brand.name}:`, error);
+          brandsWithProducts[i] = {
+            ...brand,
+            data: [],
+            error: true,
+          };
         }
-
-        setUpdatedBrands(brandsWithProducts);
-        setFetchCompleted(true);
-      } catch (error) {
-        console.error("Overall fetch error:", error);
-      } finally {
-        setIsLoading(false);
       }
-    };
 
-    fetchProductsForBrands();
-  }, []);
+      setUpdatedBrands(brandsWithProducts);
+      setFetchCompleted(true);
+    } catch (error) {
+      console.error('Overall fetch error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    console.log(updatedBrands);
-  }, [updatedBrands]);
+    if (listBrandActive?.length) {
+      fetchProductsForBrands();
+    }
+  }, [listBrandActive]);
+
   return (
     <div className="homepage">
       <div className="homepage-container">
         <div className="block-top-home">
           <div className="wrap-menu">
-            {brands.map((brand, index) => (
-              <div className="menu" key={index}>
+            {updatedBrands.map((brand, index) => (
+              <div
+                className="menu"
+                key={index}
+              >
                 <span className="icon">
-                  <img src={brand.logo} alt={brand.name} />
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                  />
                 </span>
                 {/* Nếu là Dịch vụ thì không link */}
-                {brand.name !== "Dịch vụ" ? (
+                {brand.name !== 'Dịch vụ' ? (
                   <Link
-                    to={`/products/${brand.name}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
+                    to={`/products/${brand.name}-${brand.brand_id}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     {brand.name}
                   </Link>
@@ -127,14 +148,21 @@ const HomePage = () => {
           </div>
           <div className="banner">
             <Swiper
-              pagination={{ type: "bullets", clickable: true }}
+              pagination={{ type: 'bullets', clickable: true }}
               autoplay={true}
               loop={true}
               modules={[Autoplay, Pagination]}
             >
               {data_banner?.map((data, id) => (
-                <SwiperSlide key={id} autoplay={true}>
-                  <img src={data.url} alt="banner-img" className="banner-img" />
+                <SwiperSlide
+                  key={id}
+                  autoplay={true}
+                >
+                  <img
+                    src={data.url}
+                    alt="banner-img"
+                    className="banner-img"
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -145,16 +173,19 @@ const HomePage = () => {
             <p>Đang tải dữ liệu sản phẩm...</p>
           ) : fetchCompleted ? (
             updatedBrands.map((brand, index) =>
-              brand.name === "Dịch vụ" ? null : (
-                <div className="item-store" key={index}>
+              brand.name === 'Dịch vụ' ? null : (
+                <div
+                  className="item-store"
+                  key={index}
+                >
                   <div className="title">
                     <h2 className="title-name">
                       <p>{brand.title}</p>
                     </h2>
                   </div>
                   <div className="product-grid">
-                    {brand.data?.data?.length > 0 ? (
-                      brand.data.data.map((product, idx) => (
+                    {brand.data?.length > 0 ? (
+                      brand.data.map((product, idx) => (
                         <ProductItem
                           productCode={product.code}
                           brandName={brand.name}
@@ -164,6 +195,7 @@ const HomePage = () => {
                           productStorageSize={product.storage_size}
                           productPrice={product.price}
                           key={idx}
+                          product={product}
                         />
                       ))
                     ) : (
