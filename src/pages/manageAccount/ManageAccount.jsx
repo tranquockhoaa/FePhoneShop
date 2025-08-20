@@ -7,8 +7,9 @@ import Loggout from './LogoutPopup';
 const menu = [
   { icon: '🏠', label: 'Về Trang chủ', path: '/' },
   { icon: '👤', label: 'Thông tin tài khoản', path: 'infoAccount' },
+  { icon: '🔑', label: 'Đổi mật khẩu', path: 'changePassword' },  
   { icon: '🚪', label: 'Đăng xuất', action: 'logout' },
-];
+]
 
 const ManageAccount = () => {
   const [showLoggoutPopup, setLoggoutPopup] = useState(false);
