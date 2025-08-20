@@ -1,38 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/header/Header';
 import TableInfor from './TableInfor';
 import './ProductDetail.css';
-import js from '@eslint/js';
 
 const ProductDetail = () => {
   const { code } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [productDetail, setProductDetail] = useState([]);
+  const [productDetail, setProductDetail] = useState();
   const [product, setProduct] = useState();
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState();
   const [showInfo, setShowInfo] = useState(false);
 
-  const [selectedVersionIndex, setSelectedVersionIndex] = useState(0);
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-  const [infoProductDetail, setInfoProductDetail] = useState({});
+  const [selectedMemoryId, setSelectedMemoryId] = useState(0);
+  const [selectedColorId, setSelectedColorId] = useState(0);
+  const [infoProductDetail, setInfoProductDetail] = useState([]);
 
-  const selectedVariant = productDetail[selectedVersionIndex];
-  const selectedOption = selectedVariant?.options?.[selectedColorIndex];
+  // const selectedVariant = productDetail[selectedMemoryId];
+  // const selectedOption = selectedVariant?.options?.[selectedColorIndex];
 
-  const imagePaths =
-    selectedVariant?.options?.map((option) =>
-      encodeURI(
-        `/data/${option.brandName}/${option.code}/image/${option.color}.jpg`
-      )
-    ) || [];
+  // const imagePaths =
+  //   selectedVariant?.options?.map((option) =>
+  //     encodeURI(
+  //       `/data/${option.brandName}/${option.code}/image/${option.color}.jpg`
+  //     )
+  //   ) || [];
+
+  const images = useMemo(
+    () => product?.color?.flatMap((item) => item.images),
+    [product]
+  );
+
+  const colorOptions = useMemo(() => product?.color || [], [product]);
+  const memoryOptions = useMemo(() => {
+    const allMemory =
+      product?.productDetails?.flatMap((item) => item.memory) || [];
+    // Loại bỏ các phần tử trùng lặp dựa trên memory_id
+    const uniqueMemory = allMemory.filter(
+      (item, index, self) =>
+        index === self.findIndex((m) => m.memory_id === item.memory_id)
+    );
+    return uniqueMemory;
+  }, [product]);
+
+  // useEffect(() => {
+  //   if (images?.length > 0) {
+  //     setSelectedImage(images[0]);
+  //   }
+  // }, [images]);
 
   useEffect(() => {
-    if (imagePaths.length > 0) {
-      setSelectedImage(imagePaths[selectedColorIndex]);
+    if (product?.productDetails?.length) {
+      setProductDetail(product?.productDetails[0]);
+      setSelectedColorId(product?.productDetails[0]?.color_id);
+      setSelectedMemoryId(product?.productDetails[0]?.memory_id);
+      const colors = product?.color?.find(
+        (item) => item.color.color_id === product?.productDetails[0]?.color_id
+      );
+
+      setSelectedImage(colors?.images?.[0]);
     }
-  }, [selectedColorIndex, selectedVariant]);
+  }, [product]);
+
+  useEffect(() => {
+    if (productDetail?.specifications) {
+      setInfoProductDetail(JSON.parse(productDetail?.specifications));
+    } else {
+      setInfoProductDetail([]);
+    }
+  }, [productDetail]);
 
   const toggleInfo = () => setShowInfo(!showInfo);
 
@@ -44,7 +81,7 @@ const ProductDetail = () => {
           `http://localhost:3000/api/v1/products/${encodeURIComponent(code)}`
         );
 
-        setProductDetail(response.data?.data?.productDetails || []);
+        // setProductDetail(response.data?.data?.productDetails || []);
         setProduct(response.data?.data);
       } catch (error) {
         console.log(error);
@@ -55,48 +92,66 @@ const ProductDetail = () => {
     getInfoDetailByCodeName();
   }, [code]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const product = productDetail[0]?.options?.[0];
-      if (!product) return;
+  const handleChangeVariant = ({ color_id, memory_id }) => {
+    const newProductDetail = product?.productDetails?.find(
+      (item) => item.color_id === color_id && item.memory_id === memory_id
+    );
 
-      const { brandName, name } = product;
-      const jsonPath = encodeURI(
-        `/data/${brandName}/${code}/information/${code}.json`
-      );
-      console.log(jsonPath);
-      try {
-        const response = await fetch(jsonPath);
-        if (!response.ok) throw new Error('File not found');
-
-        const jsonData = await response.json();
-        setInfoProductDetail(jsonData);
-      } catch (err) {
-        console.error('Failed to load JSON', err);
-      }
-    };
-
-    if (productDetail.length > 0) {
-      fetchData();
+    if (newProductDetail) {
+      setProductDetail(newProductDetail);
     }
-  }, [productDetail]);
+  };
+
+  console.log('product', product);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const product = productDetail[0]?.options?.[0];
+  //     if (!product) return;
+
+  //     const { brandName, name } = product;
+  //     const jsonPath = encodeURI(
+  //       `/data/${brandName}/${code}/information/${code}.json`
+  //     );
+  //     console.log(jsonPath);
+  //     try {
+  //       const response = await fetch(jsonPath);
+  //       if (!response.ok) throw new Error('File not found');
+
+  //       const jsonData = await response.json();
+  //       setInfoProductDetail(jsonData);
+  //     } catch (err) {
+  //       console.error('Failed to load JSON', err);
+  //     }
+  //   };
+
+  //   if (productDetail.length > 0) {
+  //     fetchData();
+  //   }
+  // }, [productDetail]);
+
+  console.log('productDetail', productDetail);
 
   const handleAddToCart = async () => {
     try {
-      const account = JSON.parse(localStorage.getItem('account') || '{}');
-      const token = account.token;
+      const token = localStorage.getItem('token');
+
       if (!token) {
         alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
         return;
       }
-      const productDetailId = selectedOption?.productDetailId;
+      const productDetailId = productDetail.product_detail_id;
       if (!productDetailId) {
         alert('Vui lòng chọn phiên bản/màu sắc!');
         return;
       }
       await axios.post(
-        'http://localhost:3000/api/v1/cart/add',
-        { productDetailId, quantity: 1 },
+        'http://localhost:3000/api/v1/cart-detail/add-to-card',
+        {
+          product_detail_id: productDetailId,
+          quantity: 1,
+          unit_price: productDetail.price,
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       window.location.href = '/cart';
@@ -128,7 +183,7 @@ const ProductDetail = () => {
               <div className="frame-img">
                 <div className="frame-img-inner">
                   <img
-                    src={selectedImage}
+                    src={selectedImage?.link}
                     alt="img-review"
                   />
                 </div>
@@ -136,17 +191,17 @@ const ProductDetail = () => {
 
               <div className="thumbs">
                 <div className="frame-img-list">
-                  {imagePaths.map((imagePath, index) => (
+                  {images?.map((imagePath, index) => (
                     <div
                       key={index}
                       className={`small-frame ${
-                        selectedImage === imagePath ? 'active' : ''
+                        selectedImage?.id === imagePath.id ? 'active' : ''
                       }`}
                       onClick={() => setSelectedImage(imagePath)}
                     >
                       <img
                         className="image"
-                        src={imagePath}
+                        src={imagePath.link}
                         alt={`img-${index}`}
                       />
                     </div>
@@ -172,52 +227,71 @@ const ProductDetail = () => {
                     className="price"
                     name="price"
                   >
-                    {selectedOption?.price.toLocaleString('vi-VN')}₫
+                    {productDetail?.price?.toLocaleString('vi-VN')}₫
                   </div>
 
                   <strong className="label">Lựa chọn phiên bản</strong>
                   <p className="pr-available">
                     {' '}
                     Tình trạng:{' '}
-                    {selectedOption?.quantity > 0 ? 'Còn hàng ' : 'Hết hàng'}
+                    {productDetail?.quantity > 0 ? 'Còn hàng ' : 'Hết hàng'}
                   </p>
 
                   <div className="storage-grid">
-                    {productDetail.map((variant, index) => (
+                    {memoryOptions.map((memory, index) => (
                       <div
                         key={index}
                         className={`grid-item ${
-                          selectedVersionIndex === index ? 'selected' : ''
+                          selectedMemoryId === memory.memory_id
+                            ? 'selected'
+                            : ''
                         }`}
                         onClick={() => {
-                          setSelectedVersionIndex(index);
-                          setSelectedColorIndex(0);
+                          setSelectedMemoryId(memory.memory_id);
+
+                          handleChangeVariant({
+                            color_id: selectedColorId,
+                            memory_id: memory.memory_id,
+                          });
+                          // setSelectedColorIndex(0);
                         }}
                       >
-                        {variant.ram ? `${variant.ram}/` : ''}
-                        {variant.storage}
-                        <div className="price">
-                          {variant.options?.[0]?.price?.toLocaleString('vi-VN')}₫
-                        </div>
+                        {memory.ram_size ? `${memory.ram_size}/` : ''}
+                        {memory.storage_size}
+                        {/* <div className="price">
+                          {memory.options?.[0]?.price?.toLocaleString('vi-VN')}
+                          ₫
+                        </div> */}
                       </div>
                     ))}
                   </div>
 
                   <strong className="label">Lựa chọn màu</strong>
                   <div className="color-grid">
-                    {selectedVariant?.options?.map((option, index) => (
+                    {colorOptions?.map((option, index) => (
                       <div
                         key={index}
                         className={`grid-item ${
-                          selectedColorIndex === index ? 'selected' : ''
+                          option?.color?.color_id === selectedColorId
+                            ? 'selected'
+                            : ''
                         }`}
-                        onClick={() => setSelectedColorIndex(index)}
+                        onClick={() => {
+                          const color_id = option?.color?.color_id;
+                          setSelectedColorId(color_id);
+                          setSelectedImage(option.images[0]);
+
+                          handleChangeVariant({
+                            color_id,
+                            memory_id: selectedMemoryId,
+                          });
+                        }}
                       >
                         <div className="extend-name">
-                          {option.color} <br />
-                          <span className="price">
+                          {option.color.name} <br />
+                          {/* <span className="price">
                             {option.price.toLocaleString('vi-VN')}₫
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     ))}
