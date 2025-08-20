@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import './Loggout.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -27,7 +28,7 @@ const LogoutPopup = ({ clickLogoutPopup }) => {
     }
   };
 
-  return (
+  return createPortal(
     <div className="loggout-container">
       <div className="loggout">
         <div className="content">
@@ -48,7 +49,8 @@ const LogoutPopup = ({ clickLogoutPopup }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
