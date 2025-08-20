@@ -1,11 +1,12 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { Button, Form, Input, notification, Radio } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userAxios from "./userAxios";
 import { createCart } from "../../api/cart-user";
 
 function SignIn() {
   const navigate = useNavigate();
+  const [api, contextHolder] = notification.useNotification();
 
   const [account, setAccount] = useState({
     email: "",
@@ -18,123 +19,93 @@ function SignIn() {
   });
 
   useEffect(() => {
-    console.log("useEffect");
-    if (account.status == "true") {
+    if (account.status === "true") {
       navigate("/");
     }
   }, [account.status]);
 
-  const handleOnSubmit = () => {
-    event.preventDefault();
-    console.log(account);
-    userAxios
-      .post("http://127.0.0.1:3000/api/v1/auth/signup", account)
-      .then((res) => {
-        if (res.data.status === "success") {
-          console.log("SignUp successful");
-          setAccount({ ...account, status: "true" });
-          createCart(res.data.userId);
-        }
-      })
-      .catch((err) => {
-        if (err.response.data) {
-          alert(err.response.data.message);
-        }
+  const handleOnSubmit = async (values) => {
+    try {
+      const response = await userAxios.post(
+        "http://127.0.0.1:3000/api/v1/auth/signup",
+        values
+      );
+      if (response.data.status === "success") {
+        setAccount({ ...values, status: "true" });
+        createCart(response.data.userId);
+        api.success({
+          message: "Thành công",
+          description: "Đăng ký thành công",
+        });
+      }
+    } catch (error) {
+      api.error({
+        message: "Thất bại",
+        description: "Email đã được đăng ký",
       });
-  };
-
-  const handleInput = (event) => {
-    setAccount({ ...account, [event.target.name]: event.target.value });
+    }
   };
 
   return (
-    <div className="sign-in-container">
-      <h2 className="sign-in-title">Đăng kí tài khoản</h2>
+    <div className="sign-in-container" style={{ marginTop: "100px" }}>
+      {contextHolder}
+      <h2 className="sign-in-title" style={{ color: "#3b82f6" }}>
+        Đăng kí tài khoản
+      </h2>
 
-      <form onSubmit={handleOnSubmit}>
-        <div class="input-wrapper">
-          <input
-            type="email"
-            class="input-field"
-            onChange={handleInput}
-            name="email"
-            placeholder="Nhập email"
-            required
-          />
-        </div>
+      <Form onFinish={handleOnSubmit} layout="vertical">
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: "Vui lòng nhập email!" },
+            { type: "email", message: "Email không hợp lệ!" },
+          ]}
+        >
+          <Input placeholder="Nhập email" />
+        </Form.Item>
 
-        <div className="input-wrapper">
-          <input
-            type="password"
-            className="input-field"
-            onChange={handleInput}
-            name="password"
-            placeholder="Nhập mật khẩu"
-            required
-          />
-        </div>
+        <Form.Item
+          label="Mật khẩu"
+          name="password"
+          rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+        >
+          <Input.Password placeholder="Nhập mật khẩu" />
+        </Form.Item>
 
-        <div className="input-wrapper">
-          <input
-            type="text"
-            className="input-field"
-            onChange={handleInput}
-            name="full_name"
-            placeholder="Nhập họ và tên"
-            required
-          />
-        </div>
+        <Form.Item
+          label="Họ và tên"
+          name="full_name"
+          rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+        >
+          <Input placeholder="Nhập họ và tên" />
+        </Form.Item>
 
-        <div className="gender-checkbox">
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              id="gender-checkbox-1"
-              onChange={handleInput}
-              name="gender"
-              value="Nam"
-            />
-            <label for="gender-checkbox-1">Nam</label>
-          </div>
+        <Form.Item
+          label="Giới tính"
+          name="gender"
+          rules={[{ required: true, message: "Vui lòng chọn giới tính!" }]}
+        >
+          <Radio.Group>
+            <Radio value="Nam">Nam</Radio>
+            <Radio value="Nữ">Nữ</Radio>
+          </Radio.Group>
+        </Form.Item>
 
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              id="gender-checkbox-2"
-              onChange={handleInput}
-              name="gender"
-              value="Nữ"
-            />
-            <label for="gender-checkbox-1">Nữ</label>
-          </div>
-        </div>
+        <Form.Item label="Số điện thoại" name="phone_number">
+          <Input placeholder="Nhập số điện thoại" />
+        </Form.Item>
 
-        <div className="input-wrapper">
-          <input
-            type="text"
-            className="input-field"
-            onChange={handleInput}
-            name="phone_number"
-            placeholder="Nhập số điện thoại"
-          />
-        </div>
+        <Form.Item label="Địa chỉ" name="address">
+          <Input placeholder="Nhập địa chỉ" />
+        </Form.Item>
 
-        <div className="input-wrapper">
-          <input
-            type="text"
-            class="input-field"
-            onChange={handleInput}
-            name="address"
-            placeholder="Nhập địa chỉ"
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <button type="submit" className="submit-button">
+        <Form.Item>
+          <Button type="primary" htmlType="submit" block>
             Đăng kí
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 }
