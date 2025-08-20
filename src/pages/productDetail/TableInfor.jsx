@@ -6,10 +6,10 @@ const TableInfor = ({ data }) => {
   return (
     <table className="table-infor">
       <tbody>
-        {Object.entries(data).map(([key, value]) => (
-          <tr className="table-row" key={key}>
-            <td className="characteristic">{key.replaceAll("_", " ")}:</td>
-            <td>{value}</td>
+        {data?.map((item, index) => (
+          <tr className="table-row" key={index}>
+            <td className="characteristic">{item.label}:</td>
+            <td>{item.value}</td>
           </tr>
         ))}
       </tbody>
