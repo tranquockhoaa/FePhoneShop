@@ -32,10 +32,11 @@ const data_banner = [
 ];
 
 const brands = [
+  { name: "iQOO", logo: logoIqoo, title: "IQOO" },
   {
-    name: "Realme",
-    logo: logoRealme,
-    title: "REALME",
+    name: "Samsung",
+    logo: logoIphone,
+    title: "SAMSUNG",
   },
   {
     name: "Xiaomi",
@@ -43,18 +44,15 @@ const brands = [
     title: "XIAOMI NỔI BẬT",
   },
   {
-    name: "Samsung",
-    logo: logoIphone,
-    title: "SAMSUNG",
-  },
-  { name: "iQOO", logo: logoIqoo, title: "IQOO" },
-  {
     name: "iPhone",
     logo: logoIphone,
     title: "IPHONE",
   },
-
-  { name: "Dịch vụ", logo: logoInfo },
+  {
+    name: "Realme",
+    logo: logoRealme,
+    title: "REALME",
+  },
 ];
 
 const HomePage = () => {

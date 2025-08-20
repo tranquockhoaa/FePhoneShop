@@ -124,19 +124,19 @@ const AdminOrderList = () => {
   };
 
   // Xóa đơn hàng
-  const handleDelete = async (orderId, orderCode) => {
-    if (!window.confirm(`Bạn có chắc muốn xóa đơn hàng #${orderCode}?`)) {
-      return;
-    }
-    try {
-      await deleteOrderApi(orderId);
-      alert(`Đã xóa đơn hàng #${orderCode} thành công!`);
-      fetchOrders(pagination.current, pagination.pageSize);
-      setSelectedOrder(null);
-    } catch (error) {
-      console.error("Lỗi khi xóa đơn hàng:", error);
-    }
-  };
+  // const handleDelete = async (orderId, orderCode) => {
+  //   if (!window.confirm(`Bạn có chắc muốn xóa đơn hàng #${orderCode}?`)) {
+  //     return;
+  //   }
+  //   try {
+  //     await deleteOrderApi(orderId);
+  //     alert(`Đã xóa đơn hàng #${orderCode} thành công!`);
+  //     fetchOrders(pagination.current, pagination.pageSize);
+  //     setSelectedOrder(null);
+  //   } catch (error) {
+  //     console.error("Lỗi khi xóa đơn hàng:", error);
+  //   }
+  // };
 
   // Xử lý thay đổi trang
   const handleTableChange = (pagination) => {
@@ -222,13 +222,13 @@ const AdminOrderList = () => {
             onClick={() => handleShowDetail(record.order_id)}
             size="small"
           />
-          <Button
+          {/* <Button
             type="primary"
             danger
             icon={<FaTrash />}
             onClick={() => handleDelete(record.order_id, record.code)}
             size="small"
-          />
+          /> */}
         </Space>
       ),
     },

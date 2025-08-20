@@ -4,7 +4,6 @@ import "./OrderItem.css";
 const OrderItem = ({ item }) => {
   const { product_details } = item;
   const { product, memory, color } = product_details;
-
   return (
     <div className="order-item">
       <div className="order-left">

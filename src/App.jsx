@@ -28,6 +28,7 @@ import RequireAdmin from './components/admin/RequireAdmin';
 import PaymentResult from './pages/cart/payment/payment-success';
 import AdminOrderList from './pages/admin/AdminOrderList';
 import OrderDetail from './pages/order/OrderDetail';
+import ChangePassword from './pages/manageAccount/ChangePassword';
 
 export const AsyncAdminUsersPage = lazy(() =>
   import('./pages/admin/users/Users')
@@ -80,6 +81,10 @@ const App = () => {
                 <Route
                   path="infoAccount"
                   element={<InfoAccount />}
+                ></Route>
+                 <Route
+                  path="changePassword"
+                  element={<ChangePassword />}
                 ></Route>
                 <Route
                   path="loggout"

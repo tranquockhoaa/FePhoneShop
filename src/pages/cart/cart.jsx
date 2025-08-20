@@ -138,6 +138,21 @@ const Cart = () => {
     setShowSuccessModal(false);
   };
 
+  const getUrlImage = (index) => {
+    const nameColor = cartDetails[index].product_detail.color.name;
+    console.log("nameColor", nameColor);
+
+    const listColor = cartDetails[index].product_detail.product.color;
+    console.log("listColor", listColor);
+
+    const matchedColor = listColor.find(
+      (color) => color.color_name === nameColor
+    );
+    console.log(matchedColor?.images?.[0]?.link || null);
+    return matchedColor?.images?.[0]?.link || null;
+  };
+  // console.log(cartDetails[0].product_detail.product);
+
   return (
     <Spin spinning={loading} tip="Đang xử lý đơn hàng...">
       <div className="cart-container">
@@ -164,7 +179,7 @@ const Cart = () => {
                 />
               </div>
             ) : (
-              cartDetails.map((item) => {
+              cartDetails.map((item, index) => {
                 const cartDetailId = item.product_detail.product_detail_id;
                 const product = item.product_detail?.product || {};
                 const memory = item.product_detail?.memory || {};
@@ -173,7 +188,11 @@ const Cart = () => {
                 return (
                   <div className="cart-item" key={cartDetailId}>
                     <div className="cart-left">
-                      <img src="" alt={product.name} className="product-img" />
+                      <img
+                        src={getUrlImage(index)}
+                        alt={product.name}
+                        className="product-img"
+                      />
                       <div className="cart-info">
                         <h4>{product.name}</h4>
                         <p>
