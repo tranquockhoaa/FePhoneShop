@@ -14,29 +14,42 @@ import AdminPageHeader from '../../../components/admin/PageHeader';
 
 const AdminUsers = () => {
   const dispatch = useDispatch();
-  const { listUsers } = useSelector((state) => state.users);
+  const { listUsers, loading: usersLoading } = useSelector(
+    (state) => state.users
+  );
 
   const [search, setSearch] = useState('');
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+    total: 0,
+  });
   const [showUserModal, setShowModal] = useState(false);
   const [userDetail, setUserDetail] = useState();
-  const [loading, setLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
 
   useEffect(() => {
     dispatch(
       getUsersRequest({
         page: 1,
-        limit: 30,
+        limit: pagination.pageSize,
       })
     );
-  }, []);
+  }, [pagination.pageSize, dispatch]);
 
-  const handleSearch = () => {
-    const keyword = search.trim();
-  };
+  useEffect(() => {
+    if (!listUsers) return;
+    const nextTotal = Number(listUsers?.total || 0);
+    setPagination((prev) => ({
+      ...prev,
+      total: nextTotal,
+      current: Number(listUsers?.page || 0),
+    }));
+  }, [listUsers]);
 
   const handleUserSubmit = async (formData) => {
-    setLoading(true);
+    setFormLoading(true);
     try {
       if (userDetail) {
         await updateUserApi({ id: userDetail.user_id, body: formData });
@@ -55,7 +68,7 @@ const AdminUsers = () => {
       dispatch(
         getUsersRequest({
           page: 1,
-          limit: 30,
+          limit: pagination.pageSize,
         })
       );
 
@@ -68,8 +81,38 @@ const AdminUsers = () => {
         description: 'Có lỗi xảy ra! Vui lòng thử lại.',
       });
     } finally {
-      setLoading(false);
+      setFormLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    const keyword = search.trim();
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    dispatch(
+      getUsersRequest({
+        page: 1,
+        limit: pagination.pageSize,
+        search: keyword || undefined,
+      })
+    );
+  };
+
+  const handleTableChange = (paginationInfo) => {
+    const { current, pageSize } = paginationInfo;
+    const newPageSize = pageSize;
+    const newCurrent = pagination.pageSize !== newPageSize ? 1 : current;
+    setPagination((prev) => ({
+      ...prev,
+      current: newCurrent,
+      pageSize: newPageSize,
+    }));
+    dispatch(
+      getUsersRequest({
+        page: newCurrent,
+        limit: newPageSize,
+        search: search.trim() || undefined,
+      })
+    );
   };
 
   const columns = [
@@ -166,7 +209,7 @@ const AdminUsers = () => {
         onOk={handleUserSubmit}
         userData={userDetail}
         isEdit={!!userDetail}
-        loading={loading}
+        loading={formLoading}
       />
 
       <ModalConfirm
@@ -186,6 +229,19 @@ const AdminUsers = () => {
         <Table
           columns={columns}
           dataSource={listUsers?.users || []}
+          rowKey="user_id"
+          loading={usersLoading}
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} của ${total} người dùng`,
+            pageSizeOptions: ['10', '20', '50'],
+          }}
+          onChange={handleTableChange}
         />
       </div>
     </div>

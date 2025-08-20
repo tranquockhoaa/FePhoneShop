@@ -10,10 +10,10 @@ import AdminPageHeader from '../../components/admin/PageHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllAdminBrandApiRq } from '../../store/brands/brands.action';
 import { getColorListApiRq } from '../../store/color-list/color-list.action';
+import { searchProductByApi } from '../../api/productlist';
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
-  const [allProducts, setAllProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [formState, setFormState] = useState({
     open: false,
@@ -48,7 +48,13 @@ const AdminProductList = () => {
   );
 
   const fetchProducts = useCallback(
-    (page = 1, pageSize = 20, sortBy = 'createdAt', sortOrder = 'ASC') => {
+    (
+      page = 1,
+      pageSize = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'ASC',
+      search = ''
+    ) => {
       setPagination((prev) => ({ ...prev, loading: true }));
 
       adminAxios
@@ -58,12 +64,12 @@ const AdminProductList = () => {
             size: pageSize,
             sortBy,
             sortOrder,
+            search,
           },
         })
         .then((res) => {
           const { data, totalItems, currentPage } = res.data;
           setProducts(data || []);
-          setAllProducts(data || []);
           setPagination((prev) => ({
             ...prev,
             current: currentPage || page,
@@ -83,7 +89,7 @@ const AdminProductList = () => {
     fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
   }, [pagination.pageSize]);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const keyword = search.trim().toLowerCase();
     if (!keyword) {
       // Reset to first page when clearing search
@@ -92,23 +98,25 @@ const AdminProductList = () => {
       return;
     }
 
-    // For now, we'll do client-side search on the current page
-    // In a real implementation, you might want to send the search term to the API
-    setProducts(
-      allProducts.filter((sp) => {
-        const productId = sp.product_id?.toString() ?? '';
-        const name = sp.name ?? '';
-        const sku = sp.sku ?? '';
-        const brandName = sp.brand?.name ?? sp.brandName ?? '';
-
-        return (
-          productId.includes(keyword) ||
-          name.toLowerCase().includes(keyword) ||
-          sku.toLowerCase().includes(keyword) ||
-          brandName.toLowerCase().includes(keyword)
-        );
-      })
-    );
+    // Reset to page 1 when searching
+    setPagination((prev) => ({ ...prev, loading: true }));
+    try {
+      const params = {
+        search: keyword,
+        page: 1,
+        size: pagination.pageSize,
+      };
+      const response = await searchProductByApi(params);
+      setProducts(response.data?.data || []);
+      setPagination((prev) => ({
+        ...prev,
+        total: Number(response.headers['x-total-count']) || 0,
+        loading: false,
+      }));
+    } catch (error) {
+      console.error('Error searching products:', error);
+      setPagination((prev) => ({ ...prev, loading: false }));
+    }
   };
 
   const refreshAfterMutation = () => {
@@ -151,25 +159,25 @@ const AdminProductList = () => {
   // Sắp xếp tồn kho tăng dần
   const sortByQuantityAsc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'ASC');
+    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'ASC', search);
   };
 
   // Sắp xếp tồn kho giảm dần
   const sortByQuantityDesc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'DESC');
+    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'DESC', search);
   };
 
   // Sắp xếp ngày nhập tăng dần
   const sortByDateAsc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC', search);
   };
 
   // Sắp xếp ngày nhập giảm dần
   const sortByDateDesc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'createdAt', 'DESC');
+    fetchProducts(1, pagination.pageSize, 'createdAt', 'DESC', search);
   };
 
   // Handle pagination change
