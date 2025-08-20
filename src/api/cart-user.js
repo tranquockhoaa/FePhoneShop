@@ -48,19 +48,18 @@ export const handleRemoveProductApi = async (product_detail_id) => {
   }
 };
 
-
 export const clearCart = async () => {
   try {
-   const response = await authorizedRequest.delete("/cart-detail/clear-cart")
+    const response = await authorizedRequest.delete("/cart-detail/clear-cart");
     return response.data;
   } catch (error) {
     throw new Error("Error api: " + error.message);
   }
 };
 
-export const createCart = async () => {
+export const createCart = async (id) => {
   try {
-   const response = await authorizedRequest.post("/cart")
+    const response = await authorizedRequest.post("/cart", { id });
     return response.data;
   } catch (error) {
     throw new Error("Error api: " + error.message);
