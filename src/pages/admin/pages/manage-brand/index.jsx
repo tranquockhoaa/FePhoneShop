@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllAdminBrandApiRq } from "../../../../store/admin-list-brand/admin-list-brand.action";
-import adminAxios from "../../adminAxios";
-import "./index.css";
+import React, { useEffect, useState } from 'react';
+import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllAdminBrandApiRq } from '../../../../store/brands/brands.action';
+import adminAxios from '../../adminAxios';
+import './index.css';
 
 const AdminManageBrand = () => {
   const dispatch = useDispatch();
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [newBrand, setNewBrand] = useState({
-    name: "",
-    infomation: "",
-    icon: "",
+    name: '',
+    infomation: '',
+    icon: '',
   });
   const [editBrand, setEditBrand] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
@@ -36,14 +36,14 @@ const AdminManageBrand = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      await adminAxios.post("brand", newBrand);
+      await adminAxios.post('brand', newBrand);
       setShowCreate(false);
-      setNewBrand({ name: "", infomation: "", icon: "" });
+      setNewBrand({ name: '', infomation: '', icon: '' });
 
       dispatch(getAllAdminBrandApiRq());
     } catch (error) {
-      console.error("Lỗi tạo brand:", error);
-      alert("Tạo brand thất bại!");
+      console.error('Lỗi tạo brand:', error);
+      alert('Tạo brand thất bại!');
     }
   };
 
@@ -52,33 +52,33 @@ const AdminManageBrand = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await adminAxios.put(`brands/${editBrand.brand_id}`, editBrand);
+      await adminAxios.put(`brand/${editBrand.brand_id}`, editBrand);
       setEditBrand(null);
       dispatch(getAllAdminBrandApiRq());
     } catch (error) {
-      console.error("Lỗi cập nhật brand:", error);
-      alert("Cập nhật thất bại!");
+      console.error('Lỗi cập nhật brand:', error);
+      alert('Cập nhật thất bại!');
     }
   };
 
-  const handleDelete = async (brandId) => {
-    if (window.confirm("Bạn có chắc muốn xóa thương hiệu này?")) {
-      try {
-        await adminAxios.delete(`brands/${brandId}`);
-        dispatch(getAllAdminBrandApiRq());
-      } catch (error) {
-        console.error("Lỗi xóa brand:", error);
-        alert("Xóa thất bại!");
-      }
-    }
-  };
+  // const handleDelete = async (brandId) => {
+  //   if (window.confirm('Bạn có chắc muốn xóa thương hiệu này?')) {
+  //     try {
+  //       await adminAxios.delete(`brands/${brandId}`);
+  //       dispatch(getAllAdminBrandApiRq());
+  //     } catch (error) {
+  //       console.error('Lỗi xóa brand:', error);
+  //       alert('Xóa thất bại!');
+  //     }
+  //   }
+  // };
 
   const filteredBrands = search ? handleSearch() : listBrands;
 
   return (
     <div
       className="admin-product-page"
-      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
     >
       <h2>Quản lý thương hiệu</h2>
 
@@ -88,9 +88,12 @@ const AdminManageBrand = () => {
           placeholder="Tìm kiếm theo mã hoặc tên thương hiệu"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <button className="admin-btn search-btn" onClick={handleSearch}>
+        <button
+          className="admin-btn search-btn"
+          onClick={handleSearch}
+        >
           <FaSearch />
         </button>
         <button
@@ -103,7 +106,10 @@ const AdminManageBrand = () => {
       </div>
 
       {showCreate && (
-        <div className="modal-overlay" onClick={() => setShowCreate(false)}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowCreate(false)}
+        >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -112,7 +118,7 @@ const AdminManageBrand = () => {
             <h3>Thêm thương hiệu mới</h3>
             <form
               onSubmit={handleCreate}
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
             >
               <input
                 required
@@ -129,15 +135,18 @@ const AdminManageBrand = () => {
                   setNewBrand({ ...newBrand, infomation: e.target.value })
                 }
               />
-              <input
+              {/* <input
                 placeholder="Icon URL"
                 value={newBrand.icon}
                 onChange={(e) =>
                   setNewBrand({ ...newBrand, icon: e.target.value })
                 }
-              />
+              /> */}
               <div style={{ marginTop: 8 }}>
-                <button type="submit" className="admin-btn add-btn">
+                <button
+                  type="submit"
+                  className="admin-btn add-btn"
+                >
                   Tạo
                 </button>
                 <button
@@ -155,7 +164,10 @@ const AdminManageBrand = () => {
       )}
 
       {editBrand && (
-        <div className="modal-overlay" onClick={() => setEditBrand(null)}>
+        <div
+          className="modal-overlay"
+          onClick={() => setEditBrand(null)}
+        >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -164,7 +176,7 @@ const AdminManageBrand = () => {
             <h3>Sửa thương hiệu</h3>
             <form
               onSubmit={handleUpdate}
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
             >
               <label>
                 Tên thương hiệu:
@@ -189,7 +201,7 @@ const AdminManageBrand = () => {
                 />
               </label>
 
-              <label>
+              {/* <label>
                 Icon URL:
                 <input
                   placeholder="Icon URL"
@@ -198,12 +210,12 @@ const AdminManageBrand = () => {
                     setEditBrand({ ...editBrand, icon: e.target.value })
                   }
                 />
-              </label>
+              </label> */}
 
               <label>
                 Trạng thái:
                 <select
-                  value={editBrand.status || "ACTIVE"}
+                  value={editBrand.status || 'ACTIVE'}
                   onChange={(e) =>
                     setEditBrand({ ...editBrand, status: e.target.value })
                   }
@@ -214,7 +226,10 @@ const AdminManageBrand = () => {
               </label>
 
               <div style={{ marginTop: 8 }}>
-                <button type="submit" className="admin-btn add-btn">
+                <button
+                  type="submit"
+                  className="admin-btn add-btn"
+                >
                   Lưu
                 </button>
                 <button
@@ -223,7 +238,7 @@ const AdminManageBrand = () => {
                   onClick={() => setEditBrand(null)}
                   style={{ marginLeft: 8 }}
                 >
-                  d sadasHủy
+                  Hủy
                 </button>
               </div>
             </form>
@@ -232,7 +247,10 @@ const AdminManageBrand = () => {
       )}
 
       {selectedBrand && (
-        <div className="modal-overlay" onClick={() => setSelectedBrand(null)}>
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedBrand(null)}
+        >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -246,11 +264,11 @@ const AdminManageBrand = () => {
               <b>Tên thương hiệu:</b> {selectedBrand.name}
             </p>
             <p>
-              <b>Thông tin:</b>{" "}
-              {selectedBrand.infomation || "Không có thông tin"}
+              <b>Thông tin:</b>{' '}
+              {selectedBrand.infomation || 'Không có thông tin'}
             </p>
-            <p>
-              <b>Icon:</b>{" "}
+            {/* <p>
+              <b>Icon:</b>{' '}
               {selectedBrand.icon ? (
                 <img
                   src={selectedBrand.icon}
@@ -258,23 +276,23 @@ const AdminManageBrand = () => {
                   style={{ width: 30, height: 30 }}
                 />
               ) : (
-                "Không có icon"
+                'Không có icon'
               )}
-            </p>
+            </p> */}
             <p>
-              <b>Trạng thái:</b>{" "}
-              {selectedBrand.status === "ACTIVE" ? "Đang bán" : "Ngừng bán"}
+              <b>Trạng thái:</b>{' '}
+              {selectedBrand.status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'}
             </p>
             {selectedBrand.createdAt && (
               <p>
-                <b>Ngày tạo:</b>{" "}
-                {new Date(selectedBrand.createdAt).toLocaleDateString("vi-VN")}
+                <b>Ngày tạo:</b>{' '}
+                {new Date(selectedBrand.createdAt).toLocaleDateString('vi-VN')}
               </p>
             )}
             {selectedBrand.updatedAt && (
               <p>
-                <b>Ngày cập nhật:</b>{" "}
-                {new Date(selectedBrand.updatedAt).toLocaleDateString("vi-VN")}
+                <b>Ngày cập nhật:</b>{' '}
+                {new Date(selectedBrand.updatedAt).toLocaleDateString('vi-VN')}
               </p>
             )}
             <button
@@ -282,10 +300,10 @@ const AdminManageBrand = () => {
               onClick={() => setSelectedBrand(null)}
               style={{
                 marginTop: 16,
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               Đóng
@@ -294,7 +312,7 @@ const AdminManageBrand = () => {
         </div>
       )}
 
-      <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
+      <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
         <table className="admin-product-table">
           <thead>
             <tr>
@@ -310,14 +328,14 @@ const AdminManageBrand = () => {
             {filteredBrands?.map((brand, idx) => (
               <tr
                 key={brand.brand_id}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
                 onClick={() => setSelectedBrand(brand)}
               >
                 <td>{idx + 1}</td>
                 <td>{brand.brand_id}</td>
                 <td>{brand.name}</td>
-                <td>{brand.infomation || ""}</td>
-                <td>{brand.status === "ACTIVE" ? "Đang bán" : "Ngừng bán"}</td>
+                <td>{brand.infomation || ''}</td>
+                <td>{brand.status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'}</td>
                 <td>
                   <button
                     className="admin-btn edit-btn"
@@ -329,7 +347,7 @@ const AdminManageBrand = () => {
                   >
                     <FaEdit />
                   </button>
-                  <button
+                  {/* <button
                     className="admin-btn delete-btn"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -337,7 +355,7 @@ const AdminManageBrand = () => {
                     }}
                   >
                     <FaTrash />
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

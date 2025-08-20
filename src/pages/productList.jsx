@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "./productList.css";
-import ProductItem from "../components/product-item/product-item";
-import { searchProductByBrandName } from "../api/productlist";
+import React, { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './productList.css';
+import ProductItem from '../components/product-item/product-item';
+import { searchProductByApi } from '../api/productlist';
 
 const PAGE_SIZE = 20;
 
@@ -12,20 +12,32 @@ const ProductList = ({ brandName }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(4); // mặc định 4 trang
-  const [sortOrder, setSortOrder] = useState(""); // mặc định không sort  const navigate = useNavigate();
+  const [sortOrder, setSortOrder] = useState(''); // mặc định không sort  const navigate = useNavigate();
   const navigate = useNavigate();
+
+  const brandNameText = useMemo(() => {
+    const brandNameArray = brandName.split('-');
+    return brandNameArray[0];
+  }, [brandName]);
+
   useEffect(() => {
     if (!brandName) return;
     setIsLoading(true);
-    searchProductByBrandName(brandName, page, sortOrder)
+    const brandNameArray = brandName.split('-');
+    searchProductByApi({
+      brand_id: brandNameArray[brandNameArray.length - 1],
+      page,
+      size: PAGE_SIZE,
+      sortOrder,
+    })
       .then((res) => {
-        console.log("API response:", res.data);
+        console.log('API response:', res.data);
         // Lấy đúng key mới từ backend: res.data.products và res.data.total
-        const arr = Array.isArray(res?.data?.products) ? res.data.products : [];
-        console.log("FE products:", arr, Array.isArray(arr), arr.length);
+        const arr = Array.isArray(res?.data?.data) ? res.data.data : [];
+        console.log('FE products:', arr, Array.isArray(arr), arr.length);
         setProducts(arr);
-        if (res?.data?.total) {
-          setTotalPages(Math.ceil(Number(res.data.total) / PAGE_SIZE));
+        if (res?.data?.totalPages) {
+          setTotalPages(res?.data?.totalPages);
         } else {
           setTotalPages(1);
         }
@@ -44,37 +56,37 @@ const ProductList = ({ brandName }) => {
     <div className="product-list-page">
       <div className="product-list-container">
         <div className="product-list-title">
-          {brandName} - Danh sách sản phẩm
+          {brandNameText} - Danh sách sản phẩm
         </div>
         <div
           style={{
-            margin: "0 32px 16px 32px",
-            display: "flex",
-            justifyContent: "flex-end",
+            margin: '0 32px 16px 32px',
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
           <button
             className={
-              sortOrder === "" ? "pagination-btn active" : "pagination-btn"
+              sortOrder === '' ? 'pagination-btn active' : 'pagination-btn'
             }
-            onClick={() => setSortOrder("")}
+            onClick={() => setSortOrder('')}
           >
             Mặc định
           </button>
           <button
             className={
-              sortOrder === "desc" ? "pagination-btn active" : "pagination-btn"
+              sortOrder === 'desc' ? 'pagination-btn active' : 'pagination-btn'
             }
-            onClick={() => setSortOrder("desc")}
+            onClick={() => setSortOrder('desc')}
           >
             Giá cao đến thấp
           </button>
 
           <button
             className={
-              sortOrder === "asc" ? "pagination-btn active" : "pagination-btn"
+              sortOrder === 'asc' ? 'pagination-btn active' : 'pagination-btn'
             }
-            onClick={() => setSortOrder("asc")}
+            onClick={() => setSortOrder('asc')}
           >
             Giá thấp đến cao
           </button>
@@ -91,6 +103,7 @@ const ProductList = ({ brandName }) => {
               productRamSize={product.ram_size}
               productStorageSize={product.storage_size}
               productPrice={product.price}
+              product={product}
             />
           ))}
         </div>
@@ -98,7 +111,7 @@ const ProductList = ({ brandName }) => {
           {Array.from({ length: totalPages }, (_, idx) => (
             <button
               key={idx + 1}
-              className={`pagination-btn${page === idx + 1 ? " active" : ""}`}
+              className={`pagination-btn${page === idx + 1 ? ' active' : ''}`}
               onClick={() => setPage(idx + 1)}
             >
               {idx + 1}

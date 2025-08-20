@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./product-item.css";
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import './product-item.css';
 
 export default function ProductItem({
   productCode,
@@ -10,27 +10,41 @@ export default function ProductItem({
   productRamSize,
   productStorageSize,
   productPrice,
+  product,
+  isShowInfo,
 }) {
+  const imgUrl = useMemo(
+    () => product?.color?.[0]?.images?.[0]?.link || '',
+    [product]
+  );
+
+  const productVariant = useMemo(() => product?.productDetails?.[0], [product]);
+
+  const priceText = useMemo(
+    () => product?.productDetails?.[0]?.price || productPrice?.toLocaleString(),
+    [product, productPrice]
+  );
+
   return (
     <div className="product-item">
       <div className="frame_inner">
         <div className="text_small">Mới nguyên SEAL</div>
         <div className="image-product">
-          <Link to={`/product-detail/${productCode}`}>
+          <Link to={`/product-detail/${product?.product_id}`}>
             <img
-              src={encodeURI(
-                `data/${brandName}/${productCode}/image/${productColorName}.jpg`
-              )}
+              src={imgUrl}
               alt="image-review"
               className="img-product"
             />
             <div className="name">{productName}</div>
           </Link>
+
           <div>
-            RAM: {productRamSize} | Storage: {productStorageSize}
+            RAM: {productVariant?.memory?.ram_sze || productRamSize} | Storage:{' '}
+            {productVariant?.memory?.storage_size || productStorageSize}
           </div>
           <div>Color: {productColorName}</div>
-          <p className="price">{productPrice.toLocaleString()}₫</p>
+          {priceText && <p className="price">{priceText}₫</p>}
         </div>
       </div>
     </div>

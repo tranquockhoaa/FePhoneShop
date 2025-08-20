@@ -7,7 +7,7 @@ import ProductForm from './ProductForm';
 import './AdminProduct.css';
 import './AdminProductList.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllAdminBrandApiRq } from '../../store/admin-list-brand/admin-list-brand.action';
+import { getAllAdminBrandApiRq } from '../../store/brands/brands.action';
 import { getColorListApiRq } from '../../store/color-list/color-list.action';
 
 const AdminProductList = () => {

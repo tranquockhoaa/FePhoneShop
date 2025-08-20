@@ -36,25 +36,25 @@ const ProductForm = ({
   const [loadingImages, setLoadingImages] = useState({});
 
   // Hàm load ảnh từ server bằng media ID
-  const loadImageFromServer = async (mediaId) => {
-    try {
-      const response = await getMediaApi(mediaId);
-      if (response.success) {
-        return {
-          uid: mediaId,
-          name: response.data.name || `image_${mediaId}`,
-          status: 'done',
-          url:
-            response.data.imageUrl ||
-            `http://localhost:3000/api/v1/media/${mediaId}`,
-          mediaId: mediaId,
-        };
-      }
-    } catch (error) {
-      console.error('Error loading image:', error);
-    }
-    return null;
-  };
+  // const loadImageFromServer = async (mediaId) => {
+  //   try {
+  //     const response = await getMediaApi(mediaId);
+  //     if (response.success) {
+  //       return {
+  //         uid: mediaId,
+  //         name: response.data.name || `image_${mediaId}`,
+  //         status: 'done',
+  //         url:
+  //           response.data.imageUrl ||
+  //           `http://localhost:3000/api/v1/media/${mediaId}`,
+  //         mediaId: mediaId,
+  //       };
+  //     }
+  //   } catch (error) {
+  //     console.error('Error loading image:', error);
+  //   }
+  //   return null;
+  // };
 
   // // Hàm load tất cả ảnh cho một màu sắc
   // const loadImagesForColor = async (colorLabel, imageIds) => {
