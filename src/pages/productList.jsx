@@ -1,19 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import './productList.css';
 import ProductItem from '../components/product-item/product-item';
 import { searchProductByApi } from '../api/productlist';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 const ProductList = ({ brandName }) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(4); // mặc định 4 trang
-  const [sortOrder, setSortOrder] = useState(''); // mặc định không sort  const navigate = useNavigate();
-  const navigate = useNavigate();
 
   const brandNameText = useMemo(() => {
     const brandNameArray = brandName.split('-');
@@ -28,7 +24,6 @@ const ProductList = ({ brandName }) => {
       brand_id: brandNameArray[brandNameArray.length - 1],
       page,
       size: PAGE_SIZE,
-      sortOrder,
     })
       .then((res) => {
         console.log('API response:', res.data);
@@ -47,7 +42,7 @@ const ProductList = ({ brandName }) => {
         setTotalPages(1);
       })
       .finally(() => setIsLoading(false));
-  }, [brandName, page, sortOrder]);
+  }, [brandName, page]);
 
   if (isLoading) return <div>Loading...</div>;
   if (!products.length) return <div>No products found.</div>;
@@ -58,7 +53,7 @@ const ProductList = ({ brandName }) => {
         <div className="product-list-title">
           {brandNameText} - Danh sách sản phẩm
         </div>
-        <div
+        {/* <div
           style={{
             margin: '0 32px 16px 32px',
             display: 'flex',
@@ -90,7 +85,7 @@ const ProductList = ({ brandName }) => {
           >
             Giá thấp đến cao
           </button>
-        </div>
+        </div> */}
         {/* <ProductItem /> */}
         <div className="product-list-grid-homepage">
           {products.map((product) => (
