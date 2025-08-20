@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Form,
@@ -9,20 +9,20 @@ import {
   Space,
   Card,
   message,
-} from 'antd';
+} from "antd";
 import {
   UploadOutlined,
   DeleteOutlined,
   PlusOutlined,
-} from '@ant-design/icons';
-import adminAxios from './adminAxios';
-import { mediaUploadApi, getMediaApi } from '../../api/media.api';
+} from "@ant-design/icons";
+import adminAxios from "./adminAxios";
+import { mediaUploadApi, getMediaApi } from "../../api/media.api";
 
 const { TextArea } = Input;
 
 const ProductForm = ({
   open,
-  mode = 'create',
+  mode = "create",
   onCancel,
   onSuccess,
   initialValues = {},
@@ -79,9 +79,12 @@ const ProductForm = ({
 
   useEffect(() => {
     if (open) {
-      if (mode === 'edit' && initialValues) {
+      if (mode === "edit" && initialValues) {
         const initialColorIds =
-          initialValues?.color?.map((item) => item.color.color_id.toString()) ||
+          initialValues?.color?.map((item) =>
+            item.color?.color_id?.toString()
+          ) ||
+          "" ||
           [];
         const initialLabels = optionColors
           .filter((color) => initialColorIds.includes(color.value))
@@ -103,7 +106,7 @@ const ProductForm = ({
             const validImages = colorFind?.images?.map((img) => ({
               uid: img.id,
               name: `image_${img.id}`,
-              status: 'done',
+              status: "done",
               url: img.link || `http://localhost:3000/api/v1/media/${mediaId}`,
               mediaId: img.id,
             }));
@@ -117,16 +120,16 @@ const ProductForm = ({
         });
 
         form.setFieldsValue({
-          name: initialValues.name || '',
-          sku: initialValues.sku || '',
+          name: initialValues.name || "",
+          sku: initialValues.sku || "",
           brand_id:
-            initialValues.brand_id || initialValues.brand?.brand_id || '',
-          description: initialValues.description || '',
-          code: initialValues.code || '',
-          status: initialValues.status || 'ACTIVE',
+            initialValues.brand_id || initialValues.brand?.brand_id || "",
+          description: initialValues.description || "",
+          code: initialValues.code || "",
+          status: initialValues.status || "ACTIVE",
           color_id:
-            initialValues?.color?.map((item) =>
-              item.color.color_id.toString()
+            initialValues?.color?.map(
+              (item) => item.color?.color_id?.toString() || ""
             ) || [],
         });
       } else {
@@ -161,12 +164,12 @@ const ProductForm = ({
 
       const response = await mediaUploadApi(body);
 
-      if (typeof response.id === 'number') {
+      if (typeof response.id === "number") {
         const imageData = await getMediaApi(response.id);
         const newImage = {
           uid: response.id || Date.now(),
           name: file.name,
-          status: 'done',
+          status: "done",
           url: imageData.imageUrl,
           mediaId: response.id,
         };
@@ -178,29 +181,29 @@ const ProductForm = ({
 
         message.success(`${file.name} uploaded successfully`);
       } else {
-        message.error('Upload failed');
+        message.error("Upload failed");
       }
     } catch (error) {
-      console.error('Upload error:', error);
-      message.error('Upload failed');
+      console.error("Upload error:", error);
+      message.error("Upload failed");
     } finally {
       setUploading((prev) => ({ ...prev, [colorLabel]: false }));
     }
   };
 
   const handleImageChange = (colorLabel, info) => {
-    console.log('info', info);
-    if (info.file.status === 'uploading') {
+    console.log("info", info);
+    if (info.file.status === "uploading") {
       return;
     }
 
-    if (info.file.status === 'done') {
+    if (info.file.status === "done") {
       // File đã được upload thành công
       setColorImages((prev) => ({
         ...prev,
         [colorLabel]: info.fileList,
       }));
-    } else if (info.file.status === 'removed') {
+    } else if (info.file.status === "removed") {
       // File bị xóa
       setColorImages((prev) => ({
         ...prev,
@@ -210,9 +213,9 @@ const ProductForm = ({
   };
 
   const beforeUpload = (file, colorLabel) => {
-    const isImage = file.type.startsWith('image/');
+    const isImage = file.type.startsWith("image/");
     if (!isImage) {
-      message.error('You can only upload image files!');
+      message.error("You can only upload image files!");
       return false;
     }
 
@@ -222,7 +225,7 @@ const ProductForm = ({
   };
 
   const removeColor = (colorLabel) => {
-    const currentValues = form.getFieldValue('color_id') || [];
+    const currentValues = form.getFieldValue("color_id") || [];
     const colorToRemove = optionColors.find((c) => c.label === colorLabel);
     const newValues = currentValues.filter(
       (value) => value !== colorToRemove?.value
@@ -261,21 +264,21 @@ const ProductForm = ({
         });
       });
 
-      if (mode === 'create') {
-        await adminAxios.post('products/create', {
+      if (mode === "create") {
+        await adminAxios.post("products/create", {
           sku: values.sku,
           name: values.name,
           brand_id: values.brand_id,
-          description: values.description || '',
-          code: values.code || '',
+          description: values.description || "",
+          code: values.code || "",
           color: colorImagesData,
         });
-      } else if (mode === 'edit' && initialValues?.product_id) {
+      } else if (mode === "edit" && initialValues?.product_id) {
         await adminAxios.put(`/products/${initialValues.product_id}`, {
           name: values.name,
           sku: values.sku,
           brand_id: values.brand_id,
-          description: values.description || '',
+          description: values.description || "",
           status: values.status,
           color: colorImagesData,
         });
@@ -288,30 +291,27 @@ const ProductForm = ({
         onSuccess();
       }
     } catch (err) {
-      console.error('Form submission error:', err);
-      message.error('Có lỗi xảy ra khi lưu sản phẩm');
+      console.error("Form submission error:", err);
+      message.error("Có lỗi xảy ra khi lưu sản phẩm");
     }
   };
 
   return (
     <Modal
-      title={mode === 'create' ? 'Thêm sản phẩm mới' : 'Cập nhật sản phẩm'}
+      title={mode === "create" ? "Thêm sản phẩm mới" : "Cập nhật sản phẩm"}
       open={open}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText={mode === 'create' ? 'Tạo' : 'Lưu'}
+      okText={mode === "create" ? "Tạo" : "Lưu"}
       cancelText="Hủy"
       destroyOnClose
       width="80%"
     >
-      <Form
-        form={form}
-        layout="vertical"
-      >
+      <Form form={form} layout="vertical">
         <Form.Item
           label="Mã sản phẩm (SKU)"
           name="sku"
-          rules={[{ required: true, message: 'Vui lòng nhập mã sản phẩm' }]}
+          rules={[{ required: true, message: "Vui lòng nhập mã sản phẩm" }]}
         >
           <Input placeholder="Mã sản phẩm" />
         </Form.Item>
@@ -319,7 +319,7 @@ const ProductForm = ({
         <Form.Item
           label="Tên sản phẩm"
           name="name"
-          rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
+          rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
         >
           <Input placeholder="Tên sản phẩm" />
         </Form.Item>
@@ -327,38 +327,26 @@ const ProductForm = ({
         <Form.Item
           label="Thương hiệu"
           name="brand_id"
-          rules={[{ required: true, message: 'Vui lòng chọn thương hiệu' }]}
+          rules={[{ required: true, message: "Vui lòng chọn thương hiệu" }]}
         >
           <Select placeholder="Chọn thương hiệu">
             {brands.map((b) => (
-              <Select.Option
-                key={b.brand_id}
-                value={b.brand_id}
-              >
+              <Select.Option key={b.brand_id} value={b.brand_id}>
                 {b.name}
               </Select.Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label="Mô tả"
-          name="description"
-        >
-          <TextArea
-            placeholder="Mô tả"
-            autoSize={{ minRows: 3 }}
-          />
+        <Form.Item label="Mô tả" name="description">
+          <TextArea placeholder="Mô tả" autoSize={{ minRows: 3 }} />
         </Form.Item>
 
-        <Form.Item
-          label="Màu sắc"
-          name="color_id"
-        >
+        <Form.Item label="Màu sắc" name="color_id">
           <Select
             mode="multiple"
             allowClear
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             placeholder="Màu sắc"
             options={optionColors}
             onChange={handleColorChange}
@@ -370,7 +358,7 @@ const ProductForm = ({
             <div style={{ marginBottom: 8, fontWeight: 500 }}>
               Upload ảnh cho từng màu sắc:
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
               {selectedColorLabels.map((label, index) => (
                 <Card
                   key={index}
@@ -415,7 +403,7 @@ const ProductForm = ({
                     )}
                   </Upload>
                   <div
-                    style={{ marginTop: 8, fontSize: '12px', color: '#666' }}
+                    style={{ marginTop: 8, fontSize: "12px", color: "#666" }}
                   >
                     Tối đa 8 ảnh cho mỗi màu
                   </div>
@@ -425,20 +413,17 @@ const ProductForm = ({
           </div>
         )}
 
-        {mode === 'create' && (
-          <Form.Item
-            label="Code"
-            name="code"
-          >
+        {mode === "create" && (
+          <Form.Item label="Code" name="code">
             <Input placeholder="Mã nội bộ (tùy chọn)" />
           </Form.Item>
         )}
 
-        {mode === 'edit' && (
+        {mode === "edit" && (
           <Form.Item
             label="Trạng thái"
             name="status"
-            rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
           >
             <Select>
               <Select.Option value="ACTIVE">Đang bán</Select.Option>
