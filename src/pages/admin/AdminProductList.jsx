@@ -6,6 +6,7 @@ import ProductForm from './ProductForm';
 
 import './AdminProduct.css';
 import './AdminProductList.css';
+import AdminPageHeader from '../../components/admin/PageHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllAdminBrandApiRq } from '../../store/brands/brands.action';
 import { getColorListApiRq } from '../../store/color-list/color-list.action';
@@ -27,9 +28,6 @@ const AdminProductList = () => {
     total: 0,
     loading: false,
   });
-
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  // removed legacy local edit state – handled by formState
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -285,17 +283,19 @@ const AdminProductList = () => {
       className="admin-product-page"
       style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
     >
-      <div className="admin-product-header">
-        <h2>Danh sách sản phẩm</h2>
-        <button
-          className="admin-btn add-btn"
-          onClick={() =>
-            setFormState({ open: true, mode: 'create', initialValues: null })
-          }
-        >
-          <FaPlus /> Thêm sản phẩm
-        </button>
-      </div>
+      <AdminPageHeader
+        title="Danh sách sản phẩm"
+        rightContent={
+          <button
+            className="admin-btn add-btn"
+            onClick={() =>
+              setFormState({ open: true, mode: 'create', initialValues: null })
+            }
+          >
+            <FaPlus /> Thêm sản phẩm
+          </button>
+        }
+      />
       <div className="admin-product-toolbar">
         <input
           className="admin-product-search"
@@ -371,70 +371,8 @@ const AdminProductList = () => {
           }}
           onChange={handleTableChange}
           sticky={{ offsetHeader: 0 }}
-          onRow={(record) => ({
-            onClick: () => setSelectedProduct(record),
-            style: { cursor: 'pointer' },
-          })}
-          // size="middle"
         />
       </div>
-      {selectedProduct && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedProduct(null)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minWidth: 400 }}
-          >
-            <h3>Thông tin sản phẩm</h3>
-            <p>
-              <b>ID phẩm:</b> {selectedProduct.product_id}
-            </p>
-            <p>
-              <b>Mã sản phẩm:</b> {selectedProduct.sku}
-            </p>
-            <p>
-              <b>Tên sản phẩm:</b> {selectedProduct.name}
-            </p>
-            <p>
-              <b>Thương hiệu:</b> {selectedProduct.brand?.name || ''}
-            </p>
-            <p>
-              <b>Mô tả:</b> {selectedProduct.description || 'Không có mô tả'}
-            </p>
-            <p>
-              <b>Tổng tồn kho:</b> {selectedProduct.totalQuantity}
-            </p>
-            <p>
-              <b>Ngày nhập:</b>{' '}
-              {selectedProduct.createdAt
-                ? new Date(selectedProduct.createdAt).toLocaleDateString(
-                    'vi-VN'
-                  )
-                : ''}
-            </p>
-            <p>
-              <b>Trang thái:</b>{' '}
-              {selectedProduct.status === 'INACTIVE' ? 'Ngừng bán' : 'Đang bán'}
-            </p>{' '}
-            <button
-              className="admin-btn"
-              onClick={() => setSelectedProduct(null)}
-              style={{
-                marginTop: 16,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

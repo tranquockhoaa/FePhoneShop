@@ -1,26 +1,87 @@
 import React, { useEffect, useState } from 'react';
+import { Table } from 'antd';
+import ModalForm from '../../../../components/ModalForm';
 import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllAdminBrandApiRq } from '../../../../store/brands/brands.action';
 import adminAxios from '../../adminAxios';
+import '../../AdminProduct.css';
 import './index.css';
+import AdminPageHeader from '../../../../components/admin/PageHeader';
 
 const AdminManageBrand = () => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState('');
-  const [showCreate, setShowCreate] = useState(false);
-  const [newBrand, setNewBrand] = useState({
-    name: '',
-    infomation: '',
-    icon: '',
-  });
-  const [editBrand, setEditBrand] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState({});
+
+  const columns = [
+    {
+      title: 'STT',
+      key: 'index',
+      width: 80,
+      render: (_text, _record, index) => index + 1,
+    },
+    {
+      title: 'Mã thương hiệu',
+      dataIndex: 'brand_id',
+      key: 'brand_id',
+      width: 140,
+    },
+    {
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Thông tin',
+      dataIndex: 'infomation',
+      key: 'infomation',
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      render: (value) => (value === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'),
+      width: 160,
+    },
+    {
+      title: 'Hành động',
+      key: 'actions',
+      fixed: 'right',
+      width: 140,
+      render: (_text, record) => (
+        <div>
+          <button
+            className="admin-btn edit-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(record);
+            }}
+            style={{ marginRight: 8 }}
+          >
+            <FaEdit />
+          </button>
+          {/* <button
+            className="admin-btn delete-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(record.brand_id);
+            }}
+          >
+            <FaTrash />
+          </button> */}
+        </div>
+      ),
+    },
+  ];
 
   useEffect(() => {
     dispatch(getAllAdminBrandApiRq());
-  }, [dispatch]);
+  }, []);
   const listBrands = useSelector((state) => state.listBrands.listBrand);
 
   const handleSearch = () => {
@@ -33,32 +94,46 @@ const AdminManageBrand = () => {
     );
   };
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    try {
-      await adminAxios.post('brand', newBrand);
-      setShowCreate(false);
-      setNewBrand({ name: '', infomation: '', icon: '' });
+  const handleEdit = (brand) => {
+    setEditMode(true);
+    setCurrentRecord({
+      brand_id: brand.brand_id,
+      name: brand.name || '',
+      infomation: brand.infomation || '',
+      status: brand.status || 'ACTIVE',
+    });
+    setModalVisible(true);
+  };
 
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      if (editMode) {
+        await adminAxios.put(`brand/${currentRecord.brand_id}`, {
+          name: values.name,
+          infomation: values.infomation,
+          status: values.status,
+        });
+      } else {
+        await adminAxios.post('brand', {
+          name: values.name,
+          infomation: values.infomation,
+        });
+      }
+      setModalVisible(false);
+      setCurrentRecord({});
       dispatch(getAllAdminBrandApiRq());
     } catch (error) {
-      console.error('Lỗi tạo brand:', error);
-      alert('Tạo brand thất bại!');
+      console.error('Lỗi xử lý brand:', error);
+      alert('Thao tác thất bại!');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleEdit = (brand) => setEditBrand({ ...brand });
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      await adminAxios.put(`brand/${editBrand.brand_id}`, editBrand);
-      setEditBrand(null);
-      dispatch(getAllAdminBrandApiRq());
-    } catch (error) {
-      console.error('Lỗi cập nhật brand:', error);
-      alert('Cập nhật thất bại!');
-    }
+  const handleCancel = () => {
+    setModalVisible(false);
+    setCurrentRecord({});
   };
 
   // const handleDelete = async (brandId) => {
@@ -80,7 +155,22 @@ const AdminManageBrand = () => {
       className="admin-product-page"
       style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
     >
-      <h2>Quản lý thương hiệu</h2>
+      <AdminPageHeader
+        title="Quản lý thương hiệu"
+        rightContent={
+          <button
+            className="admin-btn add-btn"
+            onClick={() => {
+              setEditMode(false);
+              setCurrentRecord({ name: '', infomation: '', status: 'ACTIVE' });
+              setModalVisible(true);
+            }}
+            style={{ marginLeft: 8 }}
+          >
+            <FaPlus /> Thêm brand mới
+          </button>
+        }
+      />
 
       <div className="admin-order-toolbar">
         <input
@@ -96,271 +186,53 @@ const AdminManageBrand = () => {
         >
           <FaSearch />
         </button>
-        <button
-          className="admin-btn add-btn"
-          onClick={() => setShowCreate(true)}
-          style={{ marginLeft: 8 }}
-        >
-          <FaPlus /> Thêm brand mới
-        </button>
       </div>
 
-      {showCreate && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowCreate(false)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minWidth: 400 }}
-          >
-            <h3>Thêm thương hiệu mới</h3>
-            <form
-              onSubmit={handleCreate}
-              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-            >
-              <input
-                required
-                placeholder="Tên thương hiệu"
-                value={newBrand.name}
-                onChange={(e) =>
-                  setNewBrand({ ...newBrand, name: e.target.value })
-                }
-              />
-              <input
-                placeholder="Thông tin"
-                value={newBrand.infomation}
-                onChange={(e) =>
-                  setNewBrand({ ...newBrand, infomation: e.target.value })
-                }
-              />
-              {/* <input
-                placeholder="Icon URL"
-                value={newBrand.icon}
-                onChange={(e) =>
-                  setNewBrand({ ...newBrand, icon: e.target.value })
-                }
-              /> */}
-              <div style={{ marginTop: 8 }}>
-                <button
-                  type="submit"
-                  className="admin-btn add-btn"
-                >
-                  Tạo
-                </button>
-                <button
-                  type="button"
-                  className="admin-btn"
-                  onClick={() => setShowCreate(false)}
-                  style={{ marginLeft: 8 }}
-                >
-                  Hủy
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {editBrand && (
-        <div
-          className="modal-overlay"
-          onClick={() => setEditBrand(null)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minWidth: 400 }}
-          >
-            <h3>Sửa thương hiệu</h3>
-            <form
-              onSubmit={handleUpdate}
-              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-            >
-              <label>
-                Tên thương hiệu:
-                <input
-                  required
-                  placeholder="Tên thương hiệu"
-                  value={editBrand.name}
-                  onChange={(e) =>
-                    setEditBrand({ ...editBrand, name: e.target.value })
-                  }
-                />
-              </label>
-
-              <label>
-                Thông tin:
-                <input
-                  placeholder="Thông tin"
-                  value={editBrand.infomation}
-                  onChange={(e) =>
-                    setEditBrand({ ...editBrand, infomation: e.target.value })
-                  }
-                />
-              </label>
-
-              {/* <label>
-                Icon URL:
-                <input
-                  placeholder="Icon URL"
-                  value={editBrand.icon}
-                  onChange={(e) =>
-                    setEditBrand({ ...editBrand, icon: e.target.value })
-                  }
-                />
-              </label> */}
-
-              <label>
-                Trạng thái:
-                <select
-                  value={editBrand.status || 'ACTIVE'}
-                  onChange={(e) =>
-                    setEditBrand({ ...editBrand, status: e.target.value })
-                  }
-                >
-                  <option value="ACTIVE">Đang bán</option>
-                  <option value="INACTIVE">Ngừng bán</option>
-                </select>
-              </label>
-
-              <div style={{ marginTop: 8 }}>
-                <button
-                  type="submit"
-                  className="admin-btn add-btn"
-                >
-                  Lưu
-                </button>
-                <button
-                  type="button"
-                  className="admin-btn"
-                  onClick={() => setEditBrand(null)}
-                  style={{ marginLeft: 8 }}
-                >
-                  Hủy
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {selectedBrand && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedBrand(null)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minWidth: 400 }}
-          >
-            <h3>Chi tiết thương hiệu</h3>
-            <p>
-              <b>Mã thương hiệu:</b> {selectedBrand.brand_id}
-            </p>
-            <p>
-              <b>Tên thương hiệu:</b> {selectedBrand.name}
-            </p>
-            <p>
-              <b>Thông tin:</b>{' '}
-              {selectedBrand.infomation || 'Không có thông tin'}
-            </p>
-            {/* <p>
-              <b>Icon:</b>{' '}
-              {selectedBrand.icon ? (
-                <img
-                  src={selectedBrand.icon}
-                  alt="icon"
-                  style={{ width: 30, height: 30 }}
-                />
-              ) : (
-                'Không có icon'
-              )}
-            </p> */}
-            <p>
-              <b>Trạng thái:</b>{' '}
-              {selectedBrand.status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'}
-            </p>
-            {selectedBrand.createdAt && (
-              <p>
-                <b>Ngày tạo:</b>{' '}
-                {new Date(selectedBrand.createdAt).toLocaleDateString('vi-VN')}
-              </p>
-            )}
-            {selectedBrand.updatedAt && (
-              <p>
-                <b>Ngày cập nhật:</b>{' '}
-                {new Date(selectedBrand.updatedAt).toLocaleDateString('vi-VN')}
-              </p>
-            )}
-            <button
-              className="admin-btn"
-              onClick={() => setSelectedBrand(null)}
-              style={{
-                marginTop: 16,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      )}
+      {/* ModalForm dùng chung cho thêm/sửa thương hiệu */}
+      <ModalForm
+        visible={modalVisible}
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+        title={editMode ? 'Sửa thương hiệu' : 'Thêm thương hiệu'}
+        initialValues={currentRecord}
+        loading={loading}
+        isEdit={editMode}
+        fields={[
+          {
+            name: 'name',
+            label: 'Tên thương hiệu',
+            type: 'input',
+            required: true,
+            span: 24,
+          },
+          {
+            name: 'infomation',
+            label: 'Thông tin',
+            type: 'textarea',
+            required: false,
+            span: 24,
+          },
+          {
+            name: 'status',
+            label: 'Trạng thái',
+            type: 'select',
+            required: false,
+            span: 12,
+            options: [
+              { value: 'ACTIVE', label: 'Đang bán' },
+              { value: 'INACTIVE', label: 'Ngừng bán' },
+            ],
+          },
+        ]}
+      />
 
       <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
-        <table className="admin-product-table">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Mã thương hiệu</th>
-              <th>Tên</th>
-              <th>Thông tin</th>
-              <th>Trạng thái</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBrands?.map((brand, idx) => (
-              <tr
-                key={brand.brand_id}
-                style={{ cursor: 'pointer' }}
-                onClick={() => setSelectedBrand(brand)}
-              >
-                <td>{idx + 1}</td>
-                <td>{brand.brand_id}</td>
-                <td>{brand.name}</td>
-                <td>{brand.infomation || ''}</td>
-                <td>{brand.status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'}</td>
-                <td>
-                  <button
-                    className="admin-btn edit-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(brand);
-                    }}
-                    style={{ marginRight: 8 }}
-                  >
-                    <FaEdit />
-                  </button>
-                  {/* <button
-                    className="admin-btn delete-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(brand.brand_id);
-                    }}
-                  >
-                    <FaTrash />
-                  </button> */}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table
+          dataSource={filteredBrands || []}
+          columns={columns}
+          rowKey="brand_id"
+          pagination={{ pageSize: 10 }}
+        />
       </div>
     </div>
   );

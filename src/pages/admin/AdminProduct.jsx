@@ -297,12 +297,12 @@ const AdminProduct = () => {
                   </p>
                 </>
               )}
-              {brandTab === "brand" && (
+              {/* {brandTab === "brand" && (
                 <>
                   <h3>Quản lý thương hiệu</h3>
                   <p>Chức năng quản lý thương hiệu...</p>
                 </>
-              )}
+              )} */}
               <button
                 className="admin-btn"
                 onClick={() => setShowBrandModal(false)}

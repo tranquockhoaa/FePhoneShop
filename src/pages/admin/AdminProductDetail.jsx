@@ -493,63 +493,8 @@ const AdminProductDetail = () => {
           }}
           onChange={handleTableChange}
           sticky={{ offsetHeader: 0 }}
-          onRow={(record) => ({
-            onClick: () => setSelectedDetail(record),
-            style: { cursor: 'pointer' },
-          })}
         />
       </div>
-
-      {/* Modal xem chi tiết */}
-      {selectedDetail && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedDetail(null)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{ minWidth: 400 }}
-          >
-            <h3>Thông tin chi tiết sản phẩm</h3>
-            <p>
-              <b>Mã sản phẩm (sku):</b> {selectedDetail.sku || 'Trống'}
-            </p>
-            <p>
-              <b>Tên sản phẩm:</b> {selectedDetail.product?.name}
-            </p>
-            <p>
-              <b>Màu:</b> {selectedDetail.color?.name}
-            </p>
-            <p>
-              <b>RAM:</b> {selectedDetail.memory?.ram_size}
-            </p>
-            <p>
-              <b>Bộ nhớ:</b> {selectedDetail.memory?.storage_size}
-            </p>
-            <p>
-              <b>Giá bán:</b> {selectedDetail.price?.toLocaleString()} đ
-            </p>
-            <p>
-              <b>Tồn kho:</b> {selectedDetail.quantity}
-            </p>
-            <p>
-              <b>Trạng thái:</b>
-              {selectedDetail?.status}
-            </p>
-            <Button
-              type="primary"
-              onClick={() => setSelectedDetail(null)}
-              style={{
-                marginTop: 16,
-                width: '100%',
-              }}
-            >
-              Đóng
-            </Button>
-          </div>
-        </div>
-      )}
 
       {/* ModalForm cho thêm/sửa */}
       <ModalForm

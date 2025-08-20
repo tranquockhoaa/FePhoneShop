@@ -1,13 +1,11 @@
-import React from "react";
-import "../../index.css";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserProfileRequest } from "../../store/profile/profile.action";
-
-import { loginApi } from "../../api/profile.api";
-import { createCart } from "../../api/cart-user";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfileRequest } from '../../store/profile/profile.action';
+import { createCart } from '../../api/cart-user';
+import { loginApi } from '../../api/profile.api';
 
 function Login() {
   let navigate = useNavigate();
