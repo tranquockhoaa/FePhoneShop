@@ -143,7 +143,6 @@ const Cart = () => {
     console.log("nameColor", nameColor);
 
     const listColor = cartDetails[index].product_detail.product.color;
-    console.log("listColor", listColor);
 
     const matchedColor = listColor.find(
       (color) => color.color_name === nameColor

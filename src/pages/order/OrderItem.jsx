@@ -2,16 +2,23 @@ import React from "react";
 import "./OrderItem.css";
 
 const OrderItem = ({ item }) => {
+  console.log("item", item);
   const { product_details } = item;
   const { product, memory, color } = product_details;
+
+  const getUrlImage = () => {
+    const colorName = item.product_details.color.name;
+    const listColor = item.product_details.product.color;
+    const matchedColor = listColor.find(
+      (color) => color.color_name == colorName
+    );
+    return matchedColor?.images?.[0]?.link || null;
+  };
+  console.log(getUrlImage());
   return (
     <div className="order-item">
       <div className="order-left">
-        <img
-          src={product.image || "/placeholder.png"}
-          alt={product.name}
-          className="product-img"
-        />
+        <img src={getUrlImage()} alt={product.name} className="product-img" />
         <div className="order-info">
           <h4>{product.name}</h4>
           <p>

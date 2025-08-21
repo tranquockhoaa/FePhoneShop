@@ -65,6 +65,16 @@ const OrderDetail = () => {
   if (!order)
     return <div className="order-detail-error">Không tìm thấy đơn hàng!</div>;
 
+  const getUrlImage = (index) => {
+    const nameColor = order.order_items[[index]].product_details.color.name;
+    const colorList = order.order_items[[index]].product_details.product.color;
+    const matchedColor = colorList.find(
+      (color) => color.color_name === nameColor
+    );
+    return matchedColor?.images?.[0]?.link;
+  };
+
+  // console.log("order", order.order_items[[0]].product_details.product.color);
   return (
     <div className="order-detail-container">
       <h2>Chi tiết đơn hàng #{order.order_id}</h2>
@@ -123,12 +133,12 @@ const OrderDetail = () => {
       <div className="order-detail-section">
         <h3>Danh sách sản phẩm</h3>
         <div className="order-items-simple">
-          {order.order_items?.map((item) => (
+          {order.order_items?.map((item, index) => (
             <div key={item.order_item_id} className="order-item-simple">
               {/* Ảnh sản phẩm */}
               <div className="order-item-image">
                 <img
-                  src={"/placeholder.png"}
+                  src={getUrlImage(index)}
                   alt={item.product_details?.product?.name || "Không rõ"}
                 />
               </div>
