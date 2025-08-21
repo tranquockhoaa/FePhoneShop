@@ -13,10 +13,14 @@ export default function ProductItem({
   product,
   isShowInfo,
 }) {
-  const imgUrl = useMemo(
-    () => product?.color?.[0]?.images?.[0]?.link || '',
-    [product]
-  );
+  const colorVariant = useMemo(() => {
+    const color = product?.color?.find(
+      (item) =>
+        item.color?.color_id === product?.productDetails?.[0]?.color?.color_id
+    );
+
+    return color || product?.color?.[0]?.images?.[0]?.link || '';
+  }, [product]);
 
   const productVariant = useMemo(() => product?.productDetails?.[0], [product]);
 
@@ -32,7 +36,7 @@ export default function ProductItem({
         <div className="image-product">
           <Link to={`/product-detail/${product?.product_id}`}>
             <img
-              src={imgUrl}
+              src={colorVariant?.images?.[0]?.link}
               alt="image-review"
               className="img-product"
             />
@@ -40,11 +44,13 @@ export default function ProductItem({
           </Link>
 
           <div>
-            RAM: {productVariant?.memory?.ram_sze || productRamSize} | Storage:{' '}
-            {productVariant?.memory?.storage_size || productStorageSize}
+            RAM: {productVariant?.memory?.ram_size} | Storage:{' '}
+            {productVariant?.memory?.storage_size}
           </div>
-          <div>Color: {productColorName}</div>
-          {priceText && <p className="price">{priceText}₫</p>}
+          <div>Color: {colorVariant?.color?.name}</div>
+          {priceText && (
+            <p className="price">{priceText.toLocaleString('vi-VN')}₫</p>
+          )}
         </div>
       </div>
     </div>
