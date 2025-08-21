@@ -1,23 +1,25 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import adminAxios from './adminAxios';
-import { FaPlus, FaSearch, FaTrash, FaEdit } from 'react-icons/fa';
-import { Table, Button, Space, Tag } from 'antd';
-import ProductForm from './ProductForm';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import adminAxios from "./adminAxios";
+import { FaPlus, FaSearch, FaTrash, FaEdit } from "react-icons/fa";
+import { Table, Button, Space, Tag, notification } from "antd";
+import ProductForm from "./ProductForm";
 
-import './AdminProduct.css';
-import './AdminProductList.css';
-import AdminPageHeader from '../../components/admin/PageHeader';
-import { useSelector, useDispatch } from 'react-redux';
-import { getAllAdminBrandApiRq } from '../../store/brands/brands.action';
-import { getColorListApiRq } from '../../store/color-list/color-list.action';
-import { searchProductByApi } from '../../api/productlist';
+import "./AdminProduct.css";
+import "./AdminProductList.css";
+import AdminPageHeader from "../../components/admin/PageHeader";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllAdminBrandApiRq } from "../../store/brands/brands.action";
+import { getColorListApiRq } from "../../store/color-list/color-list.action";
+import { searchProductByApi } from "../../api/productlist";
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState('');
+  const [api, contextHolder] = notification.useNotification();
+
+  const [search, setSearch] = useState("");
   const [formState, setFormState] = useState({
     open: false,
-    mode: 'create',
+    mode: "create",
     initialValues: null,
   });
 
@@ -51,14 +53,14 @@ const AdminProductList = () => {
     (
       page = 1,
       pageSize = 20,
-      sortBy = 'createdAt',
-      sortOrder = 'ASC',
-      search = ''
+      sortBy = "createdAt",
+      sortOrder = "ASC",
+      search = ""
     ) => {
       setPagination((prev) => ({ ...prev, loading: true }));
 
       adminAxios
-        .get('http://localhost:3000/api/v1/admin/products', {
+        .get("http://localhost:3000/api/v1/admin/products", {
           params: {
             page,
             size: pageSize,
@@ -78,7 +80,7 @@ const AdminProductList = () => {
           }));
         })
         .catch((error) => {
-          console.error('Error fetching products:', error);
+          console.error("Error fetching products:", error);
           setPagination((prev) => ({ ...prev, loading: false }));
         });
     },
@@ -86,7 +88,7 @@ const AdminProductList = () => {
   );
 
   useEffect(() => {
-    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
+    fetchProducts(1, pagination.pageSize, "createdAt", "ASC");
   }, [pagination.pageSize]);
 
   const handleSearch = async () => {
@@ -94,7 +96,7 @@ const AdminProductList = () => {
     if (!keyword) {
       // Reset to first page when clearing search
       setPagination((prev) => ({ ...prev, current: 1 }));
-      fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
+      fetchProducts(1, pagination.pageSize, "createdAt", "ASC");
       return;
     }
 
@@ -110,27 +112,30 @@ const AdminProductList = () => {
       setProducts(response.data?.data || []);
       setPagination((prev) => ({
         ...prev,
-        total: Number(response.headers['x-total-count']) || 0,
+        total: Number(response.headers["x-total-count"]) || 0,
         loading: false,
       }));
     } catch (error) {
-      console.error('Error searching products:', error);
+      console.error("Error searching products:", error);
       setPagination((prev) => ({ ...prev, loading: false }));
     }
   };
 
   const refreshAfterMutation = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
+    fetchProducts(1, pagination.pageSize, "createdAt", "ASC");
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+    if (window.confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
       await adminAxios.delete(`products/${id}`);
       // Reset to page 1 when deleting product and sort by creation date
       setPagination((prev) => ({ ...prev, current: 1 }));
-      fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC');
-      alert('Xóa sản phẩm thành công!');
+      fetchProducts(1, pagination.pageSize, "createdAt", "ASC");
+      api.success({
+        message: "Thành công",
+        description: "Xóa sản phẩm thành công!",
+      });
     }
   };
 
@@ -138,14 +143,14 @@ const AdminProductList = () => {
   const handleEdit = (product) => {
     setFormState({
       open: true,
-      mode: 'edit',
+      mode: "edit",
       initialValues: {
         product_id: product.product_id,
         name: product.name,
         sku: product.sku,
-        description: product.description || '',
-        brand_id: product.brand?.brand_id || '',
-        status: product.status || 'ACTIVE',
+        description: product.description || "",
+        brand_id: product.brand?.brand_id || "",
+        status: product.status || "ACTIVE",
         color: product.color,
       },
     });
@@ -159,25 +164,25 @@ const AdminProductList = () => {
   // Sắp xếp tồn kho tăng dần
   const sortByQuantityAsc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'ASC', search);
+    fetchProducts(1, pagination.pageSize, "totalQuantity", "ASC", search);
   };
 
   // Sắp xếp tồn kho giảm dần
   const sortByQuantityDesc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'totalQuantity', 'DESC', search);
+    fetchProducts(1, pagination.pageSize, "totalQuantity", "DESC", search);
   };
 
   // Sắp xếp ngày nhập tăng dần
   const sortByDateAsc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'createdAt', 'ASC', search);
+    fetchProducts(1, pagination.pageSize, "createdAt", "ASC", search);
   };
 
   // Sắp xếp ngày nhập giảm dần
   const sortByDateDesc = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
-    fetchProducts(1, pagination.pageSize, 'createdAt', 'DESC', search);
+    fetchProducts(1, pagination.pageSize, "createdAt", "DESC", search);
   };
 
   // Handle pagination change
@@ -191,72 +196,72 @@ const AdminProductList = () => {
       current: newCurrent,
       pageSize: newPageSize,
     }));
-    fetchProducts(newCurrent, newPageSize, 'createdAt', 'ASC');
+    fetchProducts(newCurrent, newPageSize, "createdAt", "ASC");
   };
 
   // Định nghĩa cột cho Ant Design Table
   const columns = [
     {
-      title: 'STT',
-      dataIndex: 'stt',
-      key: 'stt',
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
       width: 80,
       render: (_, __, index) =>
         (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: 'ID Sản phẩm',
-      dataIndex: 'product_id',
-      key: 'product_id',
+      title: "ID Sản phẩm",
+      dataIndex: "product_id",
+      key: "product_id",
       width: 100,
     },
     {
-      title: 'Mã sản phẩm (SKU)',
-      dataIndex: 'sku',
-      key: 'sku',
+      title: "Mã sản phẩm (SKU)",
+      dataIndex: "sku",
+      key: "sku",
       width: 150,
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Tên sản phẩm",
+      dataIndex: "name",
+      key: "name",
       width: 200,
     },
     {
-      title: 'Thương hiệu',
-      dataIndex: ['brand', 'name'],
-      key: 'brand',
+      title: "Thương hiệu",
+      dataIndex: ["brand", "name"],
+      key: "brand",
       width: 150,
-      render: (brandName) => brandName || '',
+      render: (brandName) => brandName || "",
     },
     {
-      title: 'Tổng tồn kho',
-      dataIndex: 'total_quantity',
-      key: 'total_quantity',
+      title: "Tổng tồn kho",
+      dataIndex: "total_quantity",
+      key: "total_quantity",
       width: 120,
     },
     {
-      title: 'Ngày nhập',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
+      title: "Ngày nhập",
+      dataIndex: "createdAt",
+      key: "createdAt",
       width: 120,
       render: (date) =>
-        date ? new Date(date).toLocaleDateString('vi-VN') : '',
+        date ? new Date(date).toLocaleDateString("vi-VN") : "",
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
       width: 120,
       render: (status) => (
-        <Tag color={status === 'ACTIVE' ? 'green' : 'red'}>
-          {status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'}
+        <Tag color={status === "ACTIVE" ? "green" : "red"}>
+          {status === "ACTIVE" ? "Đang bán" : "Ngừng bán"}
         </Tag>
       ),
     },
     {
-      title: 'Hành động',
-      key: 'actions',
+      title: "Hành động",
+      key: "actions",
       width: 120,
       render: (_, record) => (
         <Space size="small">
@@ -289,15 +294,16 @@ const AdminProductList = () => {
   return (
     <div
       className="admin-product-page"
-      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
     >
+      {contextHolder}
       <AdminPageHeader
         title="Danh sách sản phẩm"
         rightContent={
           <button
             className="admin-btn add-btn"
             onClick={() =>
-              setFormState({ open: true, mode: 'create', initialValues: null })
+              setFormState({ open: true, mode: "create", initialValues: null })
             }
           >
             <FaPlus /> Thêm sản phẩm
@@ -310,12 +316,9 @@ const AdminProductList = () => {
           placeholder="Tìm kiếm theo mã sp (sku), tên sản phẩm hoặc thương hiệu"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          className="admin-btn search-btn"
-          onClick={handleSearch}
-        >
+        <button className="admin-btn search-btn" onClick={handleSearch}>
           <FaSearch />
         </button>
         <button
@@ -361,7 +364,7 @@ const AdminProductList = () => {
         onSuccess={closeFormAndRefresh}
       />
 
-      <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
+      <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
         <Table
           columns={columns}
           dataSource={products}
@@ -375,7 +378,7 @@ const AdminProductList = () => {
             showQuickJumper: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} của ${total} sản phẩm`,
-            pageSizeOptions: ['10', '20', '50', '100'],
+            pageSizeOptions: ["10", "20", "50", "100"],
           }}
           onChange={handleTableChange}
           sticky={{ offsetHeader: 0 }}

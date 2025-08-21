@@ -1,57 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import ModalForm from '../../../../components/ModalForm';
-import { FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
-import { useSelector, useDispatch } from 'react-redux';
-import { getAllAdminBrandApiRq } from '../../../../store/brands/brands.action';
-import adminAxios from '../../adminAxios';
-import '../../AdminProduct.css';
-import './index.css';
-import AdminPageHeader from '../../../../components/admin/PageHeader';
+import React, { useEffect, useState } from "react";
+import { notification, Table } from "antd";
+import ModalForm from "../../../../components/ModalForm";
+import { FaPlus, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllAdminBrandApiRq } from "../../../../store/brands/brands.action";
+import adminAxios from "../../adminAxios";
+import "../../AdminProduct.css";
+import "./index.css";
+import AdminPageHeader from "../../../../components/admin/PageHeader";
 
 const AdminManageBrand = () => {
   const dispatch = useDispatch();
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentRecord, setCurrentRecord] = useState({});
+  const [api, contextHolder] = notification.useNotification();
 
   const columns = [
     {
-      title: 'STT',
-      key: 'index',
+      title: "STT",
+      key: "index",
       width: 80,
       render: (_text, _record, index) => index + 1,
     },
     {
-      title: 'Mã thương hiệu',
-      dataIndex: 'brand_id',
-      key: 'brand_id',
+      title: "Mã thương hiệu",
+      dataIndex: "brand_id",
+      key: "brand_id",
       width: 140,
     },
     {
-      title: 'Tên',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Thông tin',
-      dataIndex: 'infomation',
-      key: 'infomation',
+      title: "Thông tin",
+      dataIndex: "infomation",
+      key: "infomation",
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
-      render: (value) => (value === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán'),
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (value) => (value === "ACTIVE" ? "Đang bán" : "Ngừng bán"),
       width: 160,
     },
     {
-      title: 'Hành động',
-      key: 'actions',
-      fixed: 'right',
+      title: "Hành động",
+      key: "actions",
+      fixed: "right",
       width: 140,
       render: (_text, record) => (
         <div>
@@ -98,9 +99,9 @@ const AdminManageBrand = () => {
     setEditMode(true);
     setCurrentRecord({
       brand_id: brand.brand_id,
-      name: brand.name || '',
-      infomation: brand.infomation || '',
-      status: brand.status || 'ACTIVE',
+      name: brand.name || "",
+      infomation: brand.infomation || "",
+      status: brand.status || "ACTIVE",
     });
     setModalVisible(true);
   };
@@ -114,18 +115,31 @@ const AdminManageBrand = () => {
           infomation: values.infomation,
           status: values.status,
         });
+        api.success({
+          message: "Thành công",
+          description: "Cập nhật thương hiệu thành công!",
+        });
       } else {
-        await adminAxios.post('brand', {
+        await adminAxios.post("brand", {
           name: values.name,
           infomation: values.infomation,
         });
+
+        api.success({
+          message: "Thành công",
+          description: "Thêm thương hiệu thành công!",
+        });
       }
+
       setModalVisible(false);
       setCurrentRecord({});
       dispatch(getAllAdminBrandApiRq());
     } catch (error) {
-      console.error('Lỗi xử lý brand:', error);
-      alert('Thao tác thất bại!');
+      console.error("Lỗi xử lý brand:", error);
+      api.error({
+        message: "Thất bại",
+        description: "Có lỗi xảy ra",
+      });
     } finally {
       setLoading(false);
     }
@@ -153,8 +167,10 @@ const AdminManageBrand = () => {
   return (
     <div
       className="admin-product-page"
-      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
     >
+      {contextHolder}
+
       <AdminPageHeader
         title="Quản lý thương hiệu"
         rightContent={
@@ -162,7 +178,7 @@ const AdminManageBrand = () => {
             className="admin-btn add-btn"
             onClick={() => {
               setEditMode(false);
-              setCurrentRecord({ name: '', infomation: '', status: 'ACTIVE' });
+              setCurrentRecord({ name: "", infomation: "", status: "ACTIVE" });
               setModalVisible(true);
             }}
             style={{ marginLeft: 8 }}
@@ -178,12 +194,9 @@ const AdminManageBrand = () => {
           placeholder="Tìm kiếm theo mã hoặc tên thương hiệu"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          className="admin-btn search-btn"
-          onClick={handleSearch}
-        >
+        <button className="admin-btn search-btn" onClick={handleSearch}>
           <FaSearch />
         </button>
       </div>
@@ -193,40 +206,40 @@ const AdminManageBrand = () => {
         visible={modalVisible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
-        title={editMode ? 'Sửa thương hiệu' : 'Thêm thương hiệu'}
+        title={editMode ? "Sửa thương hiệu" : "Thêm thương hiệu"}
         initialValues={currentRecord}
         loading={loading}
         isEdit={editMode}
         fields={[
           {
-            name: 'name',
-            label: 'Tên thương hiệu',
-            type: 'input',
+            name: "name",
+            label: "Tên thương hiệu",
+            type: "input",
             required: true,
             span: 24,
           },
           {
-            name: 'infomation',
-            label: 'Thông tin',
-            type: 'textarea',
+            name: "infomation",
+            label: "Thông tin",
+            type: "textarea",
             required: false,
             span: 24,
           },
           {
-            name: 'status',
-            label: 'Trạng thái',
-            type: 'select',
+            name: "status",
+            label: "Trạng thái",
+            type: "select",
             required: false,
             span: 12,
             options: [
-              { value: 'ACTIVE', label: 'Đang bán' },
-              { value: 'INACTIVE', label: 'Ngừng bán' },
+              { value: "ACTIVE", label: "Đang bán" },
+              { value: "INACTIVE", label: "Ngừng bán" },
             ],
           },
         ]}
       />
 
-      <div style={{ flex: 1, overflow: 'auto', width: '100%' }}>
+      <div style={{ flex: 1, overflow: "auto", width: "100%" }}>
         <Table
           dataSource={filteredBrands || []}
           columns={columns}

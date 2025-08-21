@@ -9,6 +9,7 @@ import {
   Space,
   Card,
   message,
+  notification,
 } from "antd";
 import {
   UploadOutlined,
@@ -34,6 +35,7 @@ const ProductForm = ({
   const [colorImages, setColorImages] = useState({});
   const [uploading, setUploading] = useState({});
   const [loadingImages, setLoadingImages] = useState({});
+  const [api, contextHolder] = notification.useNotification();
 
   // Hàm load ảnh từ server bằng media ID
   // const loadImageFromServer = async (mediaId) => {
@@ -273,6 +275,11 @@ const ProductForm = ({
           code: values.code || "",
           color: colorImagesData,
         });
+
+        api.success({
+          message: "Thành công",
+          description: "Thêm sản phẩm hành công thành công!",
+        });
       } else if (mode === "edit" && initialValues?.product_id) {
         await adminAxios.put(`/products/${initialValues.product_id}`, {
           name: values.name,
@@ -281,6 +288,10 @@ const ProductForm = ({
           description: values.description || "",
           status: values.status,
           color: colorImagesData,
+        });
+        api.success({
+          message: "Thành công",
+          description: "Cập nhật sản phẩm hành công thành công!",
         });
       }
       if (onSuccess) {
@@ -291,148 +302,153 @@ const ProductForm = ({
         onSuccess();
       }
     } catch (err) {
-      console.error("Form submission error:", err);
-      message.error("Có lỗi xảy ra khi lưu sản phẩm");
+      api.error({
+        message: "Thất bại",
+        description: "Có lỗi xảy ra khi lưu sản phẩm",
+      });
     }
   };
 
   return (
-    <Modal
-      title={mode === "create" ? "Thêm sản phẩm mới" : "Cập nhật sản phẩm"}
-      open={open}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      okText={mode === "create" ? "Tạo" : "Lưu"}
-      cancelText="Hủy"
-      destroyOnClose
-      width="80%"
-    >
-      <Form form={form} layout="vertical">
-        <Form.Item
-          label="Mã sản phẩm (SKU)"
-          name="sku"
-          rules={[{ required: true, message: "Vui lòng nhập mã sản phẩm" }]}
-        >
-          <Input placeholder="Mã sản phẩm" />
-        </Form.Item>
-
-        <Form.Item
-          label="Tên sản phẩm"
-          name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
-        >
-          <Input placeholder="Tên sản phẩm" />
-        </Form.Item>
-
-        <Form.Item
-          label="Thương hiệu"
-          name="brand_id"
-          rules={[{ required: true, message: "Vui lòng chọn thương hiệu" }]}
-        >
-          <Select placeholder="Chọn thương hiệu">
-            {brands.map((b) => (
-              <Select.Option key={b.brand_id} value={b.brand_id}>
-                {b.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item label="Mô tả" name="description">
-          <TextArea placeholder="Mô tả" autoSize={{ minRows: 3 }} />
-        </Form.Item>
-
-        <Form.Item label="Màu sắc" name="color_id">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: "100%" }}
-            placeholder="Màu sắc"
-            options={optionColors}
-            onChange={handleColorChange}
-          />
-        </Form.Item>
-
-        {selectedColorLabels.length > 0 && (
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ marginBottom: 8, fontWeight: 500 }}>
-              Upload ảnh cho từng màu sắc:
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
-              {selectedColorLabels.map((label, index) => (
-                <Card
-                  key={index}
-                  title={label}
-                  size="small"
-                  style={{ width: 300 }}
-                  extra={
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => removeColor(label)}
-                      size="small"
-                    />
-                  }
-                >
-                  <Upload
-                    listType="picture-card"
-                    fileList={colorImages[label] || []}
-                    onChange={(info) => handleImageChange(label, info)}
-                    beforeUpload={(file) => beforeUpload(file, label)}
-                    accept="image/*"
-                    disabled={uploading[label] || loadingImages[label]}
-                  >
-                    {(colorImages[label] || []).length < 8 &&
-                      !uploading[label] &&
-                      !loadingImages[label] && (
-                        <div>
-                          <PlusOutlined />
-                          <div style={{ marginTop: 8 }}>Upload ảnh</div>
-                        </div>
-                      )}
-                    {uploading[label] && (
-                      <div>
-                        <div style={{ marginTop: 8 }}>Uploading...</div>
-                      </div>
-                    )}
-                    {loadingImages[label] && (
-                      <div>
-                        <div style={{ marginTop: 8 }}>Loading...</div>
-                      </div>
-                    )}
-                  </Upload>
-                  <div
-                    style={{ marginTop: 8, fontSize: "12px", color: "#666" }}
-                  >
-                    Tối đa 8 ảnh cho mỗi màu
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {mode === "create" && (
-          <Form.Item label="Code" name="code">
-            <Input placeholder="Mã nội bộ (tùy chọn)" />
-          </Form.Item>
-        )}
-
-        {mode === "edit" && (
+    <>
+      {contextHolder}
+      <Modal
+        title={mode === "create" ? "Thêm sản phẩm mới" : "Cập nhật sản phẩm"}
+        open={open}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText={mode === "create" ? "Tạo" : "Lưu"}
+        cancelText="Hủy"
+        destroyOnClose
+        width="80%"
+      >
+        <Form form={form} layout="vertical">
           <Form.Item
-            label="Trạng thái"
-            name="status"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+            label="Mã sản phẩm (SKU)"
+            name="sku"
+            rules={[{ required: true, message: "Vui lòng nhập mã sản phẩm" }]}
           >
-            <Select>
-              <Select.Option value="ACTIVE">Đang bán</Select.Option>
-              <Select.Option value="INACTIVE">Ngừng bán</Select.Option>
+            <Input placeholder="Mã sản phẩm" />
+          </Form.Item>
+
+          <Form.Item
+            label="Tên sản phẩm"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
+          >
+            <Input placeholder="Tên sản phẩm" />
+          </Form.Item>
+
+          <Form.Item
+            label="Thương hiệu"
+            name="brand_id"
+            rules={[{ required: true, message: "Vui lòng chọn thương hiệu" }]}
+          >
+            <Select placeholder="Chọn thương hiệu">
+              {brands.map((b) => (
+                <Select.Option key={b.brand_id} value={b.brand_id}>
+                  {b.name}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
-        )}
-      </Form>
-    </Modal>
+
+          <Form.Item label="Mô tả" name="description">
+            <TextArea placeholder="Mô tả" autoSize={{ minRows: 3 }} />
+          </Form.Item>
+
+          <Form.Item label="Màu sắc" name="color_id">
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: "100%" }}
+              placeholder="Màu sắc"
+              options={optionColors}
+              onChange={handleColorChange}
+            />
+          </Form.Item>
+
+          {selectedColorLabels.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ marginBottom: 8, fontWeight: 500 }}>
+                Upload ảnh cho từng màu sắc:
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+                {selectedColorLabels.map((label, index) => (
+                  <Card
+                    key={index}
+                    title={label}
+                    size="small"
+                    style={{ width: 300 }}
+                    extra={
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => removeColor(label)}
+                        size="small"
+                      />
+                    }
+                  >
+                    <Upload
+                      listType="picture-card"
+                      fileList={colorImages[label] || []}
+                      onChange={(info) => handleImageChange(label, info)}
+                      beforeUpload={(file) => beforeUpload(file, label)}
+                      accept="image/*"
+                      disabled={uploading[label] || loadingImages[label]}
+                    >
+                      {(colorImages[label] || []).length < 8 &&
+                        !uploading[label] &&
+                        !loadingImages[label] && (
+                          <div>
+                            <PlusOutlined />
+                            <div style={{ marginTop: 8 }}>Upload ảnh</div>
+                          </div>
+                        )}
+                      {uploading[label] && (
+                        <div>
+                          <div style={{ marginTop: 8 }}>Uploading...</div>
+                        </div>
+                      )}
+                      {loadingImages[label] && (
+                        <div>
+                          <div style={{ marginTop: 8 }}>Loading...</div>
+                        </div>
+                      )}
+                    </Upload>
+                    <div
+                      style={{ marginTop: 8, fontSize: "12px", color: "#666" }}
+                    >
+                      Tối đa 8 ảnh cho mỗi màu
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {mode === "create" && (
+            <Form.Item label="Code" name="code">
+              <Input placeholder="Mã nội bộ (tùy chọn)" />
+            </Form.Item>
+          )}
+
+          {mode === "edit" && (
+            <Form.Item
+              label="Trạng thái"
+              name="status"
+              rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+            >
+              <Select>
+                <Select.Option value="ACTIVE">Đang bán</Select.Option>
+                <Select.Option value="INACTIVE">Ngừng bán</Select.Option>
+              </Select>
+            </Form.Item>
+          )}
+        </Form>
+      </Modal>
+    </>
   );
 };
 
