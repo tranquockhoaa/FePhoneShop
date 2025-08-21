@@ -14,7 +14,6 @@ const OrderItem = ({ item }) => {
     );
     return matchedColor?.images?.[0]?.link || null;
   };
-  console.log(getUrlImage());
   return (
     <div className="order-item">
       <div className="order-left">

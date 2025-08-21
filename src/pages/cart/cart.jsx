@@ -150,7 +150,6 @@ const Cart = () => {
     console.log(matchedColor?.images?.[0]?.link || null);
     return matchedColor?.images?.[0]?.link || null;
   };
-  // console.log(cartDetails[0].product_detail.product);
 
   return (
     <Spin spinning={loading} tip="Đang xử lý đơn hàng...">

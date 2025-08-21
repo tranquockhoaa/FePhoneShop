@@ -187,6 +187,7 @@ h2:hover {
   justify-content: center;
   position: relative;
   cursor: pointer;
+  outline: none;
 }
 
 .header-login-button .login-link,

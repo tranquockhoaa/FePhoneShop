@@ -19,6 +19,7 @@
   display: flex;
   position: relative;
   gap: 10px;
+  margin-bottom: 40px;
 }
 
 /* Menu bên trái */
@@ -74,9 +75,11 @@
 .store .item-store {
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  /* height: 90vh; */
   margin-top: 2vh;
   background-color: white;
+  margin-bottom: 40px;
+  border-radius: 10px;
 }
 
 .store .item-store .title {
@@ -101,7 +104,8 @@
 }
 /* Grid sản phẩm */
 .store .product-grid {
-  padding: 0 20px;
+  padding: 0 20px 20px 20px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
