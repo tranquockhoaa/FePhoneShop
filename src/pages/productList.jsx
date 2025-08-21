@@ -24,6 +24,7 @@ const ProductList = ({ brandName }) => {
       brand_id: brandNameArray[brandNameArray.length - 1],
       page,
       size: PAGE_SIZE,
+      sortOrder: 'DESC',
     })
       .then((res) => {
         console.log('API response:', res.data);
