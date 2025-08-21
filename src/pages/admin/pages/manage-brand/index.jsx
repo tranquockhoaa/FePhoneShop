@@ -38,6 +38,11 @@ const AdminManageBrand = () => {
       key: "name",
     },
     {
+      title: "Số lượng sản phẩm ",
+      dataIndex: "productCount",
+      key: "quantity",
+    },
+    {
       title: "Thông tin",
       dataIndex: "infomation",
       key: "infomation",
