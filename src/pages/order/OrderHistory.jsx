@@ -73,6 +73,8 @@ const OrderHistory = () => {
     // eslint-disable-next-line
   }, [status, fromDate, toDate]);
 
+  console.log("order_item");
+
   return (
     <div className="order-history-container">
       <div className="order-history-tabs">
