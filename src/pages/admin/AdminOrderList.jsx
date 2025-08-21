@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { Button, Modal, Space, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { MdClear } from "react-icons/md";
+
 import adminAxios from "./adminAxios";
-import { Table, Button, Space, Tag, Modal } from "antd";
-import { FaSearch, FaEdit, FaTrash, FaEye } from "react-icons/fa";
+
+import { updateOrderStatusApi } from "../../api/order";
 import "./AdminOrderList.css";
-import { deleteOrderApi, updateOrderStatusApi } from "../../api/order";
 
 // Hàm định dạng ngày dd/mm/yyyy tiếng Việt
 function formatVNDate(date) {
@@ -20,6 +23,7 @@ const AdminOrderList = () => {
   const [orders, setOrders] = useState([]);
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
@@ -41,8 +45,9 @@ const AdminOrderList = () => {
       let url = `/orders?page=${page}&limit=${pageSize}`;
       if (search) url += `&search=${encodeURIComponent(search)}`;
       if (status) url += `&status=${status}`;
-      if (fromDate) url += `&fromDate=${fromDate}`;
-      if (toDate) url += `&toDate=${toDate}`;
+      if (fromDate) url += `&dateFrom=${fromDate}`;
+      if (toDate) url += `&dateTo=${toDate}`;
+      if (paymentMethod) url += `&payment_method=${paymentMethod}`;
 
       const res = await adminAxios.get(url);
       setOrders(res.data.data || []);
@@ -66,7 +71,7 @@ const AdminOrderList = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, status, fromDate, toDate]);
+  }, [search, status, fromDate, toDate, paymentMethod]);
 
   // Load dữ liệu ban đầu
   useEffect(() => {
@@ -142,6 +147,14 @@ const AdminOrderList = () => {
   const handleTableChange = (pagination) => {
     fetchOrders(pagination.current, pagination.pageSize);
   };
+
+  const handleClear = () => {
+    setStatus("");
+    setFromDate("");
+    setToDate("");
+    setPaymentMethod("");
+    setSearch("");
+  }
 
   // Cột cho bảng
   const columns = [
@@ -262,6 +275,16 @@ const AdminOrderList = () => {
           <option value="CANCELLED">Đã hủy</option>
         </select>
 
+        <select
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+          className="admin-order-filter"
+        >
+          <option value="">Tất cả phương thức</option>
+          <option value="COD">COD</option>
+          <option value="VNPAY">VNPAY</option>
+        </select>
+
         <label className="date-filter-label">
           Từ ngày:
           <input
@@ -284,10 +307,10 @@ const AdminOrderList = () => {
 
         <Button
           type="primary"
-          onClick={() => fetchOrders(1, pagination.pageSize)}
-          icon={<FaSearch />}
+          onClick={handleClear}
+          icon={<MdClear />}
         >
-          Tìm kiếm
+          Xóa tất cả bộ lọc
         </Button>
       </div>
 
