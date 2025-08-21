@@ -13,21 +13,18 @@ import logoRealme from "../../assets/iconBrand/realme.png";
 import logoIqoo from "../../assets/iconBrand/iqoo.png";
 import logoIphone from "../../assets/iconBrand/iphone.png";
 import logoInfo from "../../assets/iconBrand/icon_info.png";
+
 import { searchProductByApi } from "../../api/productlist";
 
 const data_banner = [
   {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/redmi-turbo-4-pro_1751163164.jpg",
-  },
-
-  {
     url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
   },
   {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
+    url: "https://dienthoaihay.vn/images/slideshow/2025/08/19/compress/iqoo-neo-10_1755570700.jpg",
   },
   {
-    url: "https://dienthoaihay.vn/images/banners/original/q5-pro_1736649129.jpg",
+    url: "/image/banner/iphone-16.jpg",
   },
 ];
 
