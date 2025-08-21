@@ -38,7 +38,7 @@ const AdminOrderList = () => {
   const fetchOrders = async (page = 1, pageSize = 10) => {
     setPagination((prev) => ({ ...prev, loading: true }));
     try {
-      let url = `/orders?page=${page}&pageSize=${pageSize}`;
+      let url = `/orders?page=${page}&limit=${pageSize}`;
       if (search) url += `&searchTerm=${encodeURIComponent(search)}`;
       if (status) url += `&status=${status}`;
       if (fromDate) url += `&fromDate=${fromDate}`;
@@ -402,33 +402,33 @@ const AdminOrderList = () => {
                         <tr key={i}>
                           <td>
                             <b>
-                              {item.product_detail?.product?.name ||
+                              {item.product_details?.product?.name ||
                                 item.productName ||
                                 "Sản phẩm"}
                             </b>
-                            {item.product_detail?.product?.brand?.name && (
+                            {item.product_details?.product?.brand?.name && (
                               <div>
                                 Thương hiệu:{" "}
-                                {item.product_detail.product.brand.name}
+                                {item.product_details.product.brand.name}
                               </div>
                             )}
                           </td>
                           <td>
                             <div>
                               Màu:{" "}
-                              {item.product_detail?.color?.name ||
+                              {item.product_details?.color?.name ||
                                 item.color ||
                                 "N/A"}
                             </div>
                             <div>
                               RAM:{" "}
-                              {item.product_detail?.memory?.ram_size ||
+                              {item.product_details?.memory?.ram_size ||
                                 item.ram ||
                                 "N/A"}
                             </div>
                             <div>
                               Bộ nhớ:{" "}
-                              {item.product_detail?.memory?.storage_size ||
+                              {item.product_details?.memory?.storage_size ||
                                 item.storage ||
                                 "N/A"}
                             </div>
