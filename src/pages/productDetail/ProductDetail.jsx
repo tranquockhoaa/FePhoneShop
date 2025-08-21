@@ -164,11 +164,11 @@ const ProductDetail = () => {
       <Header />
 
       <div className="product-detail-body">
-        <div className="container">
+        {/* <div className="container">
           <div className="megamenu">
             <p>Danh mục sản phẩm</p>
           </div>
-        </div>
+        </div> */}
 
         <p className="product-name">
           {product?.name || code}{' '}
