@@ -88,10 +88,15 @@ const Cart = () => {
     e.preventDefault();
 
     try {
+      if (!customerInfo.address) {
+        setError("Vui lòng nhập địa chỉ giao hàng");
+        return;
+      }
       if (!customerInfo.payment_method) {
         setError("Vui lòng chọn phương thức thanh toán");
         return;
       }
+
       setLoading(true);
 
       const products = cartDetails.map((item) => {
@@ -289,7 +294,6 @@ const Cart = () => {
                   placeholder="Địa chỉ nhận hàng *"
                   value={customerInfo.address}
                   onChange={handleInputChange}
-                  required
                   rows={2}
                 />
               </div>
