@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import UserFormModal from './user-form-modal';
-import { Table, notification } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import UserFormModal from "./user-form-modal";
+import { Table, notification } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 
-import ModalConfirm from '../../../components/modal-confirm';
+import ModalConfirm from "../../../components/modal-confirm";
 
-import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
-import { getUsersRequest } from '../../../store/uses/users.action';
-import { createUserApi, updateUserApi } from '../../../api/users.api';
+import { FaPlus, FaSearch, FaEdit, FaTrash } from "react-icons/fa";
+import { getUsersRequest } from "../../../store/uses/users.action";
+import { createUserApi, updateUserApi } from "../../../api/users.api";
 
-import './AdminUsers.css';
-import AdminPageHeader from '../../../components/admin/PageHeader';
+import "./AdminUsers.css";
+import AdminPageHeader from "../../../components/admin/PageHeader";
 
 const AdminUsers = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const AdminUsers = () => {
     (state) => state.users
   );
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 20,
@@ -28,6 +28,7 @@ const AdminUsers = () => {
   const [userDetail, setUserDetail] = useState();
   const [formLoading, setFormLoading] = useState(false);
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     dispatch(
@@ -53,15 +54,15 @@ const AdminUsers = () => {
     try {
       if (userDetail) {
         await updateUserApi({ id: userDetail.user_id, body: formData });
-        notification.success({
-          message: 'Thành công',
-          description: 'Cập nhật người dùng thành công!',
+        api.success({
+          message: "Thành công",
+          description: "Cập nhật người dùng thành công!",
         });
       } else {
         await createUserApi(formData);
-        notification.success({
-          message: 'Thành công',
-          description: 'Tạo người dùng mới thành công!',
+        api.success({
+          message: "Thành công",
+          description: "Tạo người dùng mới thành công!",
         });
       }
 
@@ -75,10 +76,10 @@ const AdminUsers = () => {
       setShowModal(false);
       setUserDetail(null);
     } catch (error) {
-      console.error('Error submitting user:', error);
-      notification.error({
-        message: 'Lỗi',
-        description: 'Có lỗi xảy ra! Vui lòng thử lại.',
+      console.error("Error submitting user:", error);
+      api.error({
+        message: "Lỗi",
+        description: "Có lỗi xảy ra! Vui lòng thử lại.",
       });
     } finally {
       setFormLoading(false);
@@ -117,30 +118,30 @@ const AdminUsers = () => {
 
   const columns = [
     {
-      title: 'Tên',
-      dataIndex: 'full_name',
-      key: 'full_name',
+      title: "Tên",
+      dataIndex: "full_name",
+      key: "full_name",
       // render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'SDT',
-      dataIndex: 'phone_number',
-      key: 'phone_number',
+      title: "SDT",
+      dataIndex: "phone_number",
+      key: "phone_number",
     },
     {
-      title: 'role',
-      key: 'role',
-      dataIndex: 'role',
+      title: "role",
+      key: "role",
+      dataIndex: "role",
     },
     {
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
       render: (_, value) => (
         <>
           <button
@@ -170,6 +171,7 @@ const AdminUsers = () => {
 
   return (
     <div className="admin-product-page">
+      {contextHolder}
       <AdminPageHeader
         title="Quản lý người dùng"
         rightContent={
@@ -190,12 +192,9 @@ const AdminUsers = () => {
           placeholder="Tìm kiếm theo mã sản phẩm..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          className="admin-btn search-btn"
-          onClick={handleSearch}
-        >
+        <button className="admin-btn search-btn" onClick={handleSearch}>
           <FaSearch />
         </button>
       </div>
@@ -239,7 +238,7 @@ const AdminUsers = () => {
             showQuickJumper: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} của ${total} người dùng`,
-            pageSizeOptions: ['10', '20', '50'],
+            pageSizeOptions: ["10", "20", "50"],
           }}
           onChange={handleTableChange}
         />
