@@ -20,3 +20,13 @@ export const getBestselling = async () => {
     throw error;
   }
 };
+
+export const getTotalUser = async () => {
+  try {
+    const response = await authorizedRequest.get(`/admin/dashboard/total-user`);
+    return response.data;
+  } catch (error) {
+    console.error("Error get list users:", error);
+    throw error;
+  }
+};

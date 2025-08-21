@@ -1,9 +1,9 @@
 
 import { useEffect, useState } from "react"
 import { Card, Select, Row, Col, Statistic, Spin } from "antd"
-import { DollarOutlined, ShoppingOutlined, BarChartOutlined, TrophyOutlined } from "@ant-design/icons"
+import { DollarOutlined, ShoppingOutlined, BarChartOutlined, TrophyOutlined, UsergroupDeleteOutlined } from "@ant-design/icons"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, LineChart, Line } from "recharts"
-import { getDashboard, getBestselling } from "../../api/dashboard"
+import { getDashboard, getBestselling, getTotalUser } from "../../api/dashboard"
 
 const AdminDashboard = () => {
   const currentYear = new Date().getFullYear()
@@ -11,6 +11,7 @@ const AdminDashboard = () => {
   const [selectedYear, setSelectedYear] = useState(currentYear)
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [dashboardData, setDashboardData] = useState(null)
+  const [dashboadUser, setDashboardUser] = useState(null);
   const [bestSellingData, setBestSellingData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -24,13 +25,15 @@ const AdminDashboard = () => {
       if (selectedYear) queryParams.append("year", selectedYear.toString())
       if (selectedMonth) queryParams.append("month", selectedMonth.toString())
 
-      const [dashboardResponse, bestSellingResponse] = await Promise.all([
+      const [dashboardResponse, bestSellingResponse, totalUserRes] = await Promise.all([
         getDashboard(queryParams.toString()),
         getBestselling(),
+        getTotalUser()
       ])
 
       setDashboardData(dashboardResponse)
       setBestSellingData(bestSellingResponse)
+      setDashboardUser(totalUserRes);
     } catch (err) {
       console.error("Error fetching dashboard data:", err)
       setError("Không thể tải dữ liệu dashboard")
@@ -254,7 +257,7 @@ const AdminDashboard = () => {
 
         <Spin spinning={loading}>
           <Row gutter={[24, 24]} style={{ marginBottom: "24px" }}>
-            <Col xs={24} md={8}>
+            <Col xs={24} md={6}>
               <Card>
                 <Statistic
                   title="Tổng Doanh Thu"
@@ -265,7 +268,7 @@ const AdminDashboard = () => {
               </Card>
             </Col>
 
-            <Col xs={24} md={8}>
+            <Col xs={24} md={6}>
               <Card>
                 <Statistic
                   title="Tổng Đơn Hàng"
@@ -276,7 +279,7 @@ const AdminDashboard = () => {
               </Card>
             </Col>
 
-            <Col xs={24} md={8}>
+            <Col xs={24} md={6}>
               <Card>
                 <Statistic
                   title={selectedMonth ? "Doanh Thu TB/Ngày" : "Doanh Thu TB/Tháng"}
@@ -287,7 +290,17 @@ const AdminDashboard = () => {
               </Card>
             </Col>
 
-           
+             <Col xs={24} md={6}>
+              <Card>
+                <Statistic
+                  title="Tổng người dùng"
+                  value={dashboadUser?.total}
+                 
+                  prefix={ <UsergroupDeleteOutlined  style={{ color: "#1890ff" }}  />} 
+                />
+              </Card>
+            </Col>
+
           </Row>
 
           <Row gutter={[24, 24]} style={{ marginBottom: "24px" }}>
