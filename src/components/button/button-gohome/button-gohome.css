@@ -1,0 +1,19 @@
+.button-go-home {
+  padding: 10px 10px;
+  border-radius: 5px;
+  background-color: #1890ff;
+  margin-bottom: 10px;
+  color: white; /* Màu mặc định */
+  font-size: 14px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s; /* Mượt khi hover */
+}
+
+.button-go-home:hover {
+  color: red; /* Khi hover, chữ và icon đều đỏ */
+}

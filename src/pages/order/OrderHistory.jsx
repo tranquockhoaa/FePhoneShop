@@ -3,7 +3,8 @@ import "./OrderHistory.css";
 import { Link } from "react-router-dom";
 import { getAllOrderUserApi } from "../../api/order-user";
 import OrderItem from "./OrderItem";
-
+import CancelOrderButton from "./cancel-order";
+import ButtonGoHome from "../../components/button/button-gohome/button-gohome";
 const STATUS_TABS = [
   { label: "Tất cả", value: "" },
   { label: "Chờ xác nhận", value: "PENDING" },
@@ -48,6 +49,7 @@ const OrderHistory = () => {
   const [toDate, setToDate] = useState("");
   const [loading, setLoading] = useState(false);
 
+  console.log("orders", orders);
   const fetchOrders = async () => {
     setLoading(true);
     try {
@@ -73,10 +75,10 @@ const OrderHistory = () => {
     // eslint-disable-next-line
   }, [status, fromDate, toDate]);
 
-  console.log("order_item");
-
   return (
     <div className="order-history-container">
+      <ButtonGoHome />
+      <div></div>{" "}
       <div className="order-history-tabs">
         {STATUS_TABS.map((tab) => (
           <button
@@ -88,7 +90,6 @@ const OrderHistory = () => {
           </button>
         ))}
       </div>
-
       <div className="order-history-filter">
         <span>Lịch sử mua hàng</span>
         <input
@@ -103,7 +104,6 @@ const OrderHistory = () => {
           onChange={(e) => setToDate(e.target.value)}
         />
       </div>
-
       {loading ? (
         <div style={{ margin: 32 }}>Đang tải...</div>
       ) : orders.length === 0 ? (
@@ -117,6 +117,11 @@ const OrderHistory = () => {
         <div className="order-history-list">
           {orders.map((order) => (
             <div className="order-history-item" key={order.order_id}>
+              <div className="cancel-button-container">
+                {order.status === "PENDING" ? (
+                  <CancelOrderButton orderId={order.order_id} />
+                ) : null}
+              </div>
               <div className="order-header">
                 <div>
                   <b>Mã đơn hàng:</b> {order.order_id} {" | "}

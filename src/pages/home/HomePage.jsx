@@ -13,23 +13,6 @@ import logoRealme from "../../assets/iconBrand/realme.png";
 import logoIqoo from "../../assets/iconBrand/iqoo.png";
 import logoIphone from "../../assets/iconBrand/iphone.png";
 import logoInfo from "../../assets/iconBrand/icon_info.png";
-
-import { searchProductByApi } from "../../api/productlist";
-import React, { useEffect, useState } from "react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import ProductItem from "../../components/product-item/product-item";
-import "./HomePage.css";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import xiaomiLogo from "../../assets/iconBrand/xiaomi.png";
-import logoRealme from "../../assets/iconBrand/realme.png";
-import logoIqoo from "../../assets/iconBrand/iqoo.png";
-import logoIphone from "../../assets/iconBrand/iphone.png";
-import logoInfo from "../../assets/iconBrand/icon_info.png";
 import { searchProductByApi } from "../../api/productlist";
 
 const data_banner = [

@@ -39,7 +39,7 @@ const AdminOrderList = () => {
     setPagination((prev) => ({ ...prev, loading: true }));
     try {
       let url = `/orders?page=${page}&limit=${pageSize}`;
-      if (search) url += `&searchTerm=${encodeURIComponent(search)}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
       if (status) url += `&status=${status}`;
       if (fromDate) url += `&fromDate=${fromDate}`;
       if (toDate) url += `&toDate=${toDate}`;
