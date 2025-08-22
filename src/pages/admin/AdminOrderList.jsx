@@ -154,7 +154,7 @@ const AdminOrderList = () => {
     setToDate("");
     setPaymentMethod("");
     setSearch("");
-  }
+  };
 
   // Cột cho bảng
   const columns = [
@@ -305,11 +305,7 @@ const AdminOrderList = () => {
           />
         </label>
 
-        <Button
-          type="primary"
-          onClick={handleClear}
-          icon={<MdClear />}
-        >
+        <Button type="primary" onClick={handleClear} icon={<MdClear />}>
           Xóa tất cả bộ lọc
         </Button>
       </div>
@@ -352,6 +348,10 @@ const AdminOrderList = () => {
           <div className="order-detail-content">
             <div className="order-detail-section">
               <h3>Thông tin khách hàng</h3>
+              <p>
+                <b>Tài khoản:</b>{" "}
+                {selectedOrder.user.email || selectedOrder.name || "Không rõ"}
+              </p>
               <p>
                 <b>Tên:</b>{" "}
                 {selectedOrder.full_name || selectedOrder.name || "Không rõ"}
