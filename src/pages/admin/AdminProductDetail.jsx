@@ -263,7 +263,7 @@ const AdminProductDetail = () => {
           quantity: Number(values.quantity),
           specifications: JSON.stringify(values.specifications || []),
         });
-       api.success({
+        api.success({
           message: "Thành công",
           description: "Thêm biến thể thành công",
         });
@@ -284,9 +284,9 @@ const AdminProductDetail = () => {
     } catch (error) {
       console.error("Error:", error);
       api.error({
-          message: "Thất bại",
-          description: "Có lỗi xảy ra! Vui lòng thử lại.",
-        });
+        message: "Thất bại",
+        description: "Có lỗi xảy ra! Vui lòng thử lại.",
+      });
     } finally {
       setLoading(false);
     }
@@ -382,8 +382,10 @@ const AdminProductDetail = () => {
       key: "status",
       width: 120,
       render: (status, record) => (
-        <Tag color={status || record.quantity > 0 ? "green" : "red"}>
-          {(status && status !== "INACTIVE") || record.quantity > 0
+        <Tag
+          color={status == "ACTIVE" && record.quantity > 0 ? "green" : "red"}
+        >
+          {status && status !== "INACTIVE" && record.quantity > 0
             ? "Đang bán"
             : "Ngừng bán"}
         </Tag>

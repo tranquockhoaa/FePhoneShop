@@ -119,7 +119,10 @@ const OrderHistory = () => {
             <div className="order-history-item" key={order.order_id}>
               <div className="cancel-button-container">
                 {order.status === "PENDING" ? (
-                  <CancelOrderButton orderId={order.order_id} />
+                  <CancelOrderButton
+                    orderId={order.order_id}
+                    onCancelSuccess={fetchOrders}
+                  />
                 ) : null}
               </div>
               <div className="order-header">
