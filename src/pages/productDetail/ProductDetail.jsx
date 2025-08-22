@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import Header from '../../components/header/Header';
-import TableInfor from './TableInfor';
-import './ProductDetail.css';
+import React, { useState, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Header from "../../components/header/Header";
+import TableInfor from "./TableInfor";
+import "./ProductDetail.css";
+import ButtonGoHome from "../../components/button/button-gohome/button-gohome";
 
 const ProductDetail = () => {
   const { code } = useParams();
@@ -102,7 +103,7 @@ const ProductDetail = () => {
     }
   };
 
-  console.log('product', product);
+  console.log("product", product);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -130,23 +131,23 @@ const ProductDetail = () => {
   //   }
   // }, [productDetail]);
 
-  console.log('productDetail', productDetail);
+  console.log("productDetail", productDetail);
 
   const handleAddToCart = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (!token) {
-        alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
+        alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
         return;
       }
       const productDetailId = productDetail.product_detail_id;
       if (!productDetailId) {
-        alert('Vui lòng chọn phiên bản/màu sắc!');
+        alert("Vui lòng chọn phiên bản/màu sắc!");
         return;
       }
       await axios.post(
-        'http://localhost:3000/api/v1/cart-detail/add-to-card',
+        "http://localhost:3000/api/v1/cart-detail/add-to-card",
         {
           product_detail_id: productDetailId,
           quantity: 1,
@@ -154,9 +155,9 @@ const ProductDetail = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      window.location.href = '/cart';
+      window.location.href = "/cart";
     } catch (err) {
-      alert('Thêm vào giỏ hàng thất bại!');
+      alert("Thêm vào giỏ hàng thất bại!");
     }
   };
   return (
@@ -164,14 +165,10 @@ const ProductDetail = () => {
       <Header />
 
       <div className="product-detail-body">
-        {/* <div className="container">
-          <div className="megamenu">
-            <p>Danh mục sản phẩm</p>
-          </div>
-        </div> */}
+        <ButtonGoHome />
 
         <p className="product-name">
-          {product?.name || code}{' '}
+          {product?.name || code}{" "}
           <span className="name-small">
             Tặng gói BHV bảo hành cả nguồn, màn hình, vân tay
           </span>
@@ -182,10 +179,7 @@ const ProductDetail = () => {
             <div className="left-frame">
               <div className="frame-img">
                 <div className="frame-img-inner">
-                  <img
-                    src={selectedImage?.link}
-                    alt="img-review"
-                  />
+                  <img src={selectedImage?.link} alt="img-review" />
                 </div>
               </div>
 
@@ -195,7 +189,7 @@ const ProductDetail = () => {
                     <div
                       key={index}
                       className={`small-frame ${
-                        selectedImage?.id === imagePath.id ? 'active' : ''
+                        selectedImage?.id === imagePath.id ? "active" : ""
                       }`}
                       onClick={() => setSelectedImage(imagePath)}
                     >
@@ -223,18 +217,15 @@ const ProductDetail = () => {
             <div className="frame-center">
               <div className="product-base">
                 <form className="buy-simple-form">
-                  <div
-                    className="price"
-                    name="price"
-                  >
-                    {productDetail?.price?.toLocaleString('vi-VN')}₫
+                  <div className="price" name="price">
+                    {productDetail?.price?.toLocaleString("vi-VN")}₫
                   </div>
 
                   <strong className="label">Lựa chọn phiên bản</strong>
                   <p className="pr-available">
-                    {' '}
-                    Tình trạng:{' '}
-                    {productDetail?.quantity > 0 ? 'Còn hàng ' : 'Hết hàng'}
+                    {" "}
+                    Tình trạng:{" "}
+                    {productDetail?.quantity > 0 ? "Còn hàng " : "Hết hàng"}
                   </p>
 
                   <div className="storage-grid">
@@ -243,8 +234,8 @@ const ProductDetail = () => {
                         key={index}
                         className={`grid-item ${
                           selectedMemoryId === memory.memory_id
-                            ? 'selected'
-                            : ''
+                            ? "selected"
+                            : ""
                         }`}
                         onClick={() => {
                           setSelectedMemoryId(memory.memory_id);
@@ -256,7 +247,7 @@ const ProductDetail = () => {
                           // setSelectedColorIndex(0);
                         }}
                       >
-                        {memory.ram_size ? `${memory.ram_size}/` : ''}
+                        {memory.ram_size ? `${memory.ram_size}/` : ""}
                         {memory.storage_size}
                         {/* <div className="price">
                           {memory.options?.[0]?.price?.toLocaleString('vi-VN')}
@@ -273,8 +264,8 @@ const ProductDetail = () => {
                         key={index}
                         className={`grid-item ${
                           option?.color?.color_id === selectedColorId
-                            ? 'selected'
-                            : ''
+                            ? "selected"
+                            : ""
                         }`}
                         onClick={() => {
                           const color_id = option?.color?.color_id;
@@ -309,10 +300,7 @@ const ProductDetail = () => {
                       />
                     </div>
 
-                    <div
-                      className="order-button"
-                      onClick={handleAddToCart}
-                    >
+                    <div className="order-button" onClick={handleAddToCart}>
                       <strong>MUA NGAY </strong>
                       <span>Giao hàng tận nơi hoặc mua tại cửa hàng</span>
                     </div>
@@ -321,7 +309,7 @@ const ProductDetail = () => {
               </div>
 
               <div className="hotline-call">
-                Gọi <span className="phone-number">01234567890</span> hoặc{' '}
+                Gọi <span className="phone-number">01234567890</span> hoặc{" "}
                 <span className="phone-number">01234567890</span> để được tư vấn
               </div>
 
@@ -340,10 +328,7 @@ const ProductDetail = () => {
                 <TableInfor data={infoProductDetail} />
               </div>
               <div className="show-full-info">
-                <button
-                  className="button-show-info"
-                  onClick={toggleInfo}
-                >
+                <button className="button-show-info" onClick={toggleInfo}>
                   Xem thêm thông tin
                 </button>
               </div>
@@ -355,14 +340,8 @@ const ProductDetail = () => {
           <div className="overlay">
             <div className="content">
               <div className="table-info-title">Thông số chi tiết</div>
-              <button
-                onClick={toggleInfo}
-                className="button-close"
-              >
-                <img
-                  src="/image/common/icon-close.png"
-                  alt="close"
-                />
+              <button onClick={toggleInfo} className="button-close">
+                <img src="/image/common/icon-close.png" alt="close" />
               </button>
               <div className="show-table-info-detail">
                 <TableInfor data={infoProductDetail} />

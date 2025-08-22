@@ -1,57 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import ProductItem from '../../components/product-item/product-item';
-import './HomePage.css';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import xiaomiLogo from '../../assets/iconBrand/xiaomi.png';
-import logoRealme from '../../assets/iconBrand/realme.png';
-import logoIqoo from '../../assets/iconBrand/iqoo.png';
-import logoIphone from '../../assets/iconBrand/iphone.png';
-import logoInfo from '../../assets/iconBrand/icon_info.png';
-import { searchProductByApi } from '../../api/productlist';
+import React, { useEffect, useState } from "react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import ProductItem from "../../components/product-item/product-item";
+import "./HomePage.css";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import xiaomiLogo from "../../assets/iconBrand/xiaomi.png";
+import logoRealme from "../../assets/iconBrand/realme.png";
+import logoIqoo from "../../assets/iconBrand/iqoo.png";
+import logoIphone from "../../assets/iconBrand/iphone.png";
+import logoInfo from "../../assets/iconBrand/icon_info.png";
+import { searchProductByApi } from "../../api/productlist";
 
 const data_banner = [
   {
-    url: 'https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/redmi-turbo-4-pro_1751163164.jpg',
-  },
-
-  {
-    url: 'https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg',
+    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
   },
   {
-    url: 'https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg',
+    url: "https://dienthoaihay.vn/images/slideshow/2025/08/19/compress/iqoo-neo-10_1755570700.jpg",
   },
   {
-    url: 'https://dienthoaihay.vn/images/banners/original/q5-pro_1736649129.jpg',
+    url: "/image/banner/iphone-16.jpg",
   },
 ];
 
 const brands = [
-  { name: 'iQOO', logo: logoIqoo, title: 'IQOO' },
+  { name: "iQOO", logo: logoIqoo, title: "IQOO" },
   {
-    name: 'Samsung',
+    name: "Samsung",
     logo: logoIphone,
-    title: 'SAMSUNG',
+    title: "SAMSUNG",
   },
   {
-    name: 'Xiaomi',
+    name: "Xiaomi",
     logo: xiaomiLogo,
-    title: 'XIAOMI NỔI BẬT',
+    title: "XIAOMI NỔI BẬT",
   },
   {
-    name: 'iPhone',
+    name: "iPhone",
     logo: logoIphone,
-    title: 'IPHONE',
+    title: "IPHONE",
   },
   {
-    name: 'Realme',
+    name: "Realme",
     logo: logoRealme,
-    title: 'REALME',
+    title: "REALME",
   },
 ];
 
@@ -75,11 +71,11 @@ const HomePage = () => {
 
       for (let i = 0; i < brandsWithProducts.length; i++) {
         const brand = brandsWithProducts[i];
-        if (brand.name === 'Dịch vụ') continue;
+        if (brand.name === "Dịch vụ") continue;
         try {
           const response = await searchProductByApi({
             brand_id: brand.brand_id,
-            sortOrder: 'DESC',
+            sortOrder: "DESC",
           });
 
           brandsWithProducts[i] = {
@@ -99,7 +95,7 @@ const HomePage = () => {
       setUpdatedBrands(brandsWithProducts);
       setFetchCompleted(true);
     } catch (error) {
-      console.error('Overall fetch error:', error);
+      console.error("Overall fetch error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -117,21 +113,15 @@ const HomePage = () => {
         <div className="block-top-home">
           <div className="wrap-menu">
             {updatedBrands.map((brand, index) => (
-              <div
-                className="menu"
-                key={index}
-              >
+              <div className="menu" key={index}>
                 <span className="homepage-icon">
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                  />
+                  <img src={brand.logo} alt={brand.name} />
                 </span>
                 {/* Nếu là Dịch vụ thì không link */}
-                {brand.name !== 'Dịch vụ' ? (
+                {brand.name !== "Dịch vụ" ? (
                   <Link
                     to={`/products/${brand.name}-${brand.brand_id}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    style={{ textDecoration: "none", color: "inherit" }}
                   >
                     {brand.name}
                   </Link>
@@ -144,21 +134,14 @@ const HomePage = () => {
           </div>
           <div className="banner">
             <Swiper
-              pagination={{ type: 'bullets', clickable: true }}
+              pagination={{ type: "bullets", clickable: true }}
               autoplay={true}
               loop={true}
               modules={[Autoplay, Pagination]}
             >
               {data_banner?.map((data, id) => (
-                <SwiperSlide
-                  key={id}
-                  autoplay={true}
-                >
-                  <img
-                    src={data.url}
-                    alt="banner-img"
-                    className="banner-img"
-                  />
+                <SwiperSlide key={id} autoplay={true}>
+                  <img src={data.url} alt="banner-img" className="banner-img" />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -169,11 +152,8 @@ const HomePage = () => {
             <p>Đang tải dữ liệu sản phẩm...</p>
           ) : fetchCompleted ? (
             updatedBrands.map((brand, index) =>
-              brand.name === 'Dịch vụ' ? null : (
-                <div
-                  className="item-store"
-                  key={index}
-                >
+              brand.name === "Dịch vụ" ? null : (
+                <div className="item-store" key={index}>
                   <div className="title">
                     <h2 className="title-name">
                       <p>{brand.name}</p>

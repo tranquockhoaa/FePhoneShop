@@ -46,6 +46,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: relative;
 }
 .order-history-empty {
   margin: 48px 0;
@@ -128,6 +129,12 @@
   margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.cancel-button-container {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .order-header div {

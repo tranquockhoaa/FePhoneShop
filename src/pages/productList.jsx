@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import './productList.css';
-import ProductItem from '../components/product-item/product-item';
-import { searchProductByApi } from '../api/productlist';
-
+import React, { useEffect, useMemo, useState } from "react";
+import "./productList.css";
+import ProductItem from "../components/product-item/product-item";
+import { searchProductByApi } from "../api/productlist";
+import ButtonGoHome from "../components/button/button-gohome/button-gohome";
 const PAGE_SIZE = 10;
 
 const ProductList = ({ brandName }) => {
@@ -12,25 +12,25 @@ const ProductList = ({ brandName }) => {
   const [totalPages, setTotalPages] = useState(4); // mặc định 4 trang
 
   const brandNameText = useMemo(() => {
-    const brandNameArray = brandName.split('-');
+    const brandNameArray = brandName.split("-");
     return brandNameArray[0];
   }, [brandName]);
 
   useEffect(() => {
     if (!brandName) return;
     setIsLoading(true);
-    const brandNameArray = brandName.split('-');
+    const brandNameArray = brandName.split("-");
     searchProductByApi({
       brand_id: brandNameArray[brandNameArray.length - 1],
       page,
       size: PAGE_SIZE,
-      sortOrder: 'DESC',
+      sortOrder: "DESC",
     })
       .then((res) => {
-        console.log('API response:', res.data);
+        console.log("API response:", res.data);
         // Lấy đúng key mới từ backend: res.data.products và res.data.total
         const arr = Array.isArray(res?.data?.data) ? res.data.data : [];
-        console.log('FE products:', arr, Array.isArray(arr), arr.length);
+        console.log("FE products:", arr, Array.isArray(arr), arr.length);
         setProducts(arr);
         if (res?.data?.totalPages) {
           setTotalPages(res?.data?.totalPages);
@@ -50,6 +50,7 @@ const ProductList = ({ brandName }) => {
 
   return (
     <div className="product-list-page">
+      <ButtonGoHome />
       <div className="product-list-container">
         <div className="product-list-title">
           {brandNameText} - Danh sách sản phẩm
@@ -107,7 +108,7 @@ const ProductList = ({ brandName }) => {
           {Array.from({ length: totalPages }, (_, idx) => (
             <button
               key={idx + 1}
-              className={`pagination-btn${page === idx + 1 ? ' active' : ''}`}
+              className={`pagination-btn${page === idx + 1 ? " active" : ""}`}
               onClick={() => setPage(idx + 1)}
             >
               {idx + 1}

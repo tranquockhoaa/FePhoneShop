@@ -108,7 +108,12 @@ const AdminProductList = () => {
         page: 1,
         size: pagination.pageSize,
       };
-      const response = await searchProductByApi(params);
+      const response = await adminAxios.get(
+        "http://localhost:3000/api/v1/admin/products",
+        {
+          params,
+        }
+      );
       setProducts(response.data?.data || []);
       setPagination((prev) => ({
         ...prev,

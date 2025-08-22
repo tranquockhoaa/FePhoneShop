@@ -26,10 +26,8 @@
 } */
 
 .header-login-button .login-status {
-  width: 32px;
   font-size: 14px;
   text-align: center;
-  white-space: nowrap;
   overflow: hidden;
 
   position: absolute;
