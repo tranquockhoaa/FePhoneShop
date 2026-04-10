@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import * as XLSX from "xlsx";
 import adminAxios from "./adminAxios";
 import { useSelector, useDispatch } from "react-redux";
 import { getColorListApiRq } from "../../store/color-list/color-list.action";
@@ -15,6 +16,7 @@ const AdminProductDetail = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [currentRecord, setCurrentRecord] = useState({});
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [api, contextHolder] = notification.useNotification();
@@ -37,7 +39,7 @@ const AdminProductDetail = () => {
         value: item.color_id.toString(),
         label: item.name,
       })) || [],
-    [listColor]
+    [listColor],
   );
 
   // Định nghĩa các trường form cho ModalForm
@@ -127,7 +129,7 @@ const AdminProductDetail = () => {
       pagination.pageSize,
       currentSort.sortBy,
       currentSort.sortOrder,
-      ""
+      "",
     );
 
     dispatch(getColorListApiRq());
@@ -139,7 +141,7 @@ const AdminProductDetail = () => {
     pageSize = 20,
     sortBy = "createdAt",
     sortOrder = "ASC",
-    keyword = ""
+    keyword = "",
   ) => {
     setPagination((prev) => ({ ...prev, loading: true }));
     adminAxios
@@ -195,8 +197,85 @@ const AdminProductDetail = () => {
       pagination.pageSize,
       currentSort.sortBy,
       currentSort.sortOrder,
-      keyword
+      keyword,
     );
+  };
+
+  const exportStockSalesReport = async () => {
+    setExporting(true);
+    let saveHandle;
+
+    try {
+      const fileName = `stock-sales-report-${new Date()
+        .toISOString()
+        .slice(0, 10)}.xlsx`;
+
+      if (window.showSaveFilePicker) {
+        saveHandle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [
+            {
+              description: "Excel file",
+              accept: {
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                  [".xlsx"],
+              },
+            },
+          ],
+        });
+      }
+
+      const response = await adminAxios.get("/products/stock-sales-report");
+      const json = response.data;
+      const reportData =
+        json?.variants ||
+        json?.products ||
+        json?.data ||
+        json?.items ||
+        (Array.isArray(json) ? json : []);
+
+      if (!Array.isArray(reportData) || reportData.length === 0) {
+        message.warning("Không có dữ liệu để xuất báo cáo.");
+        return;
+      }
+
+      const worksheet = XLSX.utils.json_to_sheet(reportData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      if (saveHandle) {
+        const writable = await saveHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+      } else if (navigator.msSaveBlob) {
+        navigator.msSaveBlob(blob, fileName);
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.style.display = "none";
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      message.success("Xuất file báo cáo thành công.");
+    } catch (error) {
+      console.error("Export stock-sales-report failed:", error);
+      message.error("Xuất file báo cáo thất bại.");
+    } finally {
+      setExporting(false);
+    }
   };
 
   const sortByQuantityAsc = () => {
@@ -248,7 +327,7 @@ const AdminProductDetail = () => {
             quantity: Number(values.quantity),
             status: values.status,
             specifications: JSON.stringify(values?.specifications || ""),
-          }
+          },
         );
         api.success({
           message: "Thành công",
@@ -279,7 +358,7 @@ const AdminProductDetail = () => {
         pagination.pageSize,
         currentSort.sortBy,
         currentSort.sortOrder,
-        search.trim()
+        search.trim(),
       );
     } catch (error) {
       console.error("Error:", error);
@@ -311,7 +390,7 @@ const AdminProductDetail = () => {
         pagination.pageSize,
         currentSort.sortBy,
         currentSort.sortOrder,
-        search.trim()
+        search.trim(),
       );
     } catch {
       message.error("Có lỗi xảy ra khi xóa!");
@@ -437,7 +516,7 @@ const AdminProductDetail = () => {
       newPageSize,
       currentSort.sortBy,
       currentSort.sortOrder,
-      search.trim()
+      search.trim(),
     );
   };
 
@@ -474,6 +553,15 @@ const AdminProductDetail = () => {
           onClick={handleSearch}
           className="admin-btn search-btn"
         />
+        <Button
+          type="default"
+          className="admin-btn"
+          style={{ marginLeft: 8 }}
+          onClick={exportStockSalesReport}
+          loading={exporting}
+        >
+          Xuất báo cáo tồn kho - bán hàng
+        </Button>
         <Button
           className="admin-btn"
           style={{ marginLeft: 8 }}

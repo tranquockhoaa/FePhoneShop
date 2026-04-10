@@ -6,6 +6,8 @@
   flex-direction: column;
   align-items: center;
   height: 330px;
+  width: 100%;
+  flex-shrink: 0;
 }
 .product-item .frame_inner {
   display: flex;
@@ -28,13 +30,10 @@
   align-items: center;
   width: 100%;
 }
-.product-item .frame_inner .image-product a {
+.product-item-link {
+  display: block;
   text-decoration: none;
   color: inherit;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .product-item .frame_inner .image-product .img-product {
   width: 100%;

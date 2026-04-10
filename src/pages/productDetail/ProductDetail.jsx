@@ -5,6 +5,8 @@ import Header from "../../components/header/Header";
 import TableInfor from "./TableInfor";
 import "./ProductDetail.css";
 import ButtonGoHome from "../../components/button/button-gohome/button-gohome";
+import { getProductById } from "../../api/product";
+import Recommend from "../../components/recommend/recommend";
 
 const ProductDetail = () => {
   const { code } = useParams();
@@ -30,7 +32,7 @@ const ProductDetail = () => {
 
   const images = useMemo(
     () => product?.color?.flatMap((item) => item.images),
-    [product]
+    [product],
   );
 
   const colorOptions = useMemo(() => product?.color || [], [product]);
@@ -40,7 +42,7 @@ const ProductDetail = () => {
     // Loại bỏ các phần tử trùng lặp dựa trên memory_id
     const uniqueMemory = allMemory.filter(
       (item, index, self) =>
-        index === self.findIndex((m) => m.memory_id === item.memory_id)
+        index === self.findIndex((m) => m.memory_id === item.memory_id),
     );
     return uniqueMemory;
   }, [product]);
@@ -57,7 +59,7 @@ const ProductDetail = () => {
       setSelectedColorId(product?.productDetails[0]?.color_id);
       setSelectedMemoryId(product?.productDetails[0]?.memory_id);
       const colors = product?.color?.find(
-        (item) => item.color.color_id === product?.productDetails[0]?.color_id
+        (item) => item.color.color_id === product?.productDetails[0]?.color_id,
       );
 
       setSelectedImage(colors?.images?.[0]);
@@ -75,12 +77,14 @@ const ProductDetail = () => {
   const toggleInfo = () => setShowInfo(!showInfo);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [code]);
+
+  useEffect(() => {
     const getInfoDetailByCodeName = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/products/${encodeURIComponent(code)}`
-        );
+        const response = await getProductById(`${encodeURIComponent(code)}`);
 
         // setProductDetail(response.data?.data?.productDetails || []);
         setProduct(response.data?.data);
@@ -95,15 +99,13 @@ const ProductDetail = () => {
 
   const handleChangeVariant = ({ color_id, memory_id }) => {
     const newProductDetail = product?.productDetails?.find(
-      (item) => item.color_id === color_id && item.memory_id === memory_id
+      (item) => item.color_id === color_id && item.memory_id === memory_id,
     );
 
     if (newProductDetail) {
       setProductDetail(newProductDetail);
     }
   };
-
-  console.log("product", product);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -131,8 +133,6 @@ const ProductDetail = () => {
   //   }
   // }, [productDetail]);
 
-  console.log("productDetail", productDetail);
-
   const handleAddToCart = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -153,7 +153,7 @@ const ProductDetail = () => {
           quantity: 1,
           unit_price: productDetail.price,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       window.location.href = "/cart";
     } catch (err) {
@@ -166,14 +166,12 @@ const ProductDetail = () => {
 
       <div className="product-detail-body">
         <ButtonGoHome />
-
         <p className="product-name">
           {product?.name || code}{" "}
           <span className="name-small">
             Tặng gói BHV bảo hành cả nguồn, màn hình, vân tay
           </span>
         </p>
-
         <div className="product-normal">
           <div className="product-normal-wrap1">
             <div className="left-frame">
@@ -335,7 +333,6 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-
         {showInfo && (
           <div className="overlay">
             <div className="content">
@@ -348,7 +345,8 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-        )}
+        )}{" "}
+        <Recommend code={code} />
       </div>
     </div>
   );
