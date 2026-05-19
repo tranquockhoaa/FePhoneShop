@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import Header from '../components/header/Header.jsx';
-import { Outlet, useLocation } from 'react-router-dom';
-import './MainLayouts.css';
-import Footer from '../components/footer/footer.jsx';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from "react";
+import Header from "../components/header/Header.jsx";
+import { Outlet, useLocation } from "react-router-dom";
+import "./MainLayouts.css";
+import Footer from "../components/footer/footer.jsx";
+import FloatingChatButton from "../components/chat/FloatingChatButton";
+import { useDispatch } from "react-redux";
 
-import { getBrandsApiRq } from '../store/brands/brands.action.js';
+import { getBrandsApiRq } from "../store/brands/brands.action.js";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
@@ -13,8 +14,8 @@ const MainLayouts = () => {
 
   useEffect(() => {
     if (
-      location.pathname === '/' ||
-      location.pathname?.startsWith('/product-detail/')
+      location.pathname === "/" ||
+      location.pathname?.startsWith("/product-detail/")
     ) {
       dispatch(getBrandsApiRq());
     }
@@ -33,6 +34,7 @@ const MainLayouts = () => {
       <div>
         <Footer />
       </div>
+      <FloatingChatButton />
     </div>
   );
 };

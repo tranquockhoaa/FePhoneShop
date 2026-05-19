@@ -110,7 +110,7 @@ const AdminOrderList = () => {
 
     if (
       !window.confirm(
-        `Xác nhận chuyển trạng thái đơn hàng #${orderCode} sang "${vnStatus}"?`
+        `Xác nhận chuyển trạng thái đơn hàng #${orderCode} sang "${vnStatus}"?`,
       )
     ) {
       return;
@@ -388,7 +388,7 @@ const AdminOrderList = () => {
                     handleUpdateStatus(
                       selectedOrder.order_id,
                       e.target.value,
-                      selectedOrder.code
+                      selectedOrder.code,
                     )
                   }
                   disabled={statusUpdating}

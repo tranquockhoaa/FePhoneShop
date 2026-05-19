@@ -17,10 +17,7 @@ import { searchProductByApi } from "../../api/productlist";
 
 const data_banner = [
   {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/06/29/compress/z9-turbo_1751163651.jpg",
-  },
-  {
-    url: "https://dienthoaihay.vn/images/slideshow/2025/08/19/compress/iqoo-neo-10_1755570700.jpg",
+    url: "/image/banner/iphone-16.jpg",
   },
   {
     url: "/image/banner/iphone-16.jpg",
@@ -63,7 +60,7 @@ const HomePage = () => {
       const brandsWithProducts = listBrandActive.map((item) => {
         const brand = brands.find(
           (brandItem) =>
-            brandItem.name.toLowerCase() === item.name.toLowerCase()
+            brandItem.name.toLowerCase() === item.name.toLowerCase(),
         );
 
         return { ...brand, ...item, logo: brand?.logo || logoIphone };
@@ -179,7 +176,7 @@ const HomePage = () => {
                     )}
                   </div>
                 </div>
-              )
+              ),
             )
           ) : (
             <p>Có lỗi xảy ra khi tải dữ liệu.</p>

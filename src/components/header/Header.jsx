@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import './Header.css';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import AccountSetting from '../../pages/auth/accountSetting';
-import SearchBranch from '../search/search.jsx';
-import { searchProductByApi } from '../../api/productlist.js';
+import React, { useState } from "react";
+import "./Header.css";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import AccountSetting from "../../pages/auth/accountSetting";
+import SearchBranch from "../search/search.jsx";
+import { searchProductByApi } from "../../api/productlist.js";
 
 const Header = () => {
   const { profile } = useSelector((state) => state.profile);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
@@ -36,27 +36,21 @@ const Header = () => {
     <div className="header-container">
       <div className="navbar">
         <div className="butto-home">
-          <a
-            href="http://localhost:5173/"
-            className="homepage-link"
-          >
+          <a href="http://localhost:5173/" className="homepage-link">
             <h2>
-              {' '}
+              {" "}
               <i>MOBILE STORE</i>
             </h2>
           </a>
         </div>
 
         <div className="navbar-search">
-          <form
-            action=""
-            className="search-form"
-          >
+          <form action="" className="search-form">
             <button type="submit">
               <i className="fa fa-search"></i>
             </button>
             <input
-              style={{ height: '100%' }}
+              style={{ height: "100%" }}
               type="text"
               name="searchWord"
               placeholder="Tìm kiếm sản phẩm"
@@ -67,10 +61,7 @@ const Header = () => {
             />
           </form>
           {showSearchResults && searchTerm && (
-            <SearchBranch
-              products={products}
-              onClose={handleCloseSearch}
-            />
+            <SearchBranch products={products} onClose={handleCloseSearch} />
           )}
         </div>
 
@@ -82,29 +73,26 @@ const Header = () => {
         </div>
 
         <div className="order-button">
-          <Link
-            to="/cart"
-            className="title"
-          >
+          <Link to="/cart" className="title">
             Giỏ hàng
           </Link>
         </div>
 
         <div className="order-lookup">
-          <Link
-            to="/order-lookup"
-            className="title"
-          >
-            Tra cứu <br /> đơn hàng{' '}
+          <Link to="/order-lookup" className="title">
+            Tra cứu <br /> đơn hàng{" "}
           </Link>
         </div>
 
+        {/* <div className="chat-button">
+          <Link to="/chat" className="title">
+            Chat hỗ trợ
+          </Link>
+        </div> */}
+
         {!profile ? (
           <div className="header-login-button">
-            <Link
-              to="/login"
-              className="login-link login-status"
-            >
+            <Link to="/login" className="login-link login-status">
               Đăng nhập
             </Link>
           </div>

@@ -21,7 +21,7 @@ import {
 import {
   getDashboard,
   getBestselling,
-  getProductInventoryReport,
+  // getProductInventoryReport,
   getTotalUser,
 } from "../../api/dashboard";
 
@@ -49,18 +49,18 @@ const AdminDashboard = () => {
       const [
         dashboardResponse,
         bestSellingResponse,
-        inventoryReportResponse,
+        // inventoryReportResponse,
         totalUserRes,
       ] = await Promise.all([
         getDashboard(queryParams.toString()),
         getBestselling(),
-        getProductInventoryReport(queryParams.toString()),
+        // getProductInventoryReport(queryParams.toString()),
         getTotalUser(),
       ]);
 
       setDashboardData(dashboardResponse);
       setBestSellingData(bestSellingResponse);
-      setProductInventoryReport(inventoryReportResponse);
+      // setProductInventoryReport(inventoryReportResponse);
       setDashboardUser(totalUserRes);
     } catch (err) {
       console.error("Error fetching dashboard data:", err);
@@ -392,7 +392,7 @@ const AdminDashboard = () => {
             </Col>
           </Row>
 
-          <Row gutter={[24, 24]} style={{ marginBottom: "24px" }}>
+          {/* <Row gutter={[24, 24]} style={{ marginBottom: "24px" }}>
             <Col xs={24} md={12}>
               <Card>
                 <Statistic
@@ -414,7 +414,7 @@ const AdminDashboard = () => {
                 />
               </Card>
             </Col>
-          </Row>
+          </Row> */}
 
           <Row gutter={[24, 24]} style={{ marginBottom: "24px" }}>
             <Col xs={24} lg={12}>
